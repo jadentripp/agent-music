@@ -1,0 +1,19 @@
+id: lead
+name: Analog Lead
+instrument: analog_lead
+sound:
+  soundfont: lead_2_sawtooth
+gain: 0.58
+pan: 0.12
+delay: 0.24
+reverb: 0.34
+humanize: 0.01
+notes:
+  - { time: 5:1, duration: 8n, pitch: E4, velocity: 0.7 }
+  - { time: 5:2, duration: 8n, pitch: G4, velocity: 0.66 }
+  - { time: 5:3, duration: 8n, pitch: A4, velocity: 0.76 }
+  - { time: 6:1, duration: 8n, pitch: C5, velocity: 0.72 }
+  - { time: 6:3, duration: 8n, pitch: B4, velocity: 0.66 }
+  - { time: 7:1, duration: 8n, pitch: A4, velocity: 0.78 }
+  - { time: 7:3, duration: 8n, pitch: E5, velocity: 0.82 }
+  - { time: 8:1, duration: 4n, pitch: C5, velocity: 0.74 }

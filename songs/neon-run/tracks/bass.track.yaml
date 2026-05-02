@@ -1,0 +1,16 @@
+id: bass
+name: Upright Sub Bass
+instrument: upright_bass
+sound:
+  soundfont: acoustic_bass
+gain: 0.76
+pan: -0.04
+notes:
+  - { time: 1:1, duration: 2n, pitch: A1, velocity: 0.88, articulation: pluck }
+  - { time: 1:3, duration: 2n, pitch: A1, velocity: 0.72, articulation: pluck }
+  - { time: 2:1, duration: 2n, pitch: G1, velocity: 0.82, articulation: pluck }
+  - { time: 2:3, duration: 2n, pitch: E2, velocity: 0.7, articulation: pluck }
+  - { time: 5:1, duration: 2n, pitch: A1, velocity: 0.96, articulation: pluck }
+  - { time: 5:3, duration: 2n, pitch: C2, velocity: 0.74, articulation: pluck }
+  - { time: 6:1, duration: 2n, pitch: G1, velocity: 0.88, articulation: pluck }
+  - { time: 6:3, duration: 2n, pitch: E2, velocity: 0.76, articulation: pluck }

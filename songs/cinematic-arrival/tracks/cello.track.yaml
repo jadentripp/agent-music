@@ -1,0 +1,16 @@
+id: cello
+name: Solo Cello
+instrument: solo_cello
+sound:
+  soundfont: cello
+gain: 0.7
+pan: -0.22
+reverb: 0.55
+humanize: 0.028
+notes:
+  - { time: 2:1, duration: 1m, pitch: D3, velocity: 0.62, articulation: legato }
+  - { time: 4:1, duration: 1m, pitch: F3, velocity: 0.68, articulation: legato }
+  - { time: 6:1, duration: 1m, pitch: A3, velocity: 0.74, articulation: legato }
+  - { time: 8:1, duration: 1m, pitch: C4, velocity: 0.7, articulation: legato }
+  - { time: 10:1, duration: 1m, pitch: A3, velocity: 0.78, articulation: legato }
+  - { time: 12:1, duration: 1m, pitch: D4, velocity: 0.82, articulation: legato }

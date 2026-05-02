@@ -1,0 +1,16 @@
+id: drums
+name: Hybrid Toms
+instrument: hybrid_drums
+sound:
+  soundfont: taiko_drum
+gain: 0.56
+reverb: 0.3
+notes:
+  - { time: 5:1, duration: 8n, pitch: C2, velocity: 0.66 }
+  - { time: 5:3, duration: 8n, pitch: G2, velocity: 0.54 }
+  - { time: 6:1, duration: 8n, pitch: C2, velocity: 0.7 }
+  - { time: 7:3, duration: 8n, pitch: A2, velocity: 0.76 }
+  - { time: 9:1, duration: 8n, pitch: C2, velocity: 0.95 }
+  - { time: 9:3, duration: 8n, pitch: G2, velocity: 0.78 }
+  - { time: 10:1, duration: 8n, pitch: C2, velocity: 0.88 }
+  - { time: 11:3, duration: 8n, pitch: A2, velocity: 0.86 }

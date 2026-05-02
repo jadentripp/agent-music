@@ -1,0 +1,21 @@
+id: cello
+name: Cello Counterline
+instrument: solo_cello
+sound:
+  soundfont: cello
+  attack: 0.18
+  decay: 0.34
+  sustain: 0.84
+  release: 1.8
+gain: 0.46
+pan: -0.26
+reverb: 0.72
+humanize: 0.03
+notes:
+  - { time: 3:1, duration: 2m, pitch: G2, velocity: 0.34, articulation: legato }
+  - { time: 5:1, duration: 2m, pitch: C3, velocity: 0.42, articulation: legato }
+  - { time: 7:1, duration: 2m, pitch: B2, velocity: 0.38, articulation: legato }
+  - { time: 11:1, duration: 1m, pitch: E3, velocity: 0.48, articulation: legato }
+  - { time: 12:1, duration: 1m, pitch: F#3, velocity: 0.44, articulation: legato }
+  - { time: 13:1, duration: 2m, pitch: G3, velocity: 0.54, articulation: legato }
+  - { time: 15:1, duration: 2m, pitch: D3, velocity: 0.48, articulation: legato }

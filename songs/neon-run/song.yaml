@@ -1,0 +1,16 @@
+title: Neon Run
+artist: Codex Studio
+tempo: 124
+key: A minor
+timeSignature: 4/4
+master:
+  gain: 0.86
+  limiter: true
+sections:
+  - { id: pulse, name: Pulse Grid, start: 1:1, duration: 4m, scene: tunnel, intensity: 1.0 }
+  - { id: drop, name: Glass Drop, start: 5:1, duration: 4m, scene: nebula, intensity: 1.45 }
+trackOrder:
+  - drums
+  - bass
+  - pad
+  - lead

@@ -1,0 +1,33 @@
+title: Cinematic Arrival
+artist: Codex Studio
+tempo: 86
+key: D minor
+timeSignature: 4/4
+master:
+  gain: 0.92
+  limiter: true
+sections:
+  - id: intro
+    name: Low Light
+    start: 1:1
+    duration: 4m
+    scene: aurora
+    intensity: 0.72
+  - id: bloom
+    name: Strings Bloom
+    start: 5:1
+    duration: 4m
+    scene: cathedral
+    intensity: 1.08
+  - id: lift
+    name: Final Lift
+    start: 9:1
+    duration: 4m
+    scene: nebula
+    intensity: 1.34
+trackOrder:
+  - bass
+  - piano
+  - strings
+  - cello
+  - drums
