@@ -1,6 +1,7 @@
 import * as Soundfont from "soundfont-player";
 import type { Player } from "soundfont-player";
-import type { MixerState, Song, Track } from "../types";
+import type { AutomationPoint, KitVoice, MixerState, Song, Track } from "../types";
+import { SampleInstrument } from "./SampleInstrument";
 import { findSectionAt, musicalTimeToSeconds, noteToFrequency, songDuration } from "./timing";
 
 type ScheduledEvent = {
@@ -12,20 +13,43 @@ type ScheduledEvent = {
   frequency: number;
   velocity: number;
   articulation?: string;
+  flam?: number;
+  isKick?: boolean;
+};
+
+type TrackChannel = {
+  input: GainNode;
+  duck: GainNode;
+  output: GainNode;
+  tone?: BiquadFilterNode;
+  reverbSend?: GainNode;
+};
+
+type Voice = {
+  silence: (now: number) => void;
+  stop: (now: number) => void;
 };
 
 const lookaheadSeconds = 0.18;
 const schedulerMs = 35;
 const defaultSoundfont = "MusyngKite";
+const defaultSamplePacks: Partial<Record<Track["instrument"], string>> = {
+  cinematic_strings: "/samples/vsco-violin-section-sustain/manifest.yaml",
+  grand_piano: "/samples/salamander-grand-v8/manifest.yaml",
+  solo_cello: "/samples/vsco-cello-section-sustain/manifest.yaml",
+  drum_kit: "/samples/virtuosity-kit/manifest.yaml"
+};
 
 const soundfontMap: Record<string, string> = {
   grand_piano: "acoustic_grand_piano",
   cinematic_strings: "string_ensemble_1",
   upright_bass: "acoustic_bass",
   hybrid_drums: "taiko_drum",
+  drum_kit: "synth_drum",
   glass_pad: "pad_2_warm",
   solo_cello: "cello",
-  analog_lead: "lead_2_sawtooth"
+  analog_lead: "lead_2_sawtooth",
+  electric_piano: "electric_piano_1"
 };
 
 const defaultEnvelopes: Record<string, [number, number, number, number]> = {
@@ -33,28 +57,58 @@ const defaultEnvelopes: Record<string, [number, number, number, number]> = {
   cinematic_strings: [0.28, 0.42, 0.82, 1.6],
   upright_bass: [0.008, 0.12, 0.62, 0.36],
   hybrid_drums: [0.001, 0.08, 0.42, 0.22],
+  drum_kit: [0.001, 0.05, 0.0, 0.18],
   glass_pad: [0.52, 0.9, 0.72, 2.4],
   solo_cello: [0.12, 0.3, 0.82, 1.2],
-  analog_lead: [0.01, 0.16, 0.68, 0.42]
+  analog_lead: [0.01, 0.16, 0.68, 0.42],
+  electric_piano: [0.008, 0.22, 0.66, 0.9]
 };
+
+const defaultKit: Record<string, KitVoice> = {
+  kick: { soundfont: "taiko_drum", pitch: "A1", gain: 1.0 },
+  snare: { soundfont: "synth_drum", pitch: "D3", gain: 0.92 },
+  clap: { soundfont: "synth_drum", pitch: "G3", gain: 0.85 },
+  hat: { soundfont: "woodblock", pitch: "C5", gain: 0.55 },
+  closed_hat: { soundfont: "woodblock", pitch: "C5", gain: 0.55 },
+  open_hat: { soundfont: "woodblock", pitch: "G5", gain: 0.5 },
+  rim: { soundfont: "woodblock", pitch: "F4", gain: 0.65 },
+  perc: { soundfont: "synth_drum", pitch: "A4", gain: 0.6 },
+  tom: { soundfont: "taiko_drum", pitch: "C2", gain: 0.85 },
+  ride: { soundfont: "woodblock", pitch: "E5", gain: 0.55 },
+  crash: { soundfont: "reverse_cymbal", pitch: "C5", gain: 0.6 }
+};
+
+const kickAliases = new Set(["kick", "bd", "bass_drum", "k"]);
 
 export class AudioEngine {
   private context?: AudioContext;
   private master?: GainNode;
   private analyser?: AnalyserNode;
   private compressor?: DynamicsCompressorNode;
+  private reverb?: ConvolverNode;
+  private reverbReturn?: GainNode;
+  private vinylSource?: AudioBufferSourceNode;
+  private vinylGain?: GainNode;
   private events: ScheduledEvent[] = [];
+  private kickTimes: number[] = [];
   private nextEventIndex = 0;
   private startedAt = 0;
   private offset = 0;
   private timer?: number;
-  private sources: AudioScheduledSourceNode[] = [];
+  private voices: Voice[] = [];
   private song?: Song;
   private tempoMultiplier = 1;
   private mixer: MixerState = {};
   private loopSectionId?: string;
+  private loopEnabled = false;
+  private masterVolume = 1;
   private players = new Map<string, Player>();
+  private sampleInstruments = new Map<string, SampleInstrument>();
+  private channels = new Map<string, TrackChannel>();
+  private channelsForSong?: Song;
+  private duckedKickIndex = new Map<string, number>();
   private onTick?: () => void;
+  private playGeneration = 0;
 
   async init() {
     if (this.context) return;
@@ -72,11 +126,14 @@ export class AudioEngine {
     this.master.connect(this.compressor);
     this.compressor.connect(this.analyser);
     this.analyser.connect(this.context.destination);
+    this.buildReverbBus();
+    this.buildVinylBus();
   }
 
   loadSong(song: Song, mixer: MixerState, tempoMultiplier: number) {
     this.stop();
     this.song = song;
+    this.channelsForSong = undefined;
     this.offset = 0;
     this.tempoMultiplier = tempoMultiplier;
     this.mixer = mixer;
@@ -84,65 +141,112 @@ export class AudioEngine {
       .flatMap((track) =>
         track.notes.flatMap((note, index) => {
           const pitches = note.pitches ?? (note.pitch !== undefined ? [note.pitch] : []);
-          return pitches.map((pitch, pitchIndex) => {
+          return pitches.flatMap((pitch, pitchIndex) => {
             const voicedPitch = applyOctave(pitch, track.octave);
-            return {
+            const baseStart =
+              musicalTimeToSeconds(note.time, song, tempoMultiplier) +
+              (note.offset ?? 0) +
+              pitchIndex * (note.strum ?? 0) +
+              swingOffset(note.time, song, track.swing);
+            const isKick = track.instrument === "drum_kit" && isKickPitch(voicedPitch);
+            const main: ScheduledEvent = {
               id: `${track.id}-${index}-${pitchIndex}`,
               track,
-              start:
-                musicalTimeToSeconds(note.time, song, tempoMultiplier) +
-                (note.offset ?? 0) +
-                pitchIndex * (note.strum ?? 0) +
-                swingOffset(note.time, song, track.swing),
+              start: baseStart,
               duration: Math.max(0.04, musicalTimeToSeconds(note.duration, song, tempoMultiplier)),
               pitch: voicedPitch,
-              frequency: noteToFrequency(voicedPitch),
+              frequency: noteToFrequency(safeFreqPitch(voicedPitch)),
               velocity: note.velocity ?? 0.72,
-              articulation: note.articulation
+              articulation: note.articulation,
+              isKick
             };
+            if (note.flam && note.flam > 0) {
+              const grace: ScheduledEvent = {
+                ...main,
+                id: `${main.id}-flam`,
+                start: baseStart - note.flam,
+                duration: Math.max(0.03, main.duration * 0.5),
+                velocity: main.velocity * 0.45,
+                isKick: false
+              };
+              return [grace, main];
+            }
+            return [main];
           });
         })
       )
       .sort((a, b) => a.start - b.start);
+    this.kickTimes = this.events.filter((event) => event.isKick).map((event) => event.start);
+    this.duckedKickIndex.clear();
     this.nextEventIndex = 0;
   }
 
   async play(onTick: () => void) {
+    console.log("[AudioEngine] play() called. State:", this.context?.state);
+    const myGen = ++this.playGeneration;
+    this.clearTimer();
+
     await this.init();
+    if (myGen !== this.playGeneration) return;
     if (!this.context || !this.song || !this.master) return;
+
     await this.context.resume();
+    console.log("[AudioEngine] context.resume() done. State:", this.context.state);
+    if (myGen !== this.playGeneration) return;
+
+    if (this.channelsForSong !== this.song) {
+      console.log("[AudioEngine] building channels for:", this.song.title);
+      this.buildChannels();
+      this.channelsForSong = this.song;
+    }
+
+    await this.loadSampleInstruments();
+    if (myGen !== this.playGeneration) return;
+
     await this.loadPlayers();
+    if (myGen !== this.playGeneration) return;
+
     this.onTick = onTick;
     this.startedAt = this.context.currentTime - this.offset;
     this.nextEventIndex = this.events.findIndex((event) => event.start + event.duration >= this.offset);
     if (this.nextEventIndex < 0) this.nextEventIndex = this.events.length;
-    this.master.gain.setTargetAtTime(this.song.master.gain, this.context.currentTime, 0.02);
+    this.applyMasterBus();
+    this.scheduleTrackAutomation();
+    this.applyVinylAmount(this.song.master.vinyl ?? 0);
     this.timer = window.setInterval(() => this.schedule(), schedulerMs);
+    console.log("[AudioEngine] scheduler started at index:", this.nextEventIndex);
     this.schedule();
   }
 
   pause() {
+    this.playGeneration += 1;
     this.offset = this.currentTime;
     this.clearTimer();
-    this.stopSources();
+    void this.context?.suspend();
   }
 
   stop() {
+    this.playGeneration += 1;
     this.offset = 0;
     this.clearTimer();
-    this.stopSources();
+    this.stopVoices();
+    void this.context?.suspend();
   }
 
   seek(seconds: number) {
     const wasPlaying = Boolean(this.timer);
     this.offset = Math.max(0, Math.min(seconds, this.duration));
-    this.stopSources();
+    this.stopVoices();
     if (this.context) {
       this.startedAt = this.context.currentTime - this.offset;
     }
     this.nextEventIndex = this.events.findIndex((event) => event.start + event.duration >= this.offset);
     if (this.nextEventIndex < 0) this.nextEventIndex = this.events.length;
-    if (wasPlaying) this.schedule();
+    this.duckedKickIndex.clear();
+    if (wasPlaying) {
+      this.scheduleTrackAutomation();
+      this.schedule();
+    }
   }
 
   setMixer(mixer: MixerState) {
@@ -163,9 +267,13 @@ export class AudioEngine {
     this.loopSectionId = sectionId;
   }
 
+  setLoopEnabled(value: boolean) {
+    this.loopEnabled = value;
+  }
+
   setMasterVolume(value: number) {
-    if (!this.master || !this.context) return;
-    this.master.gain.setTargetAtTime(value, this.context.currentTime, 0.025);
+    this.masterVolume = value;
+    this.applyMasterBus();
   }
 
   get currentTime() {
@@ -200,6 +308,10 @@ export class AudioEngine {
         }
       }
     } else if (current >= this.duration) {
+      if (this.loopEnabled) {
+        this.seek(0);
+        return;
+      }
       this.pause();
       this.seek(0);
       this.onTick?.();
@@ -216,6 +328,7 @@ export class AudioEngine {
       this.nextEventIndex += 1;
     }
 
+    this.scheduleDucks(current, horizon);
     this.onTick?.();
   }
 
@@ -225,12 +338,17 @@ export class AudioEngine {
     const soloed = Object.values(this.mixer).some((track) => track.solo);
     if (trackMix.muted || (soloed && !trackMix.solo)) return;
 
+    const channel = this.channels.get(event.track.id);
+    const destination: AudioNode = channel ? channel.input : this.master;
+
     const gain = this.context.createGain();
     const pan = this.context.createStereoPanner();
     const delay = this.context.createDelay(1);
     const delayGain = this.context.createGain();
     const dryGain = this.context.createGain();
-    const trackGain = (event.track.gain ?? 0.8) * trackMix.volume * event.velocity;
+    const kitVoice = this.resolveKitVoice(event.track, event.pitch);
+    const kitGain = kitVoice?.gain ?? 1;
+    const trackGain = (event.track.gain ?? 0.8) * trackMix.volume * event.velocity * kitGain;
     const humanize = (event.track.humanize ?? 0) * seededNoise(event.id);
     const startAt = Math.max(this.context.currentTime, when + humanize);
     const release = event.track.instrument.includes("strings") || event.track.instrument.includes("pad") ? 1.2 : 0.16;
@@ -245,34 +363,185 @@ export class AudioEngine {
     delayGain.gain.value = event.track.delay ?? 0;
     gain.connect(pan);
     pan.connect(dryGain);
-    dryGain.connect(this.master);
+    dryGain.connect(destination);
     pan.connect(delay);
     delay.connect(delayGain);
-    delayGain.connect(this.master);
+    delayGain.connect(destination);
 
-    if (!this.createSampleVoice(event, gain, startAt)) {
-      this.createFallbackVoice(event, gain, startAt, event.duration + release);
+    const voice: Voice = {
+      silence: (now: number) => {
+        try {
+          const value = gain.gain.value;
+          gain.gain.cancelScheduledValues(now);
+          gain.gain.setValueAtTime(value, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.008);
+        } catch {
+        }
+      },
+      stop: () => {}
+    };
+    this.voices.push(voice);
+
+    if (!this.createSampleVoice(event, gain, startAt, voice, kitVoice)) {
+      this.createFallbackVoice(event, gain, startAt, event.duration + release, voice);
     }
+  }
+
+  private buildChannels() {
+    if (!this.context || !this.master || !this.song) return;
+    for (const channel of this.channels.values()) {
+      disconnectNode(channel.input);
+      disconnectNode(channel.duck);
+      disconnectNode(channel.output);
+      if (channel.tone) disconnectNode(channel.tone);
+      if (channel.reverbSend) disconnectNode(channel.reverbSend);
+    }
+    this.channels.clear();
+
+    for (const track of this.song.tracks) {
+      const input = this.context.createGain();
+      const duck = this.context.createGain();
+      const output = this.context.createGain();
+      const reverbSend = this.context.createGain();
+      input.gain.value = 1;
+      duck.gain.value = 1;
+      output.gain.value = 1;
+      reverbSend.gain.value = reverbSendLevel(track.reverb);
+
+      let chainEnd: AudioNode = input;
+
+      if (track.highpass !== undefined) {
+        const hp = this.context.createBiquadFilter();
+        hp.type = "highpass";
+        hp.frequency.value = track.highpass;
+        hp.Q.value = 0.7;
+        chainEnd.connect(hp);
+        chainEnd = hp;
+      }
+
+      const needsToneFilter = track.lowpass !== undefined || Boolean(track.automation?.filter?.length);
+      let tone: BiquadFilterNode | undefined;
+      if (needsToneFilter) {
+        const lp = this.context.createBiquadFilter();
+        lp.type = "lowpass";
+        lp.frequency.value = track.lowpass ?? 18000;
+        lp.Q.value = 0.7;
+        chainEnd.connect(lp);
+        chainEnd = lp;
+        tone = lp;
+      }
+
+      if (track.saturation !== undefined && track.saturation > 0) {
+        const shaper = this.context.createWaveShaper();
+        shaper.curve = makeSaturationCurve(track.saturation);
+        shaper.oversample = "2x";
+        chainEnd.connect(shaper);
+        chainEnd = shaper;
+      }
+
+      chainEnd.connect(duck);
+      duck.connect(output);
+      output.connect(this.master);
+      if (this.reverb) {
+        duck.connect(reverbSend);
+        reverbSend.connect(this.reverb);
+      }
+
+      this.channels.set(track.id, { input, duck, output, tone, reverbSend });
+    }
+  }
+
+  private scheduleTrackAutomation() {
+    if (!this.context || !this.song) return;
+    const now = this.context.currentTime;
+
+    for (const track of this.song.tracks) {
+      const channel = this.channels.get(track.id);
+      if (!channel) continue;
+
+      scheduleParamAutomation({
+        context: this.context,
+        param: channel.output.gain,
+        points: track.automation?.gain,
+        song: this.song,
+        tempoMultiplier: this.tempoMultiplier,
+        songOffset: this.offset,
+        fallbackValue: 1,
+        minValue: 0,
+        maxValue: 2
+      });
+
+      if (channel.tone) {
+        scheduleParamAutomation({
+          context: this.context,
+          param: channel.tone.frequency,
+          points: track.automation?.filter,
+          song: this.song,
+          tempoMultiplier: this.tempoMultiplier,
+          songOffset: this.offset,
+          fallbackValue: track.lowpass ?? 18000,
+          minValue: 40,
+          maxValue: 20000
+        });
+      }
+    }
+  }
+
+  private resolveKitVoice(track: Track, pitch: string | number): KitVoice | undefined {
+    if (track.instrument !== "drum_kit") return undefined;
+    if (typeof pitch !== "string") return undefined;
+    const key = pitch.toLowerCase();
+    return track.kit?.[key] ?? track.kit?.[pitch] ?? defaultKit[key];
   }
 
   private async loadPlayers() {
     if (!this.context || !this.song) return;
-    const tracks = uniqueBy(
-      this.song.tracks.filter((track) => track.sound?.source !== "fallback"),
-      (track) => this.soundfontName(track)
-    );
+    const needed = new Map<string, Set<string>>();
+    const addNote = (name: string, pitch: string | number) => {
+      if (!needed.has(name)) needed.set(name, new Set());
+      needed.get(name)!.add(String(pitch));
+    };
+
+    for (const track of this.song.tracks) {
+      if (track.sound?.source === "fallback") continue;
+      if (this.samplePackForTrack(track)) continue;
+      if (track.instrument === "drum_kit") {
+        const lanes = new Set<string>();
+        for (const note of track.notes) {
+          const pitches = note.pitches ?? (note.pitch !== undefined ? [note.pitch] : []);
+          for (const pitch of pitches) {
+            if (typeof pitch === "string") lanes.add(pitch.toLowerCase());
+          }
+        }
+        for (const lane of lanes) {
+          const voice = track.kit?.[lane] ?? defaultKit[lane];
+          const sound = voice?.soundfont;
+          const pitch = voice?.pitch ?? "C4";
+          if (sound) addNote(sound, pitch);
+        }
+      } else {
+        const sound = this.soundfontName(track);
+        for (const note of track.notes) {
+          const pitches = note.pitches ?? (note.pitch !== undefined ? [note.pitch] : []);
+          for (const pitch of pitches) {
+            const voiced = applyOctave(pitch, track.octave);
+            if (typeof voiced === "string" && /^[A-G](#|b)?-?\d$/.test(voiced)) {
+              addNote(sound, voiced);
+            }
+          }
+        }
+      }
+    }
 
     await Promise.all(
-      tracks.map(async (track) => {
-        const name = this.soundfontName(track);
+      Array.from(needed.entries()).map(async ([name, notesSet]) => {
         if (this.players.has(name)) return;
-        const notes = this.events.filter((event) => event.track.instrument === track.instrument).map((event) => event.pitch);
+        const notes = Array.from(notesSet);
         const player = await Soundfont.instrument(this.context!, name as never, {
           soundfont: defaultSoundfont,
           destination: this.context!.destination,
           notes,
-          gain: 1,
-          adsr: this.envelope(track)
+          gain: 1
         });
         player.connect(this.context!.destination);
         this.players.set(name, player);
@@ -280,23 +549,96 @@ export class AudioEngine {
     );
   }
 
-  private createSampleVoice(event: ScheduledEvent, destination: AudioNode, startAt: number) {
+  private createSampleVoice(
+    event: ScheduledEvent,
+    destination: AudioNode,
+    startAt: number,
+    voice: Voice,
+    kitVoice?: KitVoice
+  ) {
     if (!this.context || event.track.sound?.source === "fallback") return false;
-    const player = this.players.get(this.soundfontName(event.track));
+    const samplePack = this.samplePackForTrack(event.track);
+    if (samplePack) {
+      const instrument = this.sampleInstruments.get(samplePack);
+      const sources = instrument?.trigger({
+        pitch: event.pitch,
+        velocity: event.velocity,
+        destination,
+        startAt,
+        duration: event.duration,
+        gain: kitVoice?.gain ?? 1
+      });
+      if (sources?.length) {
+        voice.stop = (now: number) => {
+          for (const source of sources) {
+            try {
+              source.stop(now + 0.012);
+            } catch {
+              try {
+                source.stop();
+              } catch {
+              }
+            }
+          }
+        };
+        return true;
+      }
+    }
+
+    let playerName = this.soundfontName(event.track);
+    let pitchToPlay: string | number = event.pitch;
+
+    if (event.track.instrument === "drum_kit") {
+      if (!kitVoice) return false;
+      playerName = kitVoice.soundfont ?? soundfontMap.drum_kit;
+      pitchToPlay = kitVoice.pitch ?? "C4";
+    }
+
+    const player = this.players.get(playerName);
     if (!player) return false;
-    const source = player.play(String(event.pitch), startAt, {
+    const source = player.play(String(pitchToPlay), startAt, {
       duration: event.duration,
       gain: 1,
       adsr: this.envelope(event.track, event.articulation)
-    }) as unknown as { stop?: (when?: number) => void; amp?: GainNode };
-    if (!source.amp) return false;
+    }) as unknown as { stop?: (when?: number) => void; amp?: GainNode } | undefined;
+    if (!source?.amp) return false;
     source.amp.disconnect();
     source.amp.connect(destination);
     if (source.stop) {
-      const stopper = { stop: source.stop.bind(source) } as AudioScheduledSourceNode;
-      this.sources.push(stopper);
+      const stopFn = source.stop.bind(source);
+      voice.stop = (now: number) => {
+        try {
+          stopFn(now + 0.012);
+        } catch {
+          try {
+            stopFn();
+          } catch {
+          }
+        }
+      };
     }
     return true;
+  }
+
+  private async loadSampleInstruments() {
+    if (!this.context || !this.song) return;
+    const manifests = unique(
+      this.song.tracks
+        .map((track) => this.samplePackForTrack(track))
+        .filter((manifest): manifest is string => Boolean(manifest))
+    );
+
+    await Promise.all(
+      manifests.map(async (manifest) => {
+        if (this.sampleInstruments.has(manifest)) return;
+        this.sampleInstruments.set(manifest, await SampleInstrument.load(this.context!, manifest));
+      })
+    );
+  }
+
+  private samplePackForTrack(track: Track) {
+    if (track.sound?.source === "fallback" || track.sound?.source === "soundfont") return undefined;
+    return track.sound?.samplePack ?? defaultSamplePacks[track.instrument];
   }
 
   private soundfontName(track: Track) {
@@ -331,10 +673,16 @@ export class AudioEngine {
     return envelope;
   }
 
-  private createFallbackVoice(event: ScheduledEvent, destination: AudioNode, startAt: number, duration: number) {
+  private createFallbackVoice(
+    event: ScheduledEvent,
+    destination: AudioNode,
+    startAt: number,
+    duration: number,
+    voice: Voice
+  ) {
     if (!this.context) return;
-    if (event.track.instrument === "hybrid_drums") {
-      this.createDrumVoice(event, destination, startAt);
+    if (event.track.instrument === "hybrid_drums" || event.track.instrument === "drum_kit") {
+      this.createDrumVoice(event, destination, startAt, voice);
       return;
     }
 
@@ -363,34 +711,126 @@ export class AudioEngine {
     body.start(startAt);
     osc.stop(startAt + duration);
     body.stop(startAt + duration);
-    this.sources.push(osc, body);
+    voice.stop = (now: number) => {
+      try { osc.stop(now + 0.012); } catch { }
+      try { body.stop(now + 0.012); } catch { }
+    };
   }
 
-  private createDrumVoice(event: ScheduledEvent, destination: AudioNode, startAt: number) {
+  private createDrumVoice(event: ScheduledEvent, destination: AudioNode, startAt: number, voice: Voice) {
     if (!this.context) return;
     const osc = this.context.createOscillator();
     const gain = this.context.createGain();
     osc.type = "sine";
-    osc.frequency.setValueAtTime(event.frequency, startAt);
-    osc.frequency.exponentialRampToValueAtTime(Math.max(40, event.frequency * 0.42), startAt + 0.12);
+    const baseFreq = event.frequency > 0 ? event.frequency : 220;
+    osc.frequency.setValueAtTime(baseFreq, startAt);
+    osc.frequency.exponentialRampToValueAtTime(Math.max(40, baseFreq * 0.42), startAt + 0.12);
     gain.gain.setValueAtTime(0.9, startAt);
     gain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.22);
     osc.connect(gain);
     gain.connect(destination);
     osc.start(startAt);
     osc.stop(startAt + 0.24);
-    this.sources.push(osc);
+    voice.stop = (now: number) => {
+      try { osc.stop(now + 0.012); } catch { }
+    };
   }
 
-  private stopSources() {
-    for (const source of this.sources) {
-      try {
-        source.stop();
-      } catch {
-        // Already stopped by the Web Audio scheduler.
+  private scheduleDucks(currentSongTime: number, horizonSongTime: number) {
+    if (!this.context || !this.song || this.kickTimes.length === 0) return;
+
+    for (const track of this.song.tracks) {
+      if (!track.duck) continue;
+      const channel = this.channels.get(track.id);
+      if (!channel) continue;
+      const targetLane = track.duck.toLowerCase();
+      const shouldDuck = kickAliases.has(targetLane) || targetLane === "kick";
+      if (!shouldDuck) continue;
+
+      const amount = Math.max(0, Math.min(1, track.duckAmount ?? 0.6));
+      if (amount <= 0) continue;
+
+      const lastIndex = this.duckedKickIndex.get(track.id) ?? -1;
+      let nextIndex = lastIndex + 1;
+      while (nextIndex < this.kickTimes.length && this.kickTimes[nextIndex] <= horizonSongTime) {
+        const kickSongTime = this.kickTimes[nextIndex];
+        if (kickSongTime + 0.4 < currentSongTime) {
+          nextIndex += 1;
+          continue;
+        }
+        const audioTime = this.context.currentTime + Math.max(0, kickSongTime - currentSongTime);
+        scheduleDuckDip(channel.duck, audioTime, amount);
+        nextIndex += 1;
       }
+      this.duckedKickIndex.set(track.id, nextIndex - 1);
     }
-    this.sources = [];
+  }
+
+  private buildVinylBus() {
+    if (!this.context || !this.master) return;
+    const buffer = this.context.createBuffer(1, this.context.sampleRate * 2, this.context.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i += 1) {
+      const noise = Math.random() * 2 - 1;
+      const crackle = Math.random() < 0.0008 ? (Math.random() * 2 - 1) * 6 : 0;
+      data[i] = noise * 0.3 + crackle;
+    }
+    const source = this.context.createBufferSource();
+    source.buffer = buffer;
+    source.loop = true;
+    const filter = this.context.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.value = 3500;
+    filter.Q.value = 0.6;
+    const gain = this.context.createGain();
+    gain.gain.value = 0;
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.master);
+    source.start();
+    this.vinylSource = source;
+    this.vinylGain = gain;
+  }
+
+  private buildReverbBus() {
+    if (!this.context || !this.master) return;
+    this.reverb = this.context.createConvolver();
+    this.reverb.buffer = makeImpulseResponse(this.context, 2.8, 2.6);
+    this.reverbReturn = this.context.createGain();
+    this.reverbReturn.gain.value = 0.42;
+    this.reverb.connect(this.reverbReturn);
+    this.reverbReturn.connect(this.master);
+  }
+
+  private applyMasterBus() {
+    if (!this.context || !this.master || !this.song || !this.compressor) return;
+    const limiterOn = this.song.master.limiter !== false;
+    const calculatedGain = this.song.master.gain * this.masterVolume;
+    this.master.gain.setTargetAtTime(calculatedGain, this.context.currentTime, 0.025);
+    this.compressor.threshold.setTargetAtTime(limiterOn ? -18 : 0, this.context.currentTime, 0.04);
+    this.compressor.knee.setTargetAtTime(limiterOn ? 22 : 0, this.context.currentTime, 0.04);
+    this.compressor.ratio.setTargetAtTime(limiterOn ? 7 : 1, this.context.currentTime, 0.04);
+    this.compressor.attack.setTargetAtTime(limiterOn ? 0.004 : 0.02, this.context.currentTime, 0.04);
+    this.compressor.release.setTargetAtTime(limiterOn ? 0.18 : 0.25, this.context.currentTime, 0.04);
+  }
+
+  private applyVinylAmount(amount: number) {
+    if (!this.vinylGain || !this.context) return;
+    const value = Math.max(0, Math.min(1, amount)) * 0.18;
+    this.vinylGain.gain.setTargetAtTime(value, this.context.currentTime, 0.05);
+  }
+
+  private stopVoices() {
+    if (!this.context) {
+      this.voices = [];
+      return;
+    }
+    const now = this.context.currentTime;
+    for (const voice of this.voices) {
+      voice.silence(now);
+      voice.stop(now);
+    }
+    this.voices = [];
   }
 
   private clearTimer() {
@@ -399,14 +839,100 @@ export class AudioEngine {
   }
 }
 
-function uniqueBy<T>(items: T[], key: (item: T) => string) {
-  const seen = new Set<string>();
-  return items.filter((item) => {
-    const value = key(item);
-    if (seen.has(value)) return false;
-    seen.add(value);
-    return true;
-  });
+function scheduleDuckDip(node: GainNode, when: number, amount: number) {
+  const dipTo = Math.max(0.05, 1 - amount);
+  node.gain.cancelScheduledValues(when);
+  node.gain.setValueAtTime(node.gain.value || 1, when);
+  node.gain.linearRampToValueAtTime(dipTo, when + 0.012);
+  node.gain.setTargetAtTime(1, when + 0.05, 0.09);
+}
+
+function scheduleParamAutomation({
+  context,
+  param,
+  points,
+  song,
+  tempoMultiplier,
+  songOffset,
+  fallbackValue,
+  minValue,
+  maxValue
+}: {
+  context: AudioContext;
+  param: AudioParam;
+  points?: AutomationPoint[];
+  song: Song;
+  tempoMultiplier: number;
+  songOffset: number;
+  fallbackValue: number;
+  minValue: number;
+  maxValue: number;
+}) {
+  const now = context.currentTime;
+  const sorted = [...(points ?? [])].sort(
+    (a, b) => musicalTimeToSeconds(a.time, song, tempoMultiplier) - musicalTimeToSeconds(b.time, song, tempoMultiplier)
+  );
+  const currentPoint = [...sorted]
+    .reverse()
+    .find((point) => musicalTimeToSeconds(point.time, song, tempoMultiplier) <= songOffset);
+  const startValue = clamp(currentPoint?.value ?? fallbackValue, minValue, maxValue);
+
+  param.cancelScheduledValues(now);
+  param.setValueAtTime(startValue, now);
+
+  for (const point of sorted) {
+    const songTime = musicalTimeToSeconds(point.time, song, tempoMultiplier);
+    if (songTime <= songOffset) continue;
+    const audioTime = now + (songTime - songOffset);
+    param.linearRampToValueAtTime(clamp(point.value, minValue, maxValue), audioTime);
+  }
+}
+
+function reverbSendLevel(amount = 0) {
+  return Math.pow(Math.max(0, Math.min(1, amount)), 1.4) * 0.72;
+}
+
+function makeImpulseResponse(context: AudioContext, seconds: number, decay: number) {
+  const length = Math.max(1, Math.floor(context.sampleRate * seconds));
+  const impulse = context.createBuffer(2, length, context.sampleRate);
+
+  for (let channel = 0; channel < impulse.numberOfChannels; channel += 1) {
+    const data = impulse.getChannelData(channel);
+    for (let i = 0; i < length; i += 1) {
+      const progress = i / length;
+      const noise = Math.random() * 2 - 1;
+      data[i] = noise * Math.pow(1 - progress, decay);
+    }
+  }
+
+  return impulse;
+}
+
+function disconnectNode(node: AudioNode) {
+  try {
+    node.disconnect();
+  } catch {
+  }
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function unique<T>(items: T[]) {
+  return Array.from(new Set(items));
+}
+
+function makeSaturationCurve(amount: number): Float32Array<ArrayBuffer> {
+  const samples = 1024;
+  const buffer = new ArrayBuffer(samples * Float32Array.BYTES_PER_ELEMENT);
+  const curve = new Float32Array(buffer);
+  const k = 1 + amount * 18;
+  for (let i = 0; i < samples; i += 1) {
+    const x = (i * 2) / samples - 1;
+    curve[i] = Math.tanh(k * x) / Math.tanh(k);
+  }
+  return curve;
 }
 
 function applyOctave(pitch: string | number, octaveShift = 0) {
@@ -418,6 +944,16 @@ function swingOffset(time: string | number, song: Song, swing = 0) {
   if (!swing || typeof time !== "string" || !/^\d+:\d+(:\d+)?$/.test(time)) return 0;
   const beat = musicalTimeToSeconds(time, song) / (60 / song.tempo);
   return Math.round(beat * 2) % 2 === 1 ? swing * (60 / song.tempo) : 0;
+}
+
+function isKickPitch(pitch: string | number): boolean {
+  if (typeof pitch !== "string") return false;
+  return kickAliases.has(pitch.toLowerCase());
+}
+
+function safeFreqPitch(pitch: string | number): string | number {
+  if (typeof pitch === "number") return pitch;
+  return /^[A-G](#|b)?-?\d$/.test(pitch) ? pitch : "C4";
 }
 
 function seededNoise(id: string) {

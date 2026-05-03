@@ -7,8 +7,8 @@ master:
   gain: 0.82
   limiter: true
 sections:
-  - { id: opening, name: First Light, start: 1:1, duration: 8m, scene: aurora, intensity: 0.7 }
-  - { id: ascent, name: Orbit Bloom, start: 9:1, duration: 8m, scene: cathedral, intensity: 1.0 }
+  - { id: intro, name: Intro, start: 1:1, duration: 8m, scene: aurora, intensity: 0.7 }
+  - { id: outro, name: Outro, start: 9:1, duration: 8m, scene: cathedral, intensity: 1.0 }
 trackOrder:
   - bass
   - piano

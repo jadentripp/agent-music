@@ -1,0 +1,14 @@
+id: texture
+name: Air Pad
+instrument: glass_pad
+gain: 0.15
+reverb: 0.6
+lowpass: 3200
+highpass: 220
+duck: kick
+duckAmount: 0.15
+notes:
+  - { time: 5:1, duration: 8m, pitches: [Ab4, C5, G5], velocity: 0.30, articulation: sustain, strum: 0.04 }
+  - { time: 13:1, duration: 8m, pitches: [F4, Ab4, Eb5], velocity: 0.25, articulation: sustain, strum: 0.05 }
+  - { time: 21:1, duration: 8m, pitches: [Ab4, C5, G5], velocity: 0.35, articulation: sustain, strum: 0.04 }
+  - { time: 29:1, duration: 8m, pitches: [Ab4, C5, G5], velocity: 0.20, articulation: sustain, strum: 0.06 }

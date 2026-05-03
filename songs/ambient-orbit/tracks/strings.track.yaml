@@ -11,6 +11,15 @@ gain: 0.48
 pan: 0.16
 reverb: 0.8
 humanize: 0.018
+automation:
+  gain:
+    - { time: 1:1, value: 0.58 }
+    - { time: 9:1, value: 0.86 }
+    - { time: 15:1, value: 0.52 }
+  filter:
+    - { time: 1:1, value: 1800 }
+    - { time: 9:1, value: 4200 }
+    - { time: 15:1, value: 2200 }
 notes:
   - { time: 1:1, duration: 4m, pitch: G3, velocity: 0.34, articulation: legato }
   - { time: 1:1, duration: 4m, pitch: D4, velocity: 0.3, articulation: legato }

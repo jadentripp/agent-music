@@ -1,0 +1,29 @@
+id: cello
+name: Soul Cello
+instrument: solo_cello
+sound: { soundfont: cello, attack: 0.12, decay: 0.3, sustain: 0.82, release: 1.2 }
+gain: 0.55
+pan: 0.22
+reverb: 0.5
+highpass: 200
+duck: kick
+duckAmount: 0.18
+humanize: 0.02
+notes:
+  # Verse 1
+  - { time: 9:1, duration: 2m, pitch: F3, velocity: 0.45, articulation: sustain }
+  - { time: 10:3, duration: 2n, pitch: G3, velocity: 0.40, articulation: legato }
+  - { time: 11:1, duration: 1m, pitch: Ab3, velocity: 0.48, articulation: sustain }
+  - { time: 12:1, duration: 2n, pitch: Bb3, velocity: 0.42, articulation: legato }
+  - { time: 12:3, duration: 2n, pitch: C4, velocity: 0.50, articulation: sustain }
+
+  # Verse 2 (Peak)
+  - { time: 21:1, duration: 2m, pitch: F3, velocity: 0.55, articulation: sustain }
+  - { time: 23:1, duration: 1m, pitch: G3, velocity: 0.50, articulation: legato }
+  - { time: 24:1, duration: 1m, pitch: Ab3, velocity: 0.58, articulation: sustain }
+  - { time: 25:1, duration: 2m, pitch: C4, velocity: 0.60, articulation: sustain }
+  - { time: 27:1, duration: 2m, pitch: Eb4, velocity: 0.55, articulation: legato }
+
+  # Sunset Outro
+  - { time: 29:1, duration: 4m, pitch: F2, velocity: 0.35, articulation: sustain }
+  - { time: 33:1, duration: 4m, pitch: F2, velocity: 0.25, articulation: sustain }

@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+script="$0"
+
+while [ -L "$script" ]; do
+  target="$(readlink "$script")"
+  case "$target" in
+    /*) script="$target" ;;
+    *) script="$(dirname "$script")/$target" ;;
+  esac
+done
+
+root="$(cd "$(dirname "$script")" && pwd -P)"
+exec bun run "$root/src/songctl.ts" "$@"

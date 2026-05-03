@@ -11,6 +11,11 @@ gain: 0.56
 pan: -0.14
 reverb: 0.62
 humanize: 0.026
+automation:
+  gain:
+    - { time: 1:1, value: 0.72 }
+    - { time: 9:1, value: 0.92 }
+    - { time: 15:1, value: 0.62 }
 notes:
   - { time: 1:1, duration: 2n, pitch: G3, velocity: 0.32 }
   - { time: 1:1, duration: 2n, pitch: D4, velocity: 0.28, strum: 0.025 }

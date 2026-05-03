@@ -1,0 +1,20 @@
+title: "Midnight Groove"
+tempo: 88
+key: F minor
+timeSignature: 4/4
+master:
+  gain: 0.78
+  limiter: true
+  vinyl: 0.22
+sections:
+  - { id: intro, name: Tape Intro, start: 1:1, duration: 4m, scene: aurora, intensity: 0.6 }
+  - { id: verse1, name: Verse 1, start: 5:1, duration: 8m, scene: nebula, intensity: 1.0 }
+  - { id: breakdown, name: Solar Shift, start: 13:1, duration: 8m, scene: aurora, intensity: 0.8 }
+  - { id: verse2, name: Verse 2, start: 21:1, duration: 8m, scene: nebula, intensity: 1.2 }
+  - { id: outro, name: Sunset Outro, start: 29:1, duration: 8m, scene: cathedral, intensity: 0.5 }
+trackOrder:
+  - drums
+  - bass
+  - rhodes
+  - texture
+  - cello

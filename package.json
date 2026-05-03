@@ -5,10 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc && vite build",
+    "build": "bunx tsc && bunx vite build",
+    "check": "bun run audit:music && bun run build",
+    "audit:music": "bun scripts/audit-music.mjs",
+    "samples:sync": "bun scripts/sync-sample-packs.mjs",
+    "samples:vsco": "bun scripts/install-vsco-samples.mjs",
+    "samples:drums": "bun scripts/install-pro-drums.mjs",
+    "yaml": "bun scripts/author-yaml.mjs",
+    "yaml:check": "bun scripts/author-yaml.mjs check",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
+    "@audio-samples/piano-velocity8": "1.0.5",
     "@vitejs/plugin-react": "^4.3.4",
     "js-yaml": "^4.1.0",
     "lucide-react": "^0.468.0",

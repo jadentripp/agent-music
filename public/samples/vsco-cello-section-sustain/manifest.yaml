@@ -1,0 +1,31 @@
+name: VSCO 2 CE Cello Section Sustain
+kind: solo_cello
+baseUrl: /samples/vsco-cello-section-sustain/
+regions:
+  - { sample: susvib_C1_v1_1.wav, root: C1, lokey: 23, hikey: 26, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: C1-v1 }
+  - { sample: susvib_C1_v3_1.wav, root: C1, lokey: 23, hikey: 26, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: C1-v3 }
+  - { sample: susvib_E1_v1_1.wav, root: E1, lokey: 27, hikey: 29, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: E1-v1 }
+  - { sample: susvib_E1_v1_2.wav, root: E1, lokey: 27, hikey: 29, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: E1-v1 }
+  - { sample: susvib_E1_v3_1.wav, root: E1, lokey: 27, hikey: 29, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: E1-v3 }
+  - { sample: susvib_G1_v1_1.wav, root: G1, lokey: 30, hikey: 33, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: G1-v1 }
+  - { sample: susvib_G1_v3_1.wav, root: G1, lokey: 30, hikey: 33, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: G1-v3 }
+  - { sample: susvib_B1_v1_1.wav, root: B1, lokey: 34, hikey: 36, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: B1-v1 }
+  - { sample: susvib_B1_v3_1.wav, root: B1, lokey: 34, hikey: 36, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: B1-v3 }
+  - { sample: susvib_D2_v1_1.wav, root: D2, lokey: 37, hikey: 39, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: D2-v1 }
+  - { sample: susvib_D2_v3_1.wav, root: D2, lokey: 37, hikey: 39, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: D2-v3 }
+  - { sample: susvib_F2_v1_1.wav, root: F2, lokey: 40, hikey: 43, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: F2-v1 }
+  - { sample: susvib_F2_v3_1.wav, root: F2, lokey: 40, hikey: 43, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: F2-v3 }
+  - { sample: susvib_A2_v1_1.wav, root: A2, lokey: 44, hikey: 46, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: A2-v1 }
+  - { sample: susvib_A2_v3_1.wav, root: A2, lokey: 44, hikey: 46, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: A2-v3 }
+  - { sample: susvib_C3_v1_1.wav, root: C3, lokey: 47, hikey: 50, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: C3-v1 }
+  - { sample: susvib_C3_v3_1.wav, root: C3, lokey: 47, hikey: 50, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: C3-v3 }
+  - { sample: susvib_E3_v1_1.wav, root: E3, lokey: 51, hikey: 53, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: E3-v1 }
+  - { sample: susvib_E3_v3_1.wav, root: E3, lokey: 51, hikey: 53, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: E3-v3 }
+  - { sample: susvib_G3_v1_1.wav, root: G3, lokey: 54, hikey: 57, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: G3-v1 }
+  - { sample: susvib_G3_v3_1.wav, root: G3, lokey: 54, hikey: 57, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: G3-v3 }
+  - { sample: susvib_B3_v1_1.wav, root: B3, lokey: 58, hikey: 60, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: B3-v1 }
+  - { sample: susvib_B3_v3_1.wav, root: B3, lokey: 58, hikey: 60, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: B3-v3 }
+  - { sample: susvib_D4_v1_1.wav, root: D4, lokey: 61, hikey: 63, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: D4-v1 }
+  - { sample: susvib_D4_v3_1.wav, root: D4, lokey: 61, hikey: 63, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: D4-v3 }
+  - { sample: susvib_F4_v1_1.wav, root: F4, lokey: 64, hikey: 66, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: F4-v1 }
+  - { sample: susvib_F4_v3_1.wav, root: F4, lokey: 64, hikey: 66, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: F4-v3 }

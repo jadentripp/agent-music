@@ -1,0 +1,17 @@
+name: Dusty Kit
+kind: drum_kit
+baseUrl: /samples/dusty-kit/
+regions:
+  - { lane: kick, sample: kick-soft.wav, lovel: 0, hivel: 0.72, gain: 1.0, oneShot: true, roundRobin: kick }
+  - { lane: kick, sample: kick-hard.wav, lovel: 0.6, hivel: 1, gain: 1.0, oneShot: true, roundRobin: kick }
+  - { lane: snare, sample: snare-soft.wav, lovel: 0, hivel: 0.7, gain: 0.86, oneShot: true, roundRobin: snare }
+  - { lane: snare, sample: snare-hard.wav, lovel: 0.58, hivel: 1, gain: 0.92, oneShot: true, roundRobin: snare }
+  - { lane: clap, sample: clap.wav, lovel: 0, hivel: 1, gain: 0.82, oneShot: true }
+  - { lane: hat, sample: hat-1.wav, lovel: 0, hivel: 1, gain: 0.54, oneShot: true, roundRobin: hat }
+  - { lane: hat, sample: hat-2.wav, lovel: 0, hivel: 1, gain: 0.5, oneShot: true, roundRobin: hat }
+  - { lane: closed_hat, sample: hat-1.wav, lovel: 0, hivel: 1, gain: 0.54, oneShot: true, roundRobin: hat }
+  - { lane: open_hat, sample: open-hat.wav, lovel: 0, hivel: 1, gain: 0.56, oneShot: true }
+  - { lane: rim, sample: rim.wav, lovel: 0, hivel: 1, gain: 0.72, oneShot: true }
+  - { lane: perc, sample: perc.wav, lovel: 0, hivel: 1, gain: 0.72, oneShot: true }
+  - { lane: tom, sample: tom.wav, lovel: 0, hivel: 1, gain: 0.8, oneShot: true }
+  - { lane: crash, sample: crash.wav, lovel: 0, hivel: 1, gain: 0.6, oneShot: true }

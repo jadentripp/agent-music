@@ -1,0 +1,739 @@
+name: Virtuosity Kit
+kind: drum_kit
+source: Virtuosity Drums by Versilian Studios and Karoryfer Samples, CC0-1.0
+baseUrl: /samples/virtuosity-kit/
+regions:
+  - lane: kick
+    layer: close
+    sample: kickmic_kick_snon_vl2_rr1.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 1.06
+    oneShot: true
+    roundRobin: kick:close
+  - lane: kick
+    layer: close
+    sample: kickmic_kick_snon_vl2_rr2.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 1.06
+    oneShot: true
+    roundRobin: kick:close
+  - lane: kick
+    layer: close
+    sample: kickmic_kick_snon_vl3_rr1.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 1.06
+    oneShot: true
+    roundRobin: kick:close
+  - lane: kick
+    layer: close
+    sample: kickmic_kick_snon_vl3_rr2.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 1.06
+    oneShot: true
+    roundRobin: kick:close
+  - lane: kick
+    layer: close
+    sample: kickmic_kick_snon_vl4_rr1.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 1.06
+    oneShot: true
+    roundRobin: kick:close
+  - lane: kick
+    layer: close
+    sample: kickmic_kick_snon_vl4_rr2.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 1.06
+    oneShot: true
+    roundRobin: kick:close
+  - lane: kick
+    layer: overhead
+    sample: oh_kick_snon_vl2_rr1.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.34
+    oneShot: true
+    roundRobin: kick:overhead
+  - lane: kick
+    layer: overhead
+    sample: oh_kick_snon_vl2_rr2.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.34
+    oneShot: true
+    roundRobin: kick:overhead
+  - lane: kick
+    layer: overhead
+    sample: oh_kick_snon_vl3_rr1.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.34
+    oneShot: true
+    roundRobin: kick:overhead
+  - lane: kick
+    layer: overhead
+    sample: oh_kick_snon_vl3_rr2.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.34
+    oneShot: true
+    roundRobin: kick:overhead
+  - lane: kick
+    layer: overhead
+    sample: oh_kick_snon_vl4_rr1.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.34
+    oneShot: true
+    roundRobin: kick:overhead
+  - lane: kick
+    layer: overhead
+    sample: oh_kick_snon_vl4_rr2.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.34
+    oneShot: true
+    roundRobin: kick:overhead
+  - lane: snare
+    layer: close
+    sample: snaremic_snare_center_vl12.flac
+    lovel: 0
+    hivel: 0.201
+    gain: 1
+    oneShot: true
+  - lane: snare
+    layer: close
+    sample: snaremic_snare_center_vl18.flac
+    lovel: 0.2
+    hivel: 0.401
+    gain: 1
+    oneShot: true
+  - lane: snare
+    layer: close
+    sample: snaremic_snare_center_vl24.flac
+    lovel: 0.4
+    hivel: 0.601
+    gain: 1
+    oneShot: true
+  - lane: snare
+    layer: close
+    sample: snaremic_snare_center_vl30.flac
+    lovel: 0.6
+    hivel: 0.801
+    gain: 1
+    oneShot: true
+  - lane: snare
+    layer: close
+    sample: snaremic_snare_center_vl34.flac
+    lovel: 0.8
+    hivel: 1
+    gain: 1
+    oneShot: true
+  - lane: snare
+    layer: overhead
+    sample: oh_snare_center_vl12.flac
+    lovel: 0
+    hivel: 0.201
+    gain: 0.42
+    oneShot: true
+  - lane: snare
+    layer: overhead
+    sample: oh_snare_center_vl18.flac
+    lovel: 0.2
+    hivel: 0.401
+    gain: 0.42
+    oneShot: true
+  - lane: snare
+    layer: overhead
+    sample: oh_snare_center_vl24.flac
+    lovel: 0.4
+    hivel: 0.601
+    gain: 0.42
+    oneShot: true
+  - lane: snare
+    layer: overhead
+    sample: oh_snare_center_vl30.flac
+    lovel: 0.6
+    hivel: 0.801
+    gain: 0.42
+    oneShot: true
+  - lane: snare
+    layer: overhead
+    sample: oh_snare_center_vl34.flac
+    lovel: 0.8
+    hivel: 1
+    gain: 0.42
+    oneShot: true
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl2_rr1.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl2_rr2.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl2_rr3.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl2_rr4.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl3_rr1.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl3_rr2.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl3_rr3.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl3_rr4.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl4_rr1.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl4_rr2.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl4_rr3.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: hat
+    layer: overhead
+    sample: oh_hh_closed_vl4_rr4.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.66
+    oneShot: true
+    roundRobin: hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl2_rr1.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl2_rr2.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl2_rr3.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl2_rr4.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl3_rr1.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl3_rr2.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl3_rr3.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl3_rr4.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl4_rr1.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl4_rr2.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl4_rr3.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: closed_hat
+    layer: overhead
+    sample: oh_hh_closed_vl4_rr4.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.66
+    oneShot: true
+    roundRobin: closed_hat:overhead
+  - lane: open_hat
+    layer: overhead
+    sample: oh_hh_open_vl2_rr1.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.62
+    oneShot: true
+    roundRobin: open_hat:overhead
+  - lane: open_hat
+    layer: overhead
+    sample: oh_hh_open_vl2_rr2.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.62
+    oneShot: true
+    roundRobin: open_hat:overhead
+  - lane: open_hat
+    layer: overhead
+    sample: oh_hh_open_vl2_rr3.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.62
+    oneShot: true
+    roundRobin: open_hat:overhead
+  - lane: open_hat
+    layer: overhead
+    sample: oh_hh_open_vl3_rr1.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.62
+    oneShot: true
+    roundRobin: open_hat:overhead
+  - lane: open_hat
+    layer: overhead
+    sample: oh_hh_open_vl3_rr2.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.62
+    oneShot: true
+    roundRobin: open_hat:overhead
+  - lane: open_hat
+    layer: overhead
+    sample: oh_hh_open_vl3_rr3.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.62
+    oneShot: true
+    roundRobin: open_hat:overhead
+  - lane: open_hat
+    layer: overhead
+    sample: oh_hh_open_vl4_rr1.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.62
+    oneShot: true
+    roundRobin: open_hat:overhead
+  - lane: open_hat
+    layer: overhead
+    sample: oh_hh_open_vl4_rr2.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.62
+    oneShot: true
+    roundRobin: open_hat:overhead
+  - lane: open_hat
+    layer: overhead
+    sample: oh_hh_open_vl4_rr3.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.62
+    oneShot: true
+    roundRobin: open_hat:overhead
+  - lane: rim
+    layer: close
+    sample: snaremic_snare_crossstick_vl6.flac
+    lovel: 0
+    hivel: 0.251
+    gain: 0.76
+    oneShot: true
+  - lane: rim
+    layer: close
+    sample: snaremic_snare_crossstick_vl10.flac
+    lovel: 0.25
+    hivel: 0.501
+    gain: 0.76
+    oneShot: true
+  - lane: rim
+    layer: close
+    sample: snaremic_snare_crossstick_vl14.flac
+    lovel: 0.5
+    hivel: 0.751
+    gain: 0.76
+    oneShot: true
+  - lane: rim
+    layer: close
+    sample: snaremic_snare_crossstick_vl16.flac
+    lovel: 0.75
+    hivel: 1
+    gain: 0.76
+    oneShot: true
+  - lane: perc
+    layer: close
+    sample: snaremic_snare_stickshot1_vl3.flac
+    lovel: 0
+    hivel: 0.251
+    gain: 0.56
+    oneShot: true
+  - lane: perc
+    layer: close
+    sample: snaremic_snare_stickshot1_vl5.flac
+    lovel: 0.25
+    hivel: 0.501
+    gain: 0.56
+    oneShot: true
+  - lane: perc
+    layer: close
+    sample: snaremic_snare_stickshot1_vl7.flac
+    lovel: 0.5
+    hivel: 0.751
+    gain: 0.56
+    oneShot: true
+  - lane: perc
+    layer: close
+    sample: snaremic_snare_stickshot1_vl8.flac
+    lovel: 0.75
+    hivel: 1
+    gain: 0.56
+    oneShot: true
+  - lane: tom
+    layer: overhead
+    sample: oh_ltom_center_vl6.flac
+    lovel: 0
+    hivel: 0.251
+    gain: 0.82
+    oneShot: true
+  - lane: tom
+    layer: overhead
+    sample: oh_ltom_center_vl10.flac
+    lovel: 0.25
+    hivel: 0.501
+    gain: 0.82
+    oneShot: true
+  - lane: tom
+    layer: overhead
+    sample: oh_ltom_center_vl13.flac
+    lovel: 0.5
+    hivel: 0.751
+    gain: 0.82
+    oneShot: true
+  - lane: tom
+    layer: overhead
+    sample: oh_ltom_center_vl16.flac
+    lovel: 0.75
+    hivel: 1
+    gain: 0.82
+    oneShot: true
+  - lane: high_tom
+    layer: overhead
+    sample: oh_htom_center_vl6.flac
+    lovel: 0
+    hivel: 0.251
+    gain: 0.78
+    oneShot: true
+  - lane: high_tom
+    layer: overhead
+    sample: oh_htom_center_vl10.flac
+    lovel: 0.25
+    hivel: 0.501
+    gain: 0.78
+    oneShot: true
+  - lane: high_tom
+    layer: overhead
+    sample: oh_htom_center_vl13.flac
+    lovel: 0.5
+    hivel: 0.751
+    gain: 0.78
+    oneShot: true
+  - lane: high_tom
+    layer: overhead
+    sample: oh_htom_center_vl16.flac
+    lovel: 0.75
+    hivel: 1
+    gain: 0.78
+    oneShot: true
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl1_rr1.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl1_rr2.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl1_rr3.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl1_rr4.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl2_rr1.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl2_rr2.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl2_rr3.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl2_rr4.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl3_rr1.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl3_rr2.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl3_rr3.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: ride
+    layer: overhead
+    sample: oh_ride_ride_vl3_rr4.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.56
+    oneShot: true
+    roundRobin: ride:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl1_rr1.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl1_rr2.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl1_rr3.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl1_rr4.flac
+    lovel: 0
+    hivel: 0.334
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl2_rr1.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl2_rr2.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl2_rr3.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl2_rr4.flac
+    lovel: 0.333
+    hivel: 0.668
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl3_rr1.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl3_rr2.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl3_rr3.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead
+  - lane: crash
+    layer: overhead
+    sample: oh_crash_crash_vl3_rr4.flac
+    lovel: 0.667
+    hivel: 1
+    gain: 0.58
+    oneShot: true
+    roundRobin: crash:overhead

@@ -1,0 +1,46 @@
+id: rhodes
+name: Rhodes
+instrument: electric_piano
+sound:
+  soundfont: electric_piano_1
+  attack: 0.012
+  decay: 0.32
+  sustain: 0.62
+  release: 1.05
+gain: 0.48
+pan: -0.16
+reverb: 0.42
+saturation: 0.18
+lowpass: 5600
+highpass: 150
+duck: kick
+duckAmount: 0.36
+humanize: 0.019
+automation:
+  gain:
+    - { time: 1:1, value: 0.2 }
+    - { time: 5:1, value: 0.82 }
+    - { time: 13:1, value: 1.04 }
+    - { time: 17:1, value: 0.62 }
+  filter:
+    - { time: 1:1, value: 2400 }
+    - { time: 5:1, value: 4600 }
+    - { time: 13:1, value: 6400 }
+    - { time: 17:1, value: 3000 }
+notes:
+  - { time: 1:1, duration: 2m, pitches: [C3, Bb3, D4, Eb4], velocity: 0.28, articulation: sustain, strum: 0.018 }
+  - { time: 3:1, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.3, articulation: sustain, strum: 0.016 }
+  - { time: 5:1, duration: 1m, pitches: [C3, G3, Bb3, D4], velocity: 0.48, articulation: sustain, strum: 0.016 }
+  - { time: 6:3, duration: 2n, pitches: [Eb3, G3, Bb3], velocity: 0.34, articulation: legato, strum: 0.012 }
+  - { time: 7:1, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.46, articulation: sustain, strum: 0.016 }
+  - { time: 8:3, duration: 2n, pitches: [G3, Bb3, D4], velocity: 0.34, articulation: legato, strum: 0.01 }
+  - { time: 9:1, duration: 1m, pitches: [F3, Ab3, C4, Eb4], velocity: 0.48, articulation: sustain, strum: 0.017 }
+  - { time: 10:3, duration: 2n, pitches: [Ab3, C4, Eb4], velocity: 0.34, articulation: legato, strum: 0.01 }
+  - { time: 11:1, duration: 1m, pitches: [G3, Bb3, D4, F4], velocity: 0.47, articulation: sustain, strum: 0.016 }
+  - { time: 12:3, duration: 2n, pitches: [Bb3, D4, F4], velocity: 0.33, articulation: legato, strum: 0.01 }
+  - { time: 13:1, duration: 1m, pitches: [C3, Bb3, D4, Eb4], velocity: 0.54, articulation: sustain, strum: 0.018 }
+  - { time: 14:3, duration: 2n, pitches: [G3, Bb3, D4], velocity: 0.38, articulation: legato, strum: 0.012 }
+  - { time: 15:1, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.52, articulation: sustain, strum: 0.018 }
+  - { time: 16:3, duration: 2n, pitches: [G3, Bb3, D4], velocity: 0.36, articulation: legato, strum: 0.012 }
+  - { time: 17:1, duration: 2m, pitches: [F3, Ab3, C4, Eb4], velocity: 0.36, articulation: sustain, strum: 0.02 }
+  - { time: 19:1, duration: 2m, pitches: [G3, Bb3, D4, F4], velocity: 0.32, articulation: sustain, strum: 0.02 }

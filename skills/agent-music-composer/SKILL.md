@@ -20,7 +20,7 @@ Write one instrument at a time. Do not compose a full multi-track song in one pa
 5. For each new track, read the existing tracks first and decide its role. It must leave space for the other parts.
 6. Humanize the one track you are writing: velocity shape, small offsets, articulations, strums, and track-level humanize.
 7. Mix that track against the existing arrangement: gain, pan, envelope, reverb intent, and register.
-8. Validate with `npm run build`; then listen in the browser and revise the music, not just the syntax.
+8. Validate with `bun run check`; then listen in the browser and revise the music, not just the syntax.
 
 The pass is not done until the current instrument has a clear musical role and does not fight the existing parts.
 
@@ -142,6 +142,6 @@ Before calling a song good, check:
 - Do velocities vary musically?
 - Are offsets/humanize subtle rather than chaotic?
 - Does the ending feel intentional?
-- Does `npm run build` pass?
+- Does `bun run check` pass?
 
 If it sounds bad, revise the arrangement first: harmony, register, rhythm, and dynamics matter more than adding more notes.

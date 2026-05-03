@@ -1,5 +1,8 @@
-import type { Song, SongFile } from "../types";
+import type { Song, SongFile, SongMeta, Track } from "../types";
+import { applyGroove, resolveGroove } from "./grooves";
+import { expandPattern } from "./patternExpander";
 import { parseSongMetaYaml, parseTrackYaml } from "./songSchema";
+import { musicalTimeToBeats } from "./timing";
 
 const metaModules = import.meta.glob("../../songs/*/song.yaml", {
   query: "?raw",
@@ -42,7 +45,8 @@ export async function loadSong(file: SongFile): Promise<Song> {
   const tracks = await Promise.all(
     trackEntries.map(async ([path, loader]) => {
       try {
-        return parseTrackYaml((await loader()) as string);
+        const track = parseTrackYaml((await loader()) as string);
+        return prepareTrack(track, meta);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         throw new Error(`${path}\n${message}`);
@@ -62,6 +66,25 @@ export async function loadSong(file: SongFile): Promise<Song> {
     ...meta,
     tracks: orderedTracks
   };
+}
+
+function prepareTrack(track: Track, meta: SongMeta): Track {
+  const beatsPerMeasure = Number(meta.timeSignature.split("/")[0] ?? 4);
+  let notes = [...(track.notes ?? [])];
+
+  if (track.pattern) {
+    const startBeat = musicalTimeToBeats(track.pattern.start ?? "1:1", { timeSignature: meta.timeSignature } as never);
+    notes = [...expandPattern(track.pattern, beatsPerMeasure, startBeat), ...notes];
+  }
+
+  if (track.groove) {
+    const groove = resolveGroove(track.groove);
+    if (groove) {
+      notes = applyGroove(notes, groove, meta.timeSignature);
+    }
+  }
+
+  return { ...track, notes };
 }
 
 function titleFromId(id: string) {

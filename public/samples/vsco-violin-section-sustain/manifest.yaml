@@ -1,0 +1,26 @@
+name: VSCO 2 CE Violin Section Sustain
+kind: cinematic_strings
+baseUrl: /samples/vsco-violin-section-sustain/
+regions:
+  - { sample: VlnEns_susVib_G2_v1.wav, root: G2, lokey: 42, hikey: 44, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: G2-v1 }
+  - { sample: VlnEns_susVib_G2_v2.wav, root: G2, lokey: 42, hikey: 44, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: G2-v2 }
+  - { sample: VlnEns_susVib_A2_v1.wav, root: A2, lokey: 45, hikey: 46, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: A2-v1 }
+  - { sample: VlnEns_susVib_A2_v2.wav, root: A2, lokey: 45, hikey: 46, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: A2-v2 }
+  - { sample: VlnEns_susVib_B2_v1.wav, root: B2, lokey: 47, hikey: 48, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: B2-v1 }
+  - { sample: VlnEns_susVib_B2_v2.wav, root: B2, lokey: 47, hikey: 48, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: B2-v2 }
+  - { sample: VlnEns_susVib_D3_v1.wav, root: D3, lokey: 49, hikey: 52, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: D3-v1 }
+  - { sample: VlnEns_susVib_D3_v2.wav, root: D3, lokey: 49, hikey: 52, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: D3-v2 }
+  - { sample: VlnEns_susVib_Fs3_v1.wav, root: F#3, lokey: 53, hikey: 55, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: F#3-v1 }
+  - { sample: VlnEns_susVib_Fs3_v2.wav, root: F#3, lokey: 53, hikey: 55, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: F#3-v2 }
+  - { sample: VlnEns_susVib_A3_v1.wav, root: A3, lokey: 56, hikey: 58, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: A3-v1 }
+  - { sample: VlnEns_susVib_A3_v2.wav, root: A3, lokey: 56, hikey: 58, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: A3-v2 }
+  - { sample: VlnEns_susVib_C4_v1.wav, root: C4, lokey: 59, hikey: 62, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: C4-v1 }
+  - { sample: VlnEns_susVib_C4_v2.wav, root: C4, lokey: 59, hikey: 62, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: C4-v2 }
+  - { sample: VlnEns_susVib_E4_v1.wav, root: E4, lokey: 63, hikey: 65, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: E4-v1 }
+  - { sample: VlnEns_susVib_E4_v2.wav, root: E4, lokey: 63, hikey: 65, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: E4-v2 }
+  - { sample: VlnEns_susVib_G4_v1.wav, root: G4, lokey: 66, hikey: 69, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: G4-v1 }
+  - { sample: VlnEns_susVib_G4_v2.wav, root: G4, lokey: 66, hikey: 69, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: G4-v2 }
+  - { sample: VlnEns_susVib_B4_v1.wav, root: B4, lokey: 70, hikey: 72, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: B4-v1 }
+  - { sample: VlnEns_susVib_B4_v2.wav, root: B4, lokey: 70, hikey: 72, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: B4-v2 }
+  - { sample: VlnEns_susVib_D5_v1.wav, root: D5, lokey: 73, hikey: 75, lovel: 0, hivel: 0.62, gain: 1, attack: 0.04, release: 1.8, roundRobin: D5-v1 }
+  - { sample: VlnEns_susVib_D5_v2.wav, root: D5, lokey: 73, hikey: 75, lovel: 0.5, hivel: 1, gain: 1, attack: 0.04, release: 1.8, roundRobin: D5-v2 }

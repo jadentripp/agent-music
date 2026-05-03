@@ -5,6 +5,7 @@ sound:
   soundfont: acoustic_bass
 gain: 0.76
 pan: -0.04
+humanize: 0.012
 notes:
   - { time: 1:1, duration: 2n, pitch: A1, velocity: 0.88, articulation: pluck }
   - { time: 1:3, duration: 2n, pitch: A1, velocity: 0.72, articulation: pluck }

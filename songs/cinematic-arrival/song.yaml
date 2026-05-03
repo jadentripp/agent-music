@@ -8,19 +8,19 @@ master:
   limiter: true
 sections:
   - id: intro
-    name: Low Light
+    name: Intro
     start: 1:1
     duration: 4m
     scene: aurora
     intensity: 0.72
   - id: bloom
-    name: Strings Bloom
+    name: Build
     start: 5:1
     duration: 4m
     scene: cathedral
     intensity: 1.08
   - id: lift
-    name: Final Lift
+    name: Climax
     start: 9:1
     duration: 4m
     scene: nebula

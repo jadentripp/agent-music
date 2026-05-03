@@ -12,7 +12,9 @@ const noteSchema = z.object({
   velocity: z.number().min(0).max(1).optional(),
   articulation: z.enum(["legato", "staccato", "marcato", "sustain", "pluck"]).optional(),
   offset: z.number().min(-0.25).max(0.25).optional(),
-  strum: z.number().min(0).max(0.25).optional()
+  strum: z.number().min(0).max(0.25).optional(),
+  ghost: z.boolean().optional(),
+  flam: z.number().min(0).max(0.05).optional()
 }).refine((note) => note.pitch !== undefined || note.pitches !== undefined, {
   message: "Provide pitch or pitches"
 });
@@ -27,9 +29,11 @@ const instrumentSchema = z.enum([
   "cinematic_strings",
   "upright_bass",
   "hybrid_drums",
+  "drum_kit",
   "glass_pad",
   "solo_cello",
-  "analog_lead"
+  "analog_lead",
+  "electric_piano"
 ]);
 
 const sectionSchema = z.object({
@@ -41,34 +45,75 @@ const sectionSchema = z.object({
   intensity: z.number().min(0).max(2).optional()
 });
 
+const kitVoiceSchema = z.object({
+  soundfont: z.string().min(1).optional(),
+  pitch: z.union([z.string().min(1), z.number()]).optional(),
+  gain: z.number().min(0).max(2).optional()
+});
+
+const patternSchema = z.object({
+  resolution: z.number().int().min(2).max(64).optional(),
+  bars: z.number().int().min(1).max(64).optional(),
+  repeat: z.number().int().min(1).max(64).optional(),
+  start: timeValue.optional(),
+  swing: z.number().min(0).max(0.4).optional(),
+  velocity: z
+    .object({
+      default: z.number().min(0).max(1).optional(),
+      ghost: z.number().min(0).max(1).optional(),
+      accent: z.number().min(0).max(1).optional()
+    })
+    .optional(),
+  lanes: z.record(z.string().min(1), z.string())
+});
+
+const grooveSchema = z.union([
+  z.string().min(1),
+  z.object({
+    resolution: z.number().int().min(2).max(64).optional(),
+    offsets: z.array(z.number().min(-200).max(200)).min(1)
+  })
+]);
+
 const trackSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   instrument: instrumentSchema,
   sound: z
     .object({
-      source: z.enum(["soundfont", "fallback"]).optional(),
+      source: z.enum(["soundfont", "sample_pack", "fallback"]).optional(),
       soundfont: z.string().min(1).optional(),
+      samplePack: z.string().min(1).optional(),
       attack: z.number().min(0).max(5).optional(),
       decay: z.number().min(0).max(5).optional(),
       sustain: z.number().min(0).max(1).optional(),
       release: z.number().min(0).max(8).optional()
     })
     .optional(),
+  kit: z.record(z.string().min(1), kitVoiceSchema).optional(),
+  pattern: patternSchema.optional(),
+  groove: grooveSchema.optional(),
   gain: z.number().min(0).max(2).optional(),
   pan: z.number().min(-1).max(1).optional(),
   reverb: z.number().min(0).max(1).optional(),
   delay: z.number().min(0).max(1).optional(),
+  saturation: z.number().min(0).max(1).optional(),
+  lowpass: z.number().min(40).max(20000).optional(),
+  highpass: z.number().min(20).max(8000).optional(),
+  duck: z.string().min(1).optional(),
+  duckAmount: z.number().min(0).max(1).optional(),
   humanize: z.number().min(0).max(0.08).optional(),
   swing: z.number().min(0).max(0.35).optional(),
   octave: z.number().int().min(-3).max(3).optional(),
-  notes: z.array(noteSchema).min(1),
+  notes: z.array(noteSchema).optional().default([]),
   automation: z
     .object({
       gain: z.array(automationPointSchema).optional(),
       filter: z.array(automationPointSchema).optional()
     })
     .optional()
+}).refine((track) => (track.notes && track.notes.length > 0) || track.pattern, {
+  message: "Provide notes or a pattern"
 });
 
 const songMetaSchema = z.object({
@@ -79,7 +124,8 @@ const songMetaSchema = z.object({
   timeSignature: z.string().regex(/^\d+\/\d+$/),
   master: z.object({
     gain: z.number().min(0).max(1.2),
-    limiter: z.boolean().optional()
+    limiter: z.boolean().optional(),
+    vinyl: z.number().min(0).max(1).optional()
   }),
   sections: z.array(sectionSchema).min(1),
   trackOrder: z.array(z.string().min(1)).optional()
@@ -104,7 +150,7 @@ export function parseTrackYaml(source: string): Track {
     throw new Error(formatIssues(parsed.error.issues));
   }
 
-  return parsed.data;
+  return parsed.data as Track;
 }
 
 function formatIssues(issues: z.ZodIssue[]) {

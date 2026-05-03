@@ -1,0 +1,34 @@
+name: Salamander Grand Piano V3 Velocity 8
+kind: grand_piano
+baseUrl: /samples/salamander-grand-v8/
+regions:
+  - { sample: A0v8.ogg, root: A0, lokey: 21, hikey: 22, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: C1v8.ogg, root: C1, lokey: 23, hikey: 25, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Ds1v8.ogg, root: D#1, lokey: 26, hikey: 28, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Fs1v8.ogg, root: F#1, lokey: 29, hikey: 31, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: A1v8.ogg, root: A1, lokey: 32, hikey: 34, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: C2v8.ogg, root: C2, lokey: 35, hikey: 37, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Ds2v8.ogg, root: D#2, lokey: 38, hikey: 40, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Fs2v8.ogg, root: F#2, lokey: 41, hikey: 43, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: A2v8.ogg, root: A2, lokey: 44, hikey: 46, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: C3v8.ogg, root: C3, lokey: 47, hikey: 49, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Ds3v8.ogg, root: D#3, lokey: 50, hikey: 52, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Fs3v8.ogg, root: F#3, lokey: 53, hikey: 55, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: A3v8.ogg, root: A3, lokey: 56, hikey: 58, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: C4v8.ogg, root: C4, lokey: 59, hikey: 61, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Ds4v8.ogg, root: D#4, lokey: 62, hikey: 64, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Fs4v8.ogg, root: F#4, lokey: 65, hikey: 67, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: A4v8.ogg, root: A4, lokey: 68, hikey: 70, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: C5v8.ogg, root: C5, lokey: 71, hikey: 73, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Ds5v8.ogg, root: D#5, lokey: 74, hikey: 76, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Fs5v8.ogg, root: F#5, lokey: 77, hikey: 79, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: A5v8.ogg, root: A5, lokey: 80, hikey: 82, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: C6v8.ogg, root: C6, lokey: 83, hikey: 85, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Ds6v8.ogg, root: D#6, lokey: 86, hikey: 88, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Fs6v8.ogg, root: F#6, lokey: 89, hikey: 91, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: A6v8.ogg, root: A6, lokey: 92, hikey: 94, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: C7v8.ogg, root: C7, lokey: 95, hikey: 97, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Ds7v8.ogg, root: D#7, lokey: 98, hikey: 100, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: Fs7v8.ogg, root: F#7, lokey: 101, hikey: 103, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: A7v8.ogg, root: A7, lokey: 104, hikey: 106, lovel: 0, hivel: 1, gain: 1, release: 1.4 }
+  - { sample: C8v8.ogg, root: C8, lokey: 107, hikey: 108, lovel: 0, hivel: 1, gain: 1, release: 1.4 }

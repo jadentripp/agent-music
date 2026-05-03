@@ -1,0 +1,21 @@
+{
+  "name": "agent-music-song-storage",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "songctl": "./songctl"
+  },
+  "scripts": {
+    "songctl": "bun run src/songctl.ts",
+    "check": "bun run src/songctl.ts validate examples/minimal-song",
+    "smoke": "rm -rf .data /tmp/songctl-export work/smoke-song && bun run src/songctl.ts new \"Smoke Song\" && bun run src/songctl.ts open smoke-song /tmp/songctl-export && bun run src/songctl.ts validate /tmp/songctl-export"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.2",
+    "@types/js-yaml": "^4.0.9"
+  }
+}

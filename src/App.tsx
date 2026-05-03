@@ -1,5 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import {
+  ChevronLeft,
+  ChevronRight,
   Expand,
   Gauge,
   Headphones,
@@ -20,7 +23,7 @@ import type { MixerState, Section, Song } from "./types";
 
 export default function App() {
   const engineRef = useRef(new AudioEngine());
-  const [selectedId, setSelectedId] = useState(songFiles[0]?.id ?? "");
+  const [selectedId, setSelectedId] = useState(songFiles.some((file) => file.id === "copper-rain") ? "copper-rain" : songFiles[0]?.id ?? "");
   const [song, setSong] = useState<Song | null>(null);
   const [error, setError] = useState("");
   const [playing, setPlaying] = useState(false);
@@ -30,10 +33,11 @@ export default function App() {
   const [mixer, setMixer] = useState<MixerState>({});
   const [masterVolume, setMasterVolume] = useState(0.86);
   const [tempoMultiplier, setTempoMultiplier] = useState(1);
-  const [loopSectionId, setLoopSectionId] = useState("");
+  const [loopEnabled, setLoopEnabled] = useState(true);
   const [visualIntensity, setVisualIntensity] = useState(1);
+  const [mixerOpen, setMixerOpen] = useState(false);
 
-  const selectedFile = useMemo(() => songFiles.find((file) => file.id === selectedId), [selectedId]);
+  const selectedFile = songFiles.find((file) => file.id === selectedId);
 
   useEffect(() => {
     if (!selectedFile) return;
@@ -57,8 +61,8 @@ export default function App() {
         setDuration(songDuration(loaded) / tempoMultiplier);
         setCurrentTime(0);
         setPlaying(false);
-        setLoopSectionId("");
         engineRef.current.loadSong(loaded, nextMixer, tempoMultiplier);
+        engineRef.current.setLoopEnabled(loopEnabled);
       })
       .catch((loadError) => {
         setSong(null);
@@ -80,8 +84,8 @@ export default function App() {
   }, [masterVolume]);
 
   useEffect(() => {
-    engineRef.current.setLoopSection(loopSectionId || undefined);
-  }, [loopSectionId]);
+    engineRef.current.setLoopEnabled(loopEnabled);
+  }, [loopEnabled]);
 
   const tick = () => {
     const engine = engineRef.current;
@@ -100,10 +104,38 @@ export default function App() {
       return;
     }
 
-    await engine.play(tick);
+    setError("");
+    // Flip the button state to "playing" *before* awaiting engine.play(). The
+    // first play of a song can take a moment while soundfonts/samples fetch;
+    // without this, the button still reads "Play" during that window and a
+    // user click triggers a second play() instead of a pause(). The engine's
+    // play-token guard makes this safe — if the user pauses mid-load, the
+    // in-flight play() aborts before the scheduler starts.
     setPlaying(true);
-    tick();
+    try {
+      await engine.play(tick);
+      tick();
+    } catch (playError) {
+      setPlaying(false);
+      setError(playError instanceof Error ? playError.message : String(playError));
+    }
   };
+
+  const togglePlaybackRef = useRef(togglePlayback);
+  togglePlaybackRef.current = togglePlayback;
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.code !== "Space" && event.key !== " ") return;
+      const target = event.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || tag === "BUTTON" || target?.isContentEditable) return;
+      event.preventDefault();
+      void togglePlaybackRef.current();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   const seek = (value: number) => {
     engineRef.current.seek(value);
@@ -128,13 +160,15 @@ export default function App() {
   };
 
   const restart = () => {
-    engineRef.current.seek(loopSectionId && song ? sectionStart(song, loopSectionId, tempoMultiplier) : 0);
+    engineRef.current.seek(0);
     tick();
   };
 
   const goFullscreen = () => {
     void document.documentElement.requestFullscreen?.();
   };
+
+  const progress = duration > 0 ? Math.min(100, Math.max(0, (currentTime / duration) * 100)) : 0;
 
   return (
     <main className="studio-shell">
@@ -150,27 +184,41 @@ export default function App() {
           <p className="eyebrow">Agent-Written Music Studio</p>
           <h1>{song?.title ?? "No song loaded"}</h1>
         </div>
-        <label className="song-picker">
-          <ListMusic size={18} />
-          <select value={selectedId} onChange={(event) => setSelectedId(event.target.value)}>
-            {songFiles.map((file) => (
-              <option key={file.id} value={file.id}>
-                {file.title}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="topbar-controls">
+          <label className="song-picker">
+            <ListMusic size={18} />
+            <select value={selectedId} onChange={(event) => setSelectedId(event.target.value)}>
+              {songFiles.map((file) => (
+                <option key={file.id} value={file.id}>
+                  {file.title}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className="song-status">
+            <span>{song?.key ?? "Key"}</span>
+            <span>{song?.tempo ?? 0} BPM</span>
+            <span>{loopEnabled ? "Loop on" : "Loop off"}</span>
+          </div>
+        </div>
       </header>
 
       <section className="transport-panel" aria-label="Playback controls">
-        <button className="primary-button" onClick={togglePlayback} disabled={!song}>
-          {playing ? <Pause size={22} /> : <Play size={22} />}
-        </button>
-        <button className="icon-button" onClick={restart} disabled={!song} title="Restart">
-          <SkipBack size={18} />
-        </button>
-        <div className="timeline">
-          <span>{formatTime(currentTime)}</span>
+        <div className="transport-main">
+          <button className="primary-button" onClick={togglePlayback} disabled={!song} title={playing ? "Pause" : "Play"}>
+            {playing ? <Pause size={24} /> : <Play size={24} />}
+          </button>
+          <button className="icon-button" onClick={restart} disabled={!song} title="Restart">
+            <SkipBack size={18} />
+          </button>
+        </div>
+        <div className="transport-readout">
+          <div className="transport-copy">
+            <strong>{activeSection?.name ?? song?.sections[0]?.name ?? "Ready"}</strong>
+            <span>{playing ? "Playing" : "Paused"} · {formatTime(currentTime)} / {formatTime(duration)}</span>
+          </div>
+          <div className="timeline" style={{ "--progress": `${progress}%` } as CSSProperties}>
+            <span>{formatTime(currentTime)}</span>
           <input
             type="range"
             min={0}
@@ -179,22 +227,21 @@ export default function App() {
             value={Math.min(currentTime, duration)}
             onChange={(event) => seek(Number(event.target.value))}
           />
-          <span>{formatTime(duration)}</span>
+            <span>{formatTime(duration)}</span>
+          </div>
         </div>
-        <label className="compact-control">
-          <Repeat size={16} />
-          <select value={loopSectionId} onChange={(event) => setLoopSectionId(event.target.value)}>
-            <option value="">No loop</option>
-            {song?.sections.map((section) => (
-              <option key={section.id} value={section.id}>
-                {section.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button className="icon-button" onClick={goFullscreen} title="Fullscreen">
-          <Expand size={18} />
-        </button>
+        <div className="transport-actions">
+          <button
+            className={loopEnabled ? "icon-button active" : "icon-button"}
+            onClick={() => setLoopEnabled((value) => !value)}
+            title={loopEnabled ? "Loop on" : "Loop off"}
+          >
+            <Repeat size={18} />
+          </button>
+          <button className="icon-button" onClick={goFullscreen} title="Fullscreen">
+            <Expand size={18} />
+          </button>
+        </div>
       </section>
 
       <aside className="left-rail">
@@ -210,14 +257,22 @@ export default function App() {
               onClick={() => seek(sectionStart(song, section.id, tempoMultiplier))}
             >
               <span>{section.name}</span>
-              <small>{section.scene}</small>
+              <small>{formatTime(musicalTimeToSeconds(section.duration, song, tempoMultiplier))}</small>
             </button>
           ))}
         </div>
         {error && <pre className="error-box">{error}</pre>}
       </aside>
 
-      <aside className="right-mixer">
+      <aside className={mixerOpen ? "right-mixer" : "right-mixer collapsed"}>
+        <button
+          className="mixer-toggle"
+          onClick={() => setMixerOpen((value) => !value)}
+          title={mixerOpen ? "Hide mixer" : "Show mixer"}
+        >
+          {mixerOpen ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
+        {mixerOpen && (<>
         <div className="rail-title">
           <SlidersHorizontal size={17} />
           <span>Mixer</span>
@@ -289,6 +344,7 @@ export default function App() {
             );
           })}
         </div>
+        </>)}
       </aside>
     </main>
   );

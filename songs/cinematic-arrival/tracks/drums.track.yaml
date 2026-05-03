@@ -5,6 +5,7 @@ sound:
   soundfont: taiko_drum
 gain: 0.56
 reverb: 0.3
+humanize: 0.012
 notes:
   - { time: 5:1, duration: 8n, pitch: C2, velocity: 0.66 }
   - { time: 5:3, duration: 8n, pitch: G2, velocity: 0.54 }
