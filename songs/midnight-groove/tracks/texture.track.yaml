@@ -1,6 +1,10 @@
 id: texture
 name: Air Pad
 instrument: glass_pad
+sound:
+  soundfont: pad_2_warm
+  attack: 0.52
+  release: 2.4
 gain: 0.15
 reverb: 0.6
 lowpass: 3200

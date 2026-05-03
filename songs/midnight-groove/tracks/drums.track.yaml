@@ -1,6 +1,9 @@
 id: drums
 name: Dusty Kit
 instrument: drum_kit
+sound:
+  source: sample_pack
+  samplePack: /samples/virtuosity-kit/manifest.yaml
 gain: 0.92
 saturation: 0.32
 lowpass: 7400

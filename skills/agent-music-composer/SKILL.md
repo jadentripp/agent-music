@@ -104,9 +104,38 @@ Expressive note fields:
   articulation: sustain
   offset: 0.012
   strum: 0.018
+  gain: 1.1
 ```
 
 Use `pitch` for single notes and `pitches` for chords. Use `strum` only with `pitches`.
+
+**Note `gain`:** optional multiplier **after** `velocity` (default `1`, range about 0–2). Use for phrase shaping and accents without rewriting every velocity.
+
+## Delay, reverb send, and pan automation
+
+**Delay (track-level)**
+
+- `delay`: wet amount 0–1 (same meaning as before).
+- `delayTime`: echo time in **seconds** (default `0.24` when delay is active). Allowed up to ~2s; engine uses a safe `maxDelayTime` on the delay line.
+- `delayFeedback`: 0–**0.85** — output fed back into the delay input. Keep below 1 to avoid runaway feedback.
+
+If `delay` and `delayFeedback` are both 0, no delay line is created for that note (dry only).
+
+**Automation** (`automation` on the track)
+
+```yaml
+automation:
+  gain: []
+  filter: []   # lowpass Hz, needs static lowpass or automation only
+  reverb: []   # values 0–1, same scale as track.reverb; drives send level over time
+  pan: []      # values -1 (left) to 1 (right); overrides static pan between points
+```
+
+Prefer a few points at section boundaries.
+
+**Routing (author mental model)**
+
+- `automation.gain` and the mixer affect the **dry** channel fader (`output` after FX). The **reverb send** is tapped **after** ducking but **before** that fader: turning down `automation.gain` does **not** turn down how much signal hits the shared reverb bus. Ride `automation.reverb` (or `track.reverb`) when you want less reverb tail on a drop.
 
 ## One-Instrument Pass Checklist
 

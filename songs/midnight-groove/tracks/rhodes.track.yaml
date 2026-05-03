@@ -10,22 +10,26 @@ highpass: 120
 duck: kick
 duckAmount: 0.42
 humanize: 0.02
-reverb: 0.4
-delay: 0.1
+reverb: 0.38
+delay: 0.09
+automation:
+  gain:
+    - { time: 5:1, value: 0.86 }
+    - { time: 13:1, value: 1.0 }
 notes:
   # Verse 1
-  - { time: 5:1, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.52, articulation: sustain, strum: 0.014 }
-  - { time: 6:3, duration: 2n, pitches: [Ab3, C4, Eb4, G4], velocity: 0.42, articulation: legato }
-  - { time: 7:1, duration: 1m, pitches: [Db4, F4, Ab4, C5], velocity: 0.52, articulation: sustain, strum: 0.014 }
-  - { time: 8:3, duration: 2n, pitches: [Db4, F4, Ab4, C5], velocity: 0.42, articulation: legato }
-  - { time: 9:1, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.52, articulation: sustain, strum: 0.014 }
-  - { time: 10:3, duration: 2n, pitches: [Ab3, C4, Eb4, G4], velocity: 0.42, articulation: legato }
-  - { time: 11:1, duration: 1m, pitches: [Db4, F4, Ab4, C5], velocity: 0.52, articulation: sustain, strum: 0.014 }
-  - { time: 12:3, duration: 4n, pitches: [Db4, F4, Ab4, C5], velocity: 0.42, articulation: legato }
-  - { time: 12:4, duration: 4n, pitches: [E3, Bb3, D4, G4],  velocity: 0.48, articulation: legato, strum: 0.02 }
+  - { time: 5:1:480, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.43, articulation: sustain, strum: 0.009 }
+  - { time: 6:3, duration: 2n, pitches: [Ab3, C4, Eb4, G4], velocity: 0.35, articulation: legato }
+  - { time: 7:1, duration: 1m, pitches: [Db4, F4, Ab4, C5], velocity: 0.43, articulation: sustain, strum: 0.009 }
+  - { time: 8:3, duration: 2n, pitches: [Db4, F4, Ab4, C5], velocity: 0.35, articulation: legato }
+  - { time: 9:1:480, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.43, articulation: sustain, strum: 0.009 }
+  - { time: 10:3, duration: 2n, pitches: [Ab3, C4, Eb4, G4], velocity: 0.35, articulation: legato }
+  - { time: 11:1, duration: 1m, pitches: [Db4, F4, Ab4, C5], velocity: 0.43, articulation: sustain, strum: 0.009 }
+  - { time: 12:3, duration: 4n, pitches: [Db4, F4, Ab4, C5], velocity: 0.35, articulation: legato }
+  - { time: 12:4, duration: 4n, pitches: [E3, Bb3, D4, G4], velocity: 0.40, articulation: legato, strum: 0.011 }
 
   # Breakdown (Solar Shift) - Dbmaj7, C7alt, Fm7, Bb13
-  - { time: 13:1, duration: 1m, pitches: [F3, Ab3, C4, Eb4], velocity: 0.55, articulation: sustain, strum: 0.018 } # Dbmaj7 (rootless)
+  - { time: 13:1:480, duration: 1m, pitches: [F3, Ab3, C4, Eb4], velocity: 0.55, articulation: sustain, strum: 0.018 } # Dbmaj7 (rootless)
   - { time: 14:1, duration: 1m, pitches: [E3, Bb3, Db4, Gb4], velocity: 0.48, articulation: sustain, strum: 0.020 } # C7alt
   - { time: 15:1, duration: 1m, pitches: [Eb3, Ab3, C4, F4],  velocity: 0.52, articulation: sustain, strum: 0.018 } # Fm7 (rootless)
   - { time: 16:1, duration: 1m, pitches: [D3, Ab3, C4, G4],   velocity: 0.45, articulation: sustain, strum: 0.022 } # Bb13
@@ -35,18 +39,18 @@ notes:
   - { time: 20:3, duration: 4n, pitches: [E3, Bb3, D4, G4],   velocity: 0.50, articulation: legato } # Turnaround
 
   # Verse 2 (Intensity)
-  - { time: 21:1, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.60, articulation: sustain, strum: 0.014 }
+  - { time: 21:1:480, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.60, articulation: sustain, strum: 0.014 }
   - { time: 22:3, duration: 2n, pitches: [Ab3, C4, Eb4, G4], velocity: 0.50, articulation: legato }
   - { time: 23:1, duration: 1m, pitches: [Db4, F4, Ab4, C5], velocity: 0.60, articulation: sustain, strum: 0.014 }
   - { time: 24:3, duration: 2n, pitches: [Db4, F4, Ab4, C5], velocity: 0.50, articulation: legato }
-  - { time: 25:1, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.60, articulation: sustain, strum: 0.014 }
+  - { time: 25:1:480, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.60, articulation: sustain, strum: 0.014 }
   - { time: 26:3, duration: 2n, pitches: [Ab3, C4, Eb4, G4], velocity: 0.50, articulation: legato }
   - { time: 27:1, duration: 1m, pitches: [Db4, F4, Ab4, C5], velocity: 0.60, articulation: sustain, strum: 0.014 }
   - { time: 28:3, duration: 2n, pitches: [Db4, F4, Ab4, C5], velocity: 0.50, articulation: legato }
 
   # Sunset Outro (The "Going Down" feel)
-  - { time: 29:1, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.45, articulation: sustain, strum: 0.014 }
-  - { time: 30:1, duration: 1m, pitches: [G3, Bb3, D4, F4],  velocity: 0.40, articulation: sustain, strum: 0.018 }
-  - { time: 31:1, duration: 1m, pitches: [Gb3, A3, Db4, E4], velocity: 0.35, articulation: sustain, strum: 0.022 }
-  - { time: 32:1, duration: 1m, pitches: [F3, Ab3, C4, Eb4], velocity: 0.32, articulation: sustain, strum: 0.026 }
-  - { time: 33:1, duration: 4m, pitches: [F2, C3, Eb3, Ab3], velocity: 0.28, articulation: sustain, strum: 0.040 }
+  - { time: 29:1:480, duration: 1m, pitches: [Ab3, C4, Eb4, G4], velocity: 0.45, articulation: sustain, strum: 0.014 }
+  - { time: 30:1:480, duration: 1m, pitches: [G3, Bb3, D4, F4],  velocity: 0.40, articulation: sustain, strum: 0.018 }
+  - { time: 31:1:480, duration: 1m, pitches: [Gb3, A3, Db4, E4], velocity: 0.35, articulation: sustain, strum: 0.022 }
+  - { time: 32:1:480, duration: 1m, pitches: [F3, Ab3, C4, Eb4], velocity: 0.32, articulation: sustain, strum: 0.026 }
+  - { time: 33:1:480, duration: 4m, pitches: [F2, C3, Eb3, Ab3], velocity: 0.28, articulation: sustain, strum: 0.040 }

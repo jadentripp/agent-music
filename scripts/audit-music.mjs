@@ -311,7 +311,8 @@ function parsePitch(value) {
 }
 
 function hasAutomation(track) {
-  return Boolean(track.automation?.gain?.length || track.automation?.filter?.length);
+  const a = track.automation;
+  return Boolean(a?.gain?.length || a?.filter?.length || a?.reverb?.length || a?.pan?.length);
 }
 
 function countBy(items) {
