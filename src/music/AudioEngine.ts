@@ -12,6 +12,8 @@ type ScheduledEvent = {
   pitch: string | number;
   frequency: number;
   velocity: number;
+  /** Expression trim after velocity (default 1). */
+  noteGain: number;
   articulation?: string;
   flam?: number;
   isKick?: boolean;
@@ -20,6 +22,7 @@ type ScheduledEvent = {
 type TrackChannel = {
   input: GainNode;
   duck: GainNode;
+  panner: StereoPannerNode;
   output: GainNode;
   tone?: BiquadFilterNode;
   reverbSend?: GainNode;
@@ -28,10 +31,22 @@ type TrackChannel = {
 type Voice = {
   silence: (now: number) => void;
   stop: (now: number) => void;
+  /** Wall/song-relative end; once `currentSongSec` passes this plus margin, prune the entry (see pruneExpiredVoiceRefs). */
+  purgeAfterSongSec?: number;
 };
 
-const lookaheadSeconds = 0.18;
+const baseLookaheadSeconds = 3;
 const schedulerMs = 35;
+/** Wall-clock gap between scheduler ticks → extra lookahead (song seconds) to avoid missing notes after main-thread stalls. */
+const schedulerGapToSongSecondsScale = 0.92;
+/** Max extra lookahead from a single gap (prevents pathological scheduling after long interruptions). */
+const maxGapCatchupSongSeconds = 45;
+/** If the scheduler runs late, still trigger hits that started up to this many seconds ago (short drums, etc.). */
+const lateHitGraceSeconds = 1.25;
+/** Extra time after the last scheduled event so groove/offset stragglers and tails don't end the transport early. */
+const playbackEndPadSeconds = 0.5;
+/** Pre-schedule at most this many seconds of sample-pack hits; the rest use the incremental scheduler (avoids huge synchronous bursts). */
+const samplePreScheduleWindowSec = 20;
 const defaultSoundfont = "MusyngKite";
 const defaultSamplePacks: Partial<Record<Track["instrument"], string>> = {
   cinematic_strings: "/samples/vsco-violin-section-sustain/manifest.yaml",
@@ -107,8 +122,13 @@ export class AudioEngine {
   private channels = new Map<string, TrackChannel>();
   private channelsForSong?: Song;
   private duckedKickIndex = new Map<string, number>();
+  /** `songDuration(song)/tempo` — kept in sync in `loadSong` only */
+  private scaledDurationCached = 0;
   private onTick?: () => void;
   private playGeneration = 0;
+  private _agentLastScheduleWallMs = 0;
+  /** Event indices already played via upfront scheduling (sample-pack tracks only). Soundfonts stay incremental. */
+  private preScheduledEventIndices = new Set<number>();
 
   async init() {
     if (this.context) return;
@@ -149,6 +169,7 @@ export class AudioEngine {
               pitchIndex * (note.strum ?? 0) +
               swingOffset(note.time, song, track.swing);
             const isKick = track.instrument === "drum_kit" && isKickPitch(voicedPitch);
+            const noteGain = note.gain ?? 1;
             const main: ScheduledEvent = {
               id: `${track.id}-${index}-${pitchIndex}`,
               track,
@@ -157,6 +178,7 @@ export class AudioEngine {
               pitch: voicedPitch,
               frequency: noteToFrequency(safeFreqPitch(voicedPitch)),
               velocity: note.velocity ?? 0.72,
+              noteGain,
               articulation: note.articulation,
               isKick
             };
@@ -179,6 +201,10 @@ export class AudioEngine {
     this.kickTimes = this.events.filter((event) => event.isKick).map((event) => event.start);
     this.duckedKickIndex.clear();
     this.nextEventIndex = 0;
+    this.preScheduledEventIndices.clear();
+    const maxEventEnd = this.events.reduce((max, e) => Math.max(max, e.start + e.duration), 0);
+    const fromSectionsAndNotes = songDuration(song) / tempoMultiplier;
+    this.scaledDurationCached = Math.max(fromSectionsAndNotes, maxEventEnd) + playbackEndPadSeconds;
   }
 
   async play(onTick: () => void) {
@@ -208,13 +234,14 @@ export class AudioEngine {
 
     this.onTick = onTick;
     this.startedAt = this.context.currentTime - this.offset;
-    this.nextEventIndex = this.events.findIndex((event) => event.start + event.duration >= this.offset);
-    if (this.nextEventIndex < 0) this.nextEventIndex = this.events.length;
+    this.stopVoices();
     this.applyMasterBus();
     this.scheduleTrackAutomation();
+    this.scheduleAllNotesFromOffset(this.offset);
     this.applyVinylAmount(this.song.master.vinyl ?? 0);
     this.timer = window.setInterval(() => this.schedule(), schedulerMs);
     console.log("[AudioEngine] scheduler started at index:", this.nextEventIndex);
+    this._agentLastScheduleWallMs = 0;
     this.schedule();
   }
 
@@ -240,11 +267,10 @@ export class AudioEngine {
     if (this.context) {
       this.startedAt = this.context.currentTime - this.offset;
     }
-    this.nextEventIndex = this.events.findIndex((event) => event.start + event.duration >= this.offset);
-    if (this.nextEventIndex < 0) this.nextEventIndex = this.events.length;
     this.duckedKickIndex.clear();
     if (wasPlaying) {
       this.scheduleTrackAutomation();
+      this.scheduleAllNotesFromOffset(this.offset);
       this.schedule();
     }
   }
@@ -282,7 +308,7 @@ export class AudioEngine {
   }
 
   get duration() {
-    return this.song ? songDuration(this.song) / this.tempoMultiplier : 0;
+    return this.scaledDurationCached;
   }
 
   get activeSection() {
@@ -295,7 +321,26 @@ export class AudioEngine {
 
   private schedule() {
     if (!this.context || !this.song) return;
+    if (this.timer && this.context.state === "suspended") {
+      void this.context.resume();
+    }
     const current = this.currentTime;
+
+    this.pruneExpiredVoiceRefs(current);
+
+    const wallNow = typeof performance !== "undefined" ? performance.now() : 0;
+    let schedulerGapWallMs = 0;
+    if (this.timer && this._agentLastScheduleWallMs > 0 && wallNow > 0) {
+      schedulerGapWallMs = wallNow - this._agentLastScheduleWallMs;
+    }
+    if (this.timer && wallNow > 0) {
+      this._agentLastScheduleWallMs = wallNow;
+    }
+
+    const gapCatchupSongSec =
+      schedulerGapWallMs > 55
+        ? Math.min((schedulerGapWallMs / 1000) * schedulerGapToSongSecondsScale, maxGapCatchupSongSeconds)
+        : 0;
 
     if (this.loopSectionId) {
       const section = this.song.sections.find((item) => item.id === this.loopSectionId);
@@ -318,10 +363,17 @@ export class AudioEngine {
       return;
     }
 
-    const horizon = current + lookaheadSeconds;
+    const horizon = current + baseLookaheadSeconds + gapCatchupSongSec;
     while (this.nextEventIndex < this.events.length && this.events[this.nextEventIndex].start <= horizon) {
+      if (this.preScheduledEventIndices.has(this.nextEventIndex)) {
+        this.nextEventIndex += 1;
+        continue;
+      }
       const event = this.events[this.nextEventIndex];
-      if (event.start + event.duration >= current) {
+      const end = event.start + event.duration;
+      const stillAudible = end > current;
+      const lateGrace = event.start < current && event.start >= current - lateHitGraceSeconds;
+      if (stillAudible || lateGrace) {
         const when = this.context.currentTime + Math.max(0, event.start - current);
         this.scheduleEvent(event, when);
       }
@@ -332,41 +384,102 @@ export class AudioEngine {
     this.onTick?.();
   }
 
-  private scheduleEvent(event: ScheduledEvent, when: number) {
+  /**
+   * Schedule every note that should still sound from `offsetSeconds` through the end of the song.
+   * Wall times use `startedAt`; avoids losing notes when `setInterval` ticks are late/throttled.
+   */
+  private scheduleAllNotesFromOffset(offsetSeconds: number) {
+    if (!this.context || !this.song) return;
+
+    this.preScheduledEventIndices.clear();
+
+    const preUntil = offsetSeconds + samplePreScheduleWindowSec;
+
+    for (let i = 0; i < this.events.length; i++) {
+      const event = this.events[i];
+      const end = event.start + event.duration;
+      const lateGrace =
+        event.start < offsetSeconds && event.start >= offsetSeconds - lateHitGraceSeconds;
+      if (end <= offsetSeconds && !lateGrace) continue;
+
+      if (!this.samplePackForTrack(event.track)) continue;
+
+      if (event.start >= offsetSeconds && event.start > preUntil) continue;
+
+      const voicesBefore = this.voices.length;
+      if (event.start >= offsetSeconds) {
+        this.scheduleEvent(event, this.startedAt + event.start);
+      } else if (end > offsetSeconds) {
+        const remaining = Math.max(0.03, end - offsetSeconds);
+        this.scheduleEvent(event, this.context.currentTime, { noteDuration: remaining });
+      } else {
+        this.scheduleEvent(event, this.startedAt + event.start);
+      }
+      if (this.voices.length > voicesBefore) {
+        this.preScheduledEventIndices.add(i);
+      }
+    }
+    this.nextEventIndex = 0;
+  }
+
+  private scheduleEvent(event: ScheduledEvent, when: number, playback?: { noteDuration?: number }) {
     if (!this.context || !this.master) return;
     const trackMix = this.mixer[event.track.id] ?? { volume: 1, muted: false, solo: false };
     const soloed = Object.values(this.mixer).some((track) => track.solo);
-    if (trackMix.muted || (soloed && !trackMix.solo)) return;
+    if (trackMix.muted || (soloed && !trackMix.solo)) {
+      return;
+    }
 
     const channel = this.channels.get(event.track.id);
     const destination: AudioNode = channel ? channel.input : this.master;
 
     const gain = this.context.createGain();
-    const pan = this.context.createStereoPanner();
-    const delay = this.context.createDelay(1);
-    const delayGain = this.context.createGain();
-    const dryGain = this.context.createGain();
     const kitVoice = this.resolveKitVoice(event.track, event.pitch);
     const kitGain = kitVoice?.gain ?? 1;
-    const trackGain = (event.track.gain ?? 0.8) * trackMix.volume * event.velocity * kitGain;
+    const trackGain =
+      (event.track.gain ?? 0.8) * trackMix.volume * event.velocity * kitGain * event.noteGain;
     const humanize = (event.track.humanize ?? 0) * seededNoise(event.id);
     const startAt = Math.max(this.context.currentTime, when + humanize);
+    const noteDuration = playback?.noteDuration ?? event.duration;
     const release = event.track.instrument.includes("strings") || event.track.instrument.includes("pad") ? 1.2 : 0.16;
 
-    pan.pan.value = event.track.pan ?? 0;
     gain.gain.setValueAtTime(0.0001, startAt);
     gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, trackGain), startAt + 0.025);
-    gain.gain.setTargetAtTime(0.0001, startAt + event.duration, release);
+    gain.gain.setTargetAtTime(0.0001, startAt + noteDuration, release);
 
-    dryGain.gain.value = 1 - (event.track.delay ?? 0) * 0.45;
-    delay.delayTime.value = 0.24;
-    delayGain.gain.value = event.track.delay ?? 0;
-    gain.connect(pan);
-    pan.connect(dryGain);
-    dryGain.connect(destination);
-    pan.connect(delay);
-    delay.connect(delayGain);
-    delayGain.connect(destination);
+    const wet = event.track.delay ?? 0;
+    const delayFeedback = event.track.delayFeedback ?? 0;
+    const delayTimeSec = event.track.delayTime ?? 0.24;
+    const useDelay = wet > 0 || delayFeedback > 0;
+
+    if (!useDelay) {
+      const dryGain = this.context.createGain();
+      dryGain.gain.value = 1;
+      gain.connect(dryGain);
+      dryGain.connect(destination);
+    } else {
+      const dryGain = this.context.createGain();
+      dryGain.gain.value = 1 - wet * 0.45;
+
+      const delayNode = this.context.createDelay(Math.max(2, delayTimeSec + 0.05));
+      delayNode.delayTime.setValueAtTime(delayTimeSec, startAt);
+
+      const wetGain = this.context.createGain();
+      wetGain.gain.value = wet;
+
+      gain.connect(dryGain);
+      dryGain.connect(destination);
+      gain.connect(delayNode);
+      delayNode.connect(wetGain);
+      wetGain.connect(destination);
+
+      if (delayFeedback > 0) {
+        const feedbackGain = this.context.createGain();
+        feedbackGain.gain.value = Math.min(0.85, delayFeedback);
+        delayNode.connect(feedbackGain);
+        feedbackGain.connect(delayNode);
+      }
+    }
 
     const voice: Voice = {
       silence: (now: number) => {
@@ -380,10 +493,11 @@ export class AudioEngine {
       },
       stop: () => {}
     };
+    voice.purgeAfterSongSec = event.start + noteDuration + release + 3;
     this.voices.push(voice);
 
-    if (!this.createSampleVoice(event, gain, startAt, voice, kitVoice)) {
-      this.createFallbackVoice(event, gain, startAt, event.duration + release, voice);
+    if (!this.createSampleVoice(event, gain, startAt, voice, kitVoice, noteDuration)) {
+      this.createFallbackVoice(event, gain, startAt, noteDuration + release, voice);
     }
   }
 
@@ -392,6 +506,7 @@ export class AudioEngine {
     for (const channel of this.channels.values()) {
       disconnectNode(channel.input);
       disconnectNode(channel.duck);
+      disconnectNode(channel.panner);
       disconnectNode(channel.output);
       if (channel.tone) disconnectNode(channel.tone);
       if (channel.reverbSend) disconnectNode(channel.reverbSend);
@@ -401,10 +516,12 @@ export class AudioEngine {
     for (const track of this.song.tracks) {
       const input = this.context.createGain();
       const duck = this.context.createGain();
+      const panner = this.context.createStereoPanner();
       const output = this.context.createGain();
       const reverbSend = this.context.createGain();
       input.gain.value = 1;
       duck.gain.value = 1;
+      panner.pan.value = track.pan ?? 0;
       output.gain.value = 1;
       reverbSend.gain.value = reverbSendLevel(track.reverb);
 
@@ -440,14 +557,15 @@ export class AudioEngine {
       }
 
       chainEnd.connect(duck);
-      duck.connect(output);
+      duck.connect(panner);
+      panner.connect(output);
       output.connect(this.master);
       if (this.reverb) {
-        duck.connect(reverbSend);
+        panner.connect(reverbSend);
         reverbSend.connect(this.reverb);
       }
 
-      this.channels.set(track.id, { input, duck, output, tone, reverbSend });
+      this.channels.set(track.id, { input, duck, panner, output, tone, reverbSend });
     }
   }
 
@@ -484,6 +602,30 @@ export class AudioEngine {
           maxValue: 20000
         });
       }
+
+      if (channel.reverbSend && this.reverb) {
+        scheduleReverbSendAutomation({
+          context: this.context,
+          param: channel.reverbSend.gain,
+          points: track.automation?.reverb,
+          song: this.song,
+          tempoMultiplier: this.tempoMultiplier,
+          songOffset: this.offset,
+          fallbackDepth: track.reverb ?? 0
+        });
+      }
+
+      scheduleParamAutomation({
+        context: this.context,
+        param: channel.panner.pan,
+        points: track.automation?.pan,
+        song: this.song,
+        tempoMultiplier: this.tempoMultiplier,
+        songOffset: this.offset,
+        fallbackValue: track.pan ?? 0,
+        minValue: -1,
+        maxValue: 1
+      });
     }
   }
 
@@ -554,8 +696,10 @@ export class AudioEngine {
     destination: AudioNode,
     startAt: number,
     voice: Voice,
-    kitVoice?: KitVoice
+    kitVoice?: KitVoice,
+    playbackDuration?: number
   ) {
+    const duration = playbackDuration ?? event.duration;
     if (!this.context || event.track.sound?.source === "fallback") return false;
     const samplePack = this.samplePackForTrack(event.track);
     if (samplePack) {
@@ -565,7 +709,7 @@ export class AudioEngine {
         velocity: event.velocity,
         destination,
         startAt,
-        duration: event.duration,
+        duration,
         gain: kitVoice?.gain ?? 1
       });
       if (sources?.length) {
@@ -597,7 +741,7 @@ export class AudioEngine {
     const player = this.players.get(playerName);
     if (!player) return false;
     const source = player.play(String(pitchToPlay), startAt, {
-      duration: event.duration,
+      duration,
       gain: 1,
       adsr: this.envelope(event.track, event.articulation)
     }) as unknown as { stop?: (when?: number) => void; amp?: GainNode } | undefined;
@@ -736,9 +880,10 @@ export class AudioEngine {
     };
   }
 
-  private scheduleDucks(currentSongTime: number, horizonSongTime: number) {
-    if (!this.context || !this.song || this.kickTimes.length === 0) return;
+  private scheduleDucks(currentSongTime: number, horizonSongTime: number): number {
+    if (!this.context || !this.song || this.kickTimes.length === 0) return 0;
 
+    let bassKickDips = 0;
     for (const track of this.song.tracks) {
       if (!track.duck) continue;
       const channel = this.channels.get(track.id);
@@ -760,10 +905,12 @@ export class AudioEngine {
         }
         const audioTime = this.context.currentTime + Math.max(0, kickSongTime - currentSongTime);
         scheduleDuckDip(channel.duck, audioTime, amount);
+        if (track.id === "bass") bassKickDips += 1;
         nextIndex += 1;
       }
       this.duckedKickIndex.set(track.id, nextIndex - 1);
     }
+    return bassKickDips;
   }
 
   private buildVinylBus() {
@@ -818,6 +965,15 @@ export class AudioEngine {
     if (!this.vinylGain || !this.context) return;
     const value = Math.max(0, Math.min(1, amount)) * 0.18;
     this.vinylGain.gain.setTargetAtTime(value, this.context.currentTime, 0.05);
+  }
+
+  private pruneExpiredVoiceRefs(currentSongSec: number) {
+    if (!this.timer || this.voices.length === 0) return;
+    const marginSec = 0.4;
+    this.voices = this.voices.filter((v) => {
+      const cutoff = v.purgeAfterSongSec;
+      return cutoff === undefined || currentSongSec < cutoff + marginSec;
+    });
   }
 
   private stopVoices() {
@@ -890,6 +1046,45 @@ function scheduleParamAutomation({
 
 function reverbSendLevel(amount = 0) {
   return Math.pow(Math.max(0, Math.min(1, amount)), 1.4) * 0.72;
+}
+
+function scheduleReverbSendAutomation({
+  context,
+  param,
+  points,
+  song,
+  tempoMultiplier,
+  songOffset,
+  fallbackDepth
+}: {
+  context: AudioContext;
+  param: AudioParam;
+  points?: AutomationPoint[];
+  song: Song;
+  tempoMultiplier: number;
+  songOffset: number;
+  fallbackDepth: number;
+}) {
+  const now = context.currentTime;
+  const sorted = [...(points ?? [])].sort(
+    (a, b) => musicalTimeToSeconds(a.time, song, tempoMultiplier) - musicalTimeToSeconds(b.time, song, tempoMultiplier)
+  );
+  const currentPoint = [...sorted]
+    .reverse()
+    .find((point) => musicalTimeToSeconds(point.time, song, tempoMultiplier) <= songOffset);
+  const depth = clamp(currentPoint?.value ?? fallbackDepth, 0, 1);
+  const startGain = reverbSendLevel(depth);
+
+  param.cancelScheduledValues(now);
+  param.setValueAtTime(startGain, now);
+
+  for (const point of sorted) {
+    const songTime = musicalTimeToSeconds(point.time, song, tempoMultiplier);
+    if (songTime <= songOffset) continue;
+    const audioTime = now + (songTime - songOffset);
+    const mappedGain = reverbSendLevel(clamp(point.value, 0, 1));
+    param.linearRampToValueAtTime(mappedGain, audioTime);
+  }
 }
 
 function makeImpulseResponse(context: AudioContext, seconds: number, decay: number) {

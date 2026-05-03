@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import {
   ChevronLeft,
@@ -15,15 +15,44 @@ import {
   Volume2,
   VolumeX
 } from "lucide-react";
-import VisualizerStage from "./components/VisualizerStage";
 import { AudioEngine } from "./music/AudioEngine";
 import { loadSong, songFiles } from "./music/songLoader";
-import { musicalTimeToSeconds, songDuration } from "./music/timing";
+import { musicalTimeToSeconds } from "./music/timing";
 import type { MixerState, Section, Song } from "./types";
+
+const VisualizerStage = lazy(() => import("./components/VisualizerStage"));
+
+/** Wall-clock throttle for scheduler-driven UI — avoids React re-render ~28Hz */
+const TRANSPORT_UI_MS = 100;
+
+function wallNowMs(): number {
+  return typeof performance !== "undefined" ? performance.now() : Date.now();
+}
 
 export default function App() {
   const engineRef = useRef(new AudioEngine());
-  const [selectedId, setSelectedId] = useState(songFiles.some((file) => file.id === "copper-rain") ? "copper-rain" : songFiles[0]?.id ?? "");
+  const lastTransportUiMs = useRef(0);
+
+  /**
+   * Immediate transport readout sync (pause, seek, tempo, restart, post-load).
+   */
+  const flushTransportUi = () => {
+    const engine = engineRef.current;
+    lastTransportUiMs.current = wallNowMs();
+    setCurrentTime(engine.currentTime);
+    setDuration(engine.duration);
+    setActiveSection(engine.activeSection);
+  };
+
+  /** Called from AudioEngine scheduler (~35ms); batches updates for the UI thread */
+  const tickFromScheduler = () => {
+    const now = wallNowMs();
+    if (now - lastTransportUiMs.current < TRANSPORT_UI_MS) return;
+    flushTransportUi();
+  };
+  const [selectedId, setSelectedId] = useState(
+    songFiles.some((file) => file.id === "midnight-groove") ? "midnight-groove" : songFiles[0]?.id ?? ""
+  );
   const [song, setSong] = useState<Song | null>(null);
   const [error, setError] = useState("");
   const [playing, setPlaying] = useState(false);
@@ -43,6 +72,7 @@ export default function App() {
     if (!selectedFile) return;
     let alive = true;
     setError("");
+    setSong(null);
     loadSong(selectedFile)
       .then((loaded) => {
         if (!alive) return;
@@ -58,11 +88,11 @@ export default function App() {
         );
         setSong(loaded);
         setMixer(nextMixer);
-        setDuration(songDuration(loaded) / tempoMultiplier);
         setCurrentTime(0);
         setPlaying(false);
         engineRef.current.loadSong(loaded, nextMixer, tempoMultiplier);
         engineRef.current.setLoopEnabled(loopEnabled);
+        setDuration(engineRef.current.duration);
       })
       .catch((loadError) => {
         setSong(null);
@@ -87,20 +117,13 @@ export default function App() {
     engineRef.current.setLoopEnabled(loopEnabled);
   }, [loopEnabled]);
 
-  const tick = () => {
-    const engine = engineRef.current;
-    setCurrentTime(engine.currentTime);
-    setDuration(engine.duration);
-    setActiveSection(engine.activeSection);
-  };
-
   const togglePlayback = async () => {
     if (!song) return;
     const engine = engineRef.current;
     if (playing) {
       engine.pause();
       setPlaying(false);
-      tick();
+      flushTransportUi();
       return;
     }
 
@@ -113,8 +136,8 @@ export default function App() {
     // in-flight play() aborts before the scheduler starts.
     setPlaying(true);
     try {
-      await engine.play(tick);
-      tick();
+      await engine.play(tickFromScheduler);
+      flushTransportUi();
     } catch (playError) {
       setPlaying(false);
       setError(playError instanceof Error ? playError.message : String(playError));
@@ -139,8 +162,7 @@ export default function App() {
 
   const seek = (value: number) => {
     engineRef.current.seek(value);
-    setCurrentTime(value);
-    tick();
+    flushTransportUi();
   };
 
   const setTrackMix = (trackId: string, patch: Partial<MixerState[string]>) => {
@@ -156,12 +178,12 @@ export default function App() {
   const changeTempo = (value: number) => {
     setTempoMultiplier(value);
     engineRef.current.setTempoMultiplier(value);
-    tick();
+    flushTransportUi();
   };
 
   const restart = () => {
     engineRef.current.seek(0);
-    tick();
+    flushTransportUi();
   };
 
   const goFullscreen = () => {
@@ -172,22 +194,25 @@ export default function App() {
 
   return (
     <main className="studio-shell">
-      <VisualizerStage
-        analyser={engineRef.current.analyserNode}
-        activeSection={activeSection}
-        intensity={visualIntensity}
-        playing={playing}
-      />
+      <Suspense fallback={<div className="visualizer-stage" aria-hidden />}>
+        <VisualizerStage
+          analyser={engineRef.current.analyserNode}
+          activeSection={activeSection}
+          intensity={visualIntensity}
+          playing={playing}
+        />
+      </Suspense>
 
       <header className="topbar">
-        <div>
+        <div className="topbar-brand">
           <p className="eyebrow">Agent-Written Music Studio</p>
-          <h1>{song?.title ?? "No song loaded"}</h1>
-        </div>
-        <div className="topbar-controls">
-          <label className="song-picker">
-            <ListMusic size={18} />
-            <select value={selectedId} onChange={(event) => setSelectedId(event.target.value)}>
+          <label className="topbar-title-picker">
+            <ListMusic size={20} aria-hidden strokeWidth={1.6} />
+            <select
+              value={selectedId}
+              aria-label="Choose composition"
+              onChange={(event) => setSelectedId(event.target.value)}
+            >
               {songFiles.map((file) => (
                 <option key={file.id} value={file.id}>
                   {file.title}
@@ -195,11 +220,16 @@ export default function App() {
               ))}
             </select>
           </label>
-          <div className="song-status">
-            <span>{song?.key ?? "Key"}</span>
-            <span>{song?.tempo ?? 0} BPM</span>
-            <span>{loopEnabled ? "Loop on" : "Loop off"}</span>
-          </div>
+        </div>
+        <div className="topbar-meta" role="group" aria-label="Composition details">
+          <span className="meta-chip">{song?.key ?? "—"}</span>
+          <span className="meta-chip meta-chip-accent">
+            <span className="meta-value">{song?.tempo ?? "—"}</span>
+            <span className="meta-label">BPM</span>
+          </span>
+          <span className={`meta-chip meta-chip-flag${loopEnabled ? " meta-chip-flag-on" : ""}`}>
+            {loopEnabled ? "Loop on" : "Loop off"}
+          </span>
         </div>
       </header>
 

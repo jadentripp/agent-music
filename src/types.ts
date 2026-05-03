@@ -22,6 +22,8 @@ export type NoteEvent = {
   strum?: number;
   ghost?: boolean;
   flam?: number;
+  /** Phrase trim / expression multiplier after velocity (default 1). */
+  gain?: number;
 };
 
 export type AutomationPoint = {
@@ -71,7 +73,12 @@ export type Track = {
   gain?: number;
   pan?: number;
   reverb?: number;
+  /** Wet send 0–1 (dry/wet mix with delay line). */
   delay?: number;
+  /** Delay line time in seconds (default 0.24 when delay wet is used). */
+  delayTime?: number;
+  /** Feedback 0–0.85; delay output fed back into the delay input. */
+  delayFeedback?: number;
   saturation?: number;
   lowpass?: number;
   highpass?: number;
@@ -84,6 +91,10 @@ export type Track = {
   automation?: {
     gain?: AutomationPoint[];
     filter?: AutomationPoint[];
+    /** Reverb send depth 0–1; same scale as track.reverb. */
+    reverb?: AutomationPoint[];
+    /** Stereo position -1 (left) to 1 (right). */
+    pan?: AutomationPoint[];
   };
 };
 

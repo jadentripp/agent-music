@@ -23,6 +23,15 @@ const ribbonSegments = 128;
 const dustCount = 1200;
 const sparkleCount = 400;
 
+/** Reused every frame instead of allocating 5 × THREE.Color from palette temps. */
+const paletteScratch = {
+  primary: new THREE.Color(),
+  secondary: new THREE.Color(),
+  accent: new THREE.Color(),
+  fog: new THREE.Color(),
+  horizon: new THREE.Color()
+};
+
 export default function VisualizerStage({ analyser, intensity, playing }: VisualizerStageProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const stateRef = useRef({ analyser, intensity, playing });
@@ -44,7 +53,8 @@ export default function VisualizerStage({ analyser, intensity, playing }: Visual
     mount.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2("#06090a", 0.034);
+    const expFog = new THREE.FogExp2("#06090a", 0.034);
+    scene.fog = expFog;
 
     const camera = new THREE.PerspectiveCamera(50, mount.clientWidth / mount.clientHeight, 0.1, 140);
     camera.position.set(0, 1.25, 15);
@@ -202,6 +212,11 @@ export default function VisualizerStage({ analyser, intensity, playing }: Visual
     const bands: AudioBands = { bass: 0.08, mids: 0.08, highs: 0.08, rms: 0.06, centroid: 0.35, dynamics: 0.2, sparse: 0.5 };
     const raw = { bass: 0.08, energy: 0.08 };
     const energyHistory: number[] = [];
+    /** @internal agent debug */
+    let lastAgentVizLog = 0;
+    let energyRiseSmooth = 0;
+    let energyDropSmooth = 0;
+    let ribbonSphereFrame = 0;
     const impulses = { ring: 0, flash: 0, burst: 0 };
     const colors = {
       primary: new THREE.Color("#42eadf"),
@@ -242,8 +257,12 @@ export default function VisualizerStage({ analyser, intensity, playing }: Visual
 
       const recentEnergy = trailingAverage(energyHistory, 36, 0);
       const olderEnergy = trailingAverage(energyHistory, 120, 42);
-      const energyRise = THREE.MathUtils.clamp((recentEnergy - olderEnergy) * 4.5, -0.55, 0.85);
-      const energyDrop = THREE.MathUtils.clamp((olderEnergy - recentEnergy) * 4.2, 0, 0.75);
+      const energyRiseRaw = THREE.MathUtils.clamp((recentEnergy - olderEnergy) * 4.5, -0.55, 0.85);
+      const energyDropRaw = THREE.MathUtils.clamp((olderEnergy - recentEnergy) * 4.2, 0, 0.75);
+      energyRiseSmooth = THREE.MathUtils.damp(energyRiseSmooth, energyRiseRaw, 4.8, dt);
+      energyDropSmooth = THREE.MathUtils.damp(energyDropSmooth, energyDropRaw, 4.8, dt);
+      const energyRise = energyRiseSmooth;
+      const energyDrop = energyDropSmooth;
       const bassDelta = next.bass - raw.bass;
       const energyDelta = energy - raw.energy;
       raw.bass = next.bass;
@@ -256,16 +275,20 @@ export default function VisualizerStage({ analyser, intensity, playing }: Visual
       impulses.flash = Math.max(0, impulses.flash - dt * 3.8);
       impulses.burst = Math.max(0, impulses.burst - dt * 2.4);
 
-      const palette = paletteFromAudio(bands, impulses, energyRise, energyDrop);
-      colors.primary.lerp(palette.primary, 0.045);
-      colors.secondary.lerp(palette.secondary, 0.045);
-      colors.accent.lerp(palette.accent, 0.045);
-      colors.fog.lerp(palette.fog, 0.045);
-      colors.horizon.lerp(palette.horizon, 0.045);
+      writePaletteScratch(bands, impulses, energyRise, energyDrop);
+      colors.primary.lerp(paletteScratch.primary, 0.045);
+      colors.secondary.lerp(paletteScratch.secondary, 0.045);
+      colors.accent.lerp(paletteScratch.accent, 0.045);
+      colors.fog.lerp(paletteScratch.fog, 0.045);
+      colors.horizon.lerp(paletteScratch.horizon, 0.045);
 
       const bloom = THREE.MathUtils.clamp(0.62 + energyRise + impulses.burst * 0.45 - energyDrop * 0.35, 0.42, 1.85);
       const openness = THREE.MathUtils.clamp(1 + energyDrop * 0.5 - energyRise * 0.22 - bands.rms * 0.12, 0.82, 1.38);
-      scene.fog = new THREE.FogExp2(colors.fog, 0.024 + bands.rms * 0.018 + bands.bass * 0.01 - energyDrop * 0.006);
+      expFog.color.copy(colors.fog);
+      expFog.density = Math.max(
+        0.012,
+        0.024 + bands.rms * 0.018 + bands.bass * 0.01 - energyDrop * 0.006
+      );
       dustMaterial.color.copy(colors.primary);
       sparkleMaterial.color.copy(colors.secondary);
       ribbonMaterial.color.copy(colors.secondary);
@@ -309,8 +332,10 @@ export default function VisualizerStage({ analyser, intensity, playing }: Visual
       });
 
       const ribbonThinness = THREE.MathUtils.lerp(0.56, 1.12, 1 - bands.sparse);
-      updateRibbon(ribbon, timeData, t, drive, bands, 0.13 * ribbonThinness + impulses.ring * 0.08);
-      updateRibbon(glowRibbon, timeData, t, drive, bands, 0.34 * ribbonThinness + impulses.ring * 0.16);
+      const updateRibbonBb = ribbonSphereFrame % 4 === 0;
+      ribbonSphereFrame += 1;
+      updateRibbon(ribbon, timeData, t, drive, bands, 0.13 * ribbonThinness + impulses.ring * 0.08, updateRibbonBb);
+      updateRibbon(glowRibbon, timeData, t, drive, bands, 0.34 * ribbonThinness + impulses.ring * 0.16, updateRibbonBb);
       ribbonMaterial.opacity = 0.32 + bands.mids * drive * 0.28 + impulses.flash * 0.18;
       glowRibbonMaterial.opacity = 0.06 + bands.bass * drive * 0.16 + impulses.ring * 0.16;
 
@@ -320,6 +345,61 @@ export default function VisualizerStage({ analyser, intensity, playing }: Visual
 
       moveCamera(camera, t, drive, bands, impulses, energyRise, energyDrop);
       renderer.toneMappingExposure = 0.96 + bands.rms * drive * 0.34 + bands.dynamics * 0.14 + impulses.flash * 0.42;
+
+      // #region agent log
+      {
+        const impSum = impulses.ring + impulses.flash + impulses.burst;
+        if (dt > 0.052) {
+          void fetch("http://127.0.0.1:7552/ingest/6cd577d3-6a16-481c-a2a8-6bc7a95b2096", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "4304c0" },
+            body: JSON.stringify({
+              sessionId: "4304c0",
+              runId: "post-fix",
+              hypothesisId: "H5",
+              location: "VisualizerStage.tsx:render:jank",
+              message: "raf_long_frame",
+              data: { dt, impSum, energyDrop, energyRise, rms: bands.rms, sparse: bands.sparse },
+              timestamp: Date.now()
+            })
+          }).catch(() => {});
+        } else if (time - lastAgentVizLog > 320 && (impSum > 0.55 || energyDrop > 0.42)) {
+          lastAgentVizLog = time;
+          const heap =
+            typeof performance !== "undefined" &&
+            "memory" in performance &&
+            performance.memory &&
+            typeof (performance.memory as { usedJSHeapSize?: number }).usedJSHeapSize === "number"
+              ? (performance.memory as { usedJSHeapSize: number }).usedJSHeapSize
+              : undefined;
+          void fetch("http://127.0.0.1:7552/ingest/6cd577d3-6a16-481c-a2a8-6bc7a95b2096", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "4304c0" },
+            body: JSON.stringify({
+              sessionId: "4304c0",
+              runId: "post-fix",
+              hypothesisId: "H1-H4",
+              location: "VisualizerStage.tsx:render:impulse_window",
+              message: "viz_high_energy_state",
+              data: {
+                dt,
+                impSum,
+                energyDrop,
+                energyDropRaw,
+                energyRise,
+                energyRiseRaw,
+                rms: bands.rms,
+                bloom,
+                openness,
+                sparse: bands.sparse,
+                heapUsedJs: heap
+              },
+              timestamp: Date.now()
+            })
+          }).catch(() => {});
+        }
+      }
+      // #endregion
 
       renderer.render(scene, camera);
       raf = window.requestAnimationFrame(render);
@@ -421,7 +501,8 @@ function updateRibbon(
   time: number,
   drive: number,
   bands: { bass: number; mids: number; highs: number },
-  thickness: number
+  thickness: number,
+  computeBoundingSphere: boolean
 ) {
   const position = ribbon.geometry.getAttribute("position") as THREE.BufferAttribute;
   for (let i = 0; i < ribbonSegments; i += 1) {
@@ -437,7 +518,7 @@ function updateRibbon(
     position.setXYZ(i * 2 + 1, x, y + width, z);
   }
   position.needsUpdate = true;
-  ribbon.geometry.computeBoundingSphere();
+  if (computeBoundingSphere) ribbon.geometry.computeBoundingSphere();
 }
 
 function moveCamera(
@@ -511,7 +592,7 @@ function idleAudioFeatures(isPlaying: boolean): AudioBands {
   };
 }
 
-function paletteFromAudio(
+function writePaletteScratch(
   bands: AudioBands,
   impulses: { ring: number; flash: number; burst: number },
   energyRise: number,
@@ -521,13 +602,11 @@ function paletteFromAudio(
   const air = THREE.MathUtils.clamp(bands.highs * 1.35 + bands.centroid * 0.75 + impulses.flash * 0.3, 0, 1);
   const contrast = THREE.MathUtils.clamp(0.28 + bands.dynamics * 0.58 + energyRise * 0.18 - energyDrop * 0.12, 0.18, 0.92);
   const hue = THREE.MathUtils.euclideanModulo(0.52 + bands.centroid * 0.28 - warmth * 0.12, 1);
-  return {
-    primary: new THREE.Color().setHSL(hue, 0.64 + contrast * 0.24, 0.34 + air * 0.22 + impulses.flash * 0.08),
-    secondary: new THREE.Color().setHSL(0.1 - warmth * 0.08 + bands.centroid * 0.04, 0.78, 0.32 + warmth * 0.34),
-    accent: new THREE.Color().setHSL(0.55 + bands.centroid * 0.08, 0.42 + air * 0.24, 0.68 + impulses.flash * 0.22),
-    fog: new THREE.Color().setHSL(0.56 + bands.centroid * 0.08, 0.38 + contrast * 0.18, 0.028 + bands.rms * 0.04),
-    horizon: new THREE.Color().setHSL(0.08 + warmth * 0.02, 0.58, 0.05 + warmth * 0.09 + energyRise * 0.035)
-  };
+  paletteScratch.primary.setHSL(hue, 0.64 + contrast * 0.24, 0.34 + air * 0.22 + impulses.flash * 0.08);
+  paletteScratch.secondary.setHSL(0.1 - warmth * 0.08 + bands.centroid * 0.04, 0.78, 0.32 + warmth * 0.34);
+  paletteScratch.accent.setHSL(0.55 + bands.centroid * 0.08, 0.42 + air * 0.24, 0.68 + impulses.flash * 0.22);
+  paletteScratch.fog.setHSL(0.56 + bands.centroid * 0.08, 0.38 + contrast * 0.18, 0.028 + bands.rms * 0.04);
+  paletteScratch.horizon.setHSL(0.08 + warmth * 0.02, 0.58, 0.05 + warmth * 0.09 + energyRise * 0.035);
 }
 
 function trailingAverage(values: number[], count: number, offset: number) {

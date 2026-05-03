@@ -14,7 +14,8 @@ const noteSchema = z.object({
   offset: z.number().min(-0.25).max(0.25).optional(),
   strum: z.number().min(0).max(0.25).optional(),
   ghost: z.boolean().optional(),
-  flam: z.number().min(0).max(0.05).optional()
+  flam: z.number().min(0).max(0.05).optional(),
+  gain: z.number().min(0).max(2).optional()
 }).refine((note) => note.pitch !== undefined || note.pitches !== undefined, {
   message: "Provide pitch or pitches"
 });
@@ -22,6 +23,16 @@ const noteSchema = z.object({
 const automationPointSchema = z.object({
   time: timeValue,
   value: z.number()
+});
+
+const automationReverbPointSchema = z.object({
+  time: timeValue,
+  value: z.number().min(0).max(1)
+});
+
+const automationPanPointSchema = z.object({
+  time: timeValue,
+  value: z.number().min(-1).max(1)
 });
 
 const instrumentSchema = z.enum([
@@ -97,6 +108,8 @@ const trackSchema = z.object({
   pan: z.number().min(-1).max(1).optional(),
   reverb: z.number().min(0).max(1).optional(),
   delay: z.number().min(0).max(1).optional(),
+  delayTime: z.number().min(0.02).max(2).optional(),
+  delayFeedback: z.number().min(0).max(0.85).optional(),
   saturation: z.number().min(0).max(1).optional(),
   lowpass: z.number().min(40).max(20000).optional(),
   highpass: z.number().min(20).max(8000).optional(),
@@ -109,7 +122,9 @@ const trackSchema = z.object({
   automation: z
     .object({
       gain: z.array(automationPointSchema).optional(),
-      filter: z.array(automationPointSchema).optional()
+      filter: z.array(automationPointSchema).optional(),
+      reverb: z.array(automationReverbPointSchema).optional(),
+      pan: z.array(automationPanPointSchema).optional()
     })
     .optional()
 }).refine((track) => (track.notes && track.notes.length > 0) || track.pattern, {
