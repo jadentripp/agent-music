@@ -1,176 +1,160 @@
 ---
 name: agent-music-composer
-description: Use when writing or improving Agent-Written Music Studio modular song folders, especially when the goal is realistic, expressive, professional-sounding browser playback with one track per file, sample-backed instruments, section structure, harmony, humanized performance, and audio-reactive visual cues.
+description: Use when writing or improving Agent-Written Music Studio songs — prefer typed `arrangement.ts` for complex agent-authored music, compile to repo-backed `song.yaml` and `tracks/*.track.yaml`, then audit/listen/revise.
 ---
 
 # Agent Music Composer
 
 ## Goal
 
-Write modular song folders that sound like intentional music, not generated note lists. Optimize for playable arrangements using the studio's real sample-backed instruments.
+Write modular song folders that sound intentional. For complex work, author `songs/<id>/arrangement.ts` first, compile it, then revise the generated arrangement until it clears audit and sounds musical in the browser. Use `arrangement.yaml` only for simple data-only sources or compatibility.
+
+## Expressing different styles (composition, not presets)
+
+There are **no style templates** in the repo—only **authoring primitives**. The model encodes genre and feel by **composing** those primitives:
+
+- **Time feel:** `pattern` density and lane choices; `pattern.swing`; per-step `groove.offsets` (ms) you design for push/pull; `humanize` and per-note `offset`.
+- **Harmony / register:** explicit `pitches`, sparse vs dense voicings, which sections enter or drop out.
+- **Rhythm identity:** ghost hits (`g`), accents, rests, `flam`, drum `kit` tuning, velocity curves.
+- **Sonic character:** `sound` / sample pack / soundfont, `eq`, `compressor`, `saturation`, filters, `reverb`, `delay`, `master.vinyl`, optional numeric `reverbIr*` for space.
+- **Rigidity vs pocket:** sidechain via `duck` / `duckAmount`; automation on gain/filter/reverb for section energy.
+
+Reference **finished songs under `songs/`** only as examples of complete work—not as scaffolds to duplicate. Build each piece from the brief using these fields.
 
 ## Workflow
 
-Write one instrument at a time. Do not compose a full multi-track song in one pass.
+1. Musical brief: arc, energy, length, key, tempo, instruments.
+2. For complex pieces, write **`songs/<id>/arrangement.ts`** with form, chord `harmony`, named `motifs`, explicit `grooves`, and role-based `parts`.
+3. Compile with **`bun run arrange compile <song-id>`**; do not hand-edit generated files unless the song intentionally opts out of the compiler.
+4. Typical arrangement order: pulse / drums → bass → harmony → lead/counterline → ear candy → mix/master.
+5. Validate with **`bun run arrange check <song-id>`**, **`bun run agent:music check <song-id>`**, **`bun run check`**, and listen in the browser after meaningful edits.
+6. **Mix / master pass:** After arranged notes feel right, rebalance **`gain`**, **`pan`**, **`eq`**, **`compressor`**, **`reverb`**, **`duck`**, **`automation`**, then **`song.yaml` → `master`**.
+7. Humanize: velocities, `humanize`, `offset`, `strum`, `articulation`, optional `groove` as **`{ resolution, offsets: [ms...] }`** (author the ms array; no preset names).
 
-1. Start with a musical brief: genre, emotional arc, reference energy, duration, key, tempo, and target instruments.
-2. Create the song scaffold only: `songs/<song-id>/song.yaml` with metadata, sections, visual scenes, and `trackOrder`.
-3. Add or revise exactly one `songs/<song-id>/tracks/<track-id>.track.yaml` file per pass. After each pass, validate and listen before adding the next instrument.
-4. Recommended order: drums/percussion or pulse, bass, harmonic bed, lead/melody, countermelody, texture/ear candy.
-5. For each new track, read the existing tracks first and decide its role. It must leave space for the other parts.
-6. Humanize the one track you are writing: velocity shape, small offsets, articulations, strums, and track-level humanize.
-7. Mix that track against the existing arrangement: gain, pan, envelope, reverb intent, and register.
-8. Validate with `bun run check`; then listen in the browser and revise the music, not just the syntax.
+## TypeScript Arrangement DSL
 
-The pass is not done until the current instrument has a clear musical role and does not fight the existing parts.
+Use `arrangement.ts` when the user asks for professional or complex music. Import helpers from `src/music/dsl.ts`:
 
-## Studio Format Rules
-
-Use repo-backed song folders.
-
-Preferred layout:
-
-```text
-songs/my-song/
-  song.yaml
-  tracks/
-    bass.track.yaml
-    piano.track.yaml
-    strings.track.yaml
+```ts
+import { defineArrangement, section, chords, motif, groove, drums, bass, harmony } from "../../src/music/dsl.ts";
 ```
 
-Required `song.yaml` fields:
+Its stable concepts are:
 
-```yaml
-title: Example
-tempo: 84
-key: D minor
-timeSignature: 4/4
-master:
-  gain: 0.82
-  limiter: true
-sections: []
-trackOrder: []
+- `sections` — the form and visual scene timeline.
+- `harmony` — chord timeline, with `time`, `duration`, and chord symbol.
+- `motifs` — reusable scale-degree phrases that the compiler varies deterministically across sections or harmony points.
+- `grooves` — named explicit per-step millisecond offset arrays.
+- `parts` — role-based tracks (`drums`, `bass`, `harmony`, `lead`, `counterline`, `pad`, `ear_candy`, `custom`) with `sound`, `mix`, `performance`, `voicing`, `pattern`, and optional generated `notes`.
+
+Compiler pass:
+
+```bash
+bun run arrange compile <song-id>
+bun run arrange check <song-id>
 ```
 
-Minimal `tracks/piano.track.yaml` template:
+If generated YAML is stale, update `arrangement.ts` and recompile. Keep generated headers intact. `arrangement.yaml` remains a fallback source, but `arrangement.ts` wins when both exist.
 
-```yaml
-id: piano
-name: Felt Piano
-instrument: grand_piano
-sound:
-  soundfont: acoustic_grand_piano
-  attack: 0.01
-  decay: 0.24
-  sustain: 0.52
-  release: 1.2
-gain: 0.58
-pan: -0.12
-reverb: 0.55
-humanize: 0.018
-notes:
-  - { time: 1:1, duration: 2n, pitches: [D3, A3, F4], velocity: 0.48, strum: 0.018 }
+The compiler writes **`arrangement.map.json`** next to the source. Use it indirectly through `bun run agent:music ...`; it maps generated notes back to part roles, intents, motif placements, harmony points, fills, and patterns.
+
+Agent-friendly DSL verbs:
+
+- Explicit notes: `note(time, duration, pitch, opts)`, `hit(time, lane, opts)`, `chordNote(...)`, and `phrase(start, [[beatOffset, duration, pitch, opts], ...])`.
+- Part sound/mix/performance: `.soundfont()`, `.samplePack()`, `.gain()`, `.pan()`, `.reverb()`, `.delay()`, `.filter()`, `.eq()`, `.compressor()`, `.duck()`, `.automate()`, `.humanize()`, `.velocityRamp()`.
+- Part role helpers: `.intent("...")`, `.lockToKick(amount)`, `.fillIntoSections()`, `.approachNextChord()`, `.drop2()`, `.avoidLowThirds(low, high)`.
+- Motif transforms: `.transpose(degrees)`, `.invert(axis)`, `.sequence()` / `.repeat()`, `.thin(every)`, `.take(count)`.
+
+Prefer fluent helpers for new `arrangement.ts` work; use raw `.mix({ ... })`, `.sound({ ... })`, or `.notes([...])` only when the fluent surface is less clear.
+
+Useful loops:
+
+```bash
+bun run agent:music check <song-id>
+bun run agent:music analyze <song-id>
+bun run agent:music suggest <song-id> --issue masking
+bun run arrange preview <song-id> --section verse2 --solo bass
 ```
 
-Preferred sampled instruments:
+Use `docs/AGENT_MUSIC_EXAMPLES.md` for compact source patterns before inventing a new arrangement from scratch.
 
-- `grand_piano` with `soundfont: acoustic_grand_piano`
-- `cinematic_strings` with `soundfont: string_ensemble_1`
-- `solo_cello` with `soundfont: cello`
-- `upright_bass` with `soundfont: acoustic_bass`
-- `glass_pad` with `soundfont: pad_2_warm`
-- `analog_lead` with `soundfont: lead_2_sawtooth`
-- `hybrid_drums` with `soundfont: taiko_drum`
+## Composing across tracks
 
-Track sound block:
+- **`trackOrder`** — When you set `song.trackOrder`, keep it aligned with every `tracks/*.track.yaml` **`id`**. Unknown ids or missing track ids make mixer/playback order fall back to file sort and can surprise mix decisions.
+- **`duck` / sidechain** — `duck` lane names must exist on the **`drum_kit`** (or hybrid part) you reference; the kit’s manifest defines which lanes are valid targets.
+- **`sections`** — Section `start`/`duration` form the structure timeline; extend parts whose musical material should continue under later sections so visualization and energy match the arrangement.
+- **`tempoMap`** — A tempo map applies to **every** track; coordinated timing changes hit all parts at once—plan cross-track entries accordingly.
+- After coordinated edits, run **`bun run check`** and listen.
 
-```yaml
-sound:
-  soundfont: acoustic_grand_piano
-  attack: 0.01
-  decay: 0.24
-  sustain: 0.52
-  release: 1.2
-```
+## Mix and master (where to edit, in what order)
 
-Expressive note fields:
+**Files:** `song.yaml` → **`master`** only for the stereo bus. Every stem lives in **`tracks/<id>.track.yaml`** (`gain`, `pan`, sends, tone, `duck`, `automation`).
 
-```yaml
-- time: 5:1
-  duration: 2n
-  pitches: [D3, A3, F4]
-  velocity: 0.48
-  articulation: sustain
-  offset: 0.012
-  strum: 0.018
-  gain: 1.1
-```
+**Rough signal path (per track):** high-pass → low-pass (optional) → saturation → **duck** (sidechain dips) → optional **delay** → **pan** → track fader (`automation.gain` drives this fader) → **master**; **reverb** is a parallel send from post-pan into one shared convolver, whose return level is set on **`master`**.
 
-Use `pitch` for single notes and `pitches` for chords. Use `strum` only with `pitches`.
+### Master bus (`song.yaml` → `master`)
 
-**Note `gain`:** optional multiplier **after** `velocity` (default `1`, range about 0–2). Use for phrase shaping and accents without rewriting every velocity.
+| Field | Role | Hint |
+| --- | --- | --- |
+| `gain` | Master trim | `0.55`–`0.92` typical before limiting; schema allows up to `1.2` if the mix is quiet. |
+| `limiter` | Bus compressor/limiter behavior | **On by default** (`true` or omitted). Set **`limiter: false`** only if you want an uncompressed, hotter stem-like export. |
+| `vinyl` | Lo-fi noise bed | `0`–`1`; subtle at `0.1`–`0.35`. |
+| `reverbIrSeconds` | Shared room IR length | Default **2.8** if omitted. |
+| `reverbIrDecay` | IR decay shape | Default **2.6** if omitted. |
+| `reverbReturnGain` | Wet return into master | Default **0.42** if omitted; lower for drier productions, raise for washier mixes. |
 
-## Delay, reverb send, and pan automation
+Per-track **`reverb`** is **send depth** (`0`–`1`). The engine maps sends non-linearly; treat `0.15`–`0.45` as common musical values before automating.
 
-**Delay (track-level)**
+### Per-track mix (`*.track.yaml`)
 
-- `delay`: wet amount 0–1 (same meaning as before).
-- `delayTime`: echo time in **seconds** (default `0.24` when delay is active). Allowed up to ~2s; engine uses a safe `maxDelayTime` on the delay line.
-- `delayFeedback`: 0–**0.85** — output fed back into the delay input. Keep below 1 to avoid runaway feedback.
+Work **one pass at a time**: balance **`gain`** (and note **`velocity`**) so the low end, drums, and lead do not all peak the same register; then **`pan`**; then **`reverb`** / **`delay`**; then **`duck`** / **`duckAmount`** against a drum lane; then **`automation`** for section lifts ( **`gain`**, **`filter`**, **`reverb`**, **`pan`** — see `src/music/songSchema.ts` for shapes).
 
-If `delay` and `delayFeedback` are both 0, no delay line is created for that note (dry only).
+| Group | Fields | Notes |
+| --- | --- | --- |
+| Level / space | `gain`, `pan`, `reverb`, `delay`, `delayTime`, `delayFeedback` | Delay dry/wet uses `delay`; default delay time **0.24** s if not set. |
+| Tone / weight | `highpass`, `lowpass`, `eq`, `compressor`, `saturation` | High-pass mud removal; use `eq` for broad low/mid/high shaping and `compressor` for stem control before ducking. |
+| Pump / groove | `duck`, `duckAmount`, `swing`, `humanize` | **`duck`** is a comma list of drum **lane** names, e.g. `kick` or `kick,snare`. **`duckAmount`** default in engine is **0.6** if omitted. |
+| Moves | `automation.gain`, `.filter`, `.reverb`, `.pan` | Points use song **`time`** values; use for drops, builds, and section contrast. |
 
-**Automation** (`automation` on the track)
+### Model workflow for a mix pass
 
-```yaml
-automation:
-  gain: []
-  filter: []   # lowpass Hz, needs static lowpass or automation only
-  reverb: []   # values 0–1, same scale as track.reverb; drives send level over time
-  pan: []      # values -1 (left) to 1 (right); overrides static pan between points
-```
+1. Read current **`trackOrder`** (if any) so you know stack order; adjust stem **`gain`** / **velocities** first.
+2. Tame masking: **`highpass`** on non-bass parts; **`lowpass`** or **`saturation`** only where tone needs it.
+3. Place elements: **`pan`**, then shared room via **`reverb`**; use **`delay`** for slap/widening.
+4. Pocket: **`duck`** + **`duckAmount`** on bass/pads/keys so kick/snare breathe.
+5. Section energy: **`automation`** (often **`gain`** + **`filter`** or **`reverb`** on pads).
+6. Last: **`master.gain`** and, if needed, **`reverbReturnGain`** / IR — then **`bun run check`** and listen.
 
-Prefer a few points at section boundaries.
+## Layout
 
-**Routing (author mental model)**
+`songs/<id>/song.yaml` and `songs/<id>/tracks/*.track.yaml`.
 
-- `automation.gain` and the mixer affect the **dry** channel fader (`output` after FX). The **reverb send** is tapped **after** ducking but **before** that fader: turning down `automation.gain` does **not** turn down how much signal hits the shared reverb bus. Ride `automation.reverb` (or `track.reverb`) when you want less reverb tail on a drop.
+## `song.yaml` fields
 
-## One-Instrument Pass Checklist
+- `title`, `artist?`, `tempo`, `tempoMap?`, `key`, `timeSignature`, `master`, `sections`, `trackOrder?`
+- `master`: `gain`, `limiter?`, `vinyl?`, optional **`reverbIrSeconds`**, **`reverbIrDecay`**, **`reverbReturnGain`** (shared convolver — numbers only).
 
-Before writing notes for a track, answer internally:
+## `track` fields (see Zod in `src/music/songSchema.ts`)
 
-- What is this instrument's role: pulse, bass, harmony, melody, counterline, texture, accent, or transition?
-- Which register is free?
-- Which sections should it enter, leave, or change?
-- What motif, groove, or voicing idea makes this part memorable?
-- What should it not play so the arrangement breathes?
+- `id`, `name`, `instrument` (`grand_piano`, `electric_piano`, `drum_kit`, …)
+- `sound?` (`soundfont`, `samplePack`, envelope, `source`)
+- `pattern?` (step grid) and/or **`notes`** (each needs `time` + `duration` + `pitch` or `pitches`)
+- Mix: `gain`, `pan`, `reverb`, `delay` / `delayTime` / `delayFeedback`, filters, `eq`, `compressor`, `saturation`, `duck`, `duckAmount`, `humanize`, `track.swing`
+- **`groove`:** only ` { resolution?: number, offsets: number[] } ` — per-step MS offsets; no string presets.
+- `automation?` on `gain`, `filter`, `reverb`, `pan`
 
-Then write only that track file. Keep the YAML simple and idiomatic. Prefer clear inline note objects for short notes and expanded YAML for important chords or expressive moments.
+## Instruments
 
-## Composition Heuristics
+Prefer explicit `sound` blocks and repo sample packs where applicable (`grand_piano` salamander, `drum_kit` virtuosity, etc.). Rhodes-style: `electric_piano` + `electric_piano_1` (or author your own soundfont).
 
-- Keep bass below melodies by at least an octave; avoid muddy low sustained thirds.
-- Piano should use sparse voicings, not constant block chords. Let notes ring.
-- Strings and pads need long notes, slow attacks, and quiet velocities.
-- Cello works best as a counterline with stepwise motion and occasional leaps.
-- Drums should support section energy. Do not fill every beat unless the genre demands it.
-- Velocity should form phrases: weak pickups, stronger downbeats, shaped peaks.
-- Leave silence. Good arrangements breathe.
-- Reuse motifs across sections with transposition, inversion, rhythmic variation, or orchestration changes.
-- Prefer 2-5 strong tracks over many weak tracks.
+## Expressive notes
 
-## Quality Bar
+`velocity`, `gain`, `articulation` (`legato`, `staccato`, …), `offset`, `strum` (with `pitches`), `ghost`, `flam`.
 
-Before calling a song good, check:
+## Pass checklist
 
-- Does it have a recognizable motif within the first 8 bars?
-- Does each section change energy, register, harmony, or orchestration?
-- Are sample-backed `soundfont` names present on tracks?
-- Do velocities vary musically?
-- Are offsets/humanize subtle rather than chaotic?
-- Does the ending feel intentional?
-- Does `bun run check` pass?
+Role, register, section entries/exits, motif, what stays silent, mix intent. **Mix/master:** stem **`gain`** balance, **`pan`** and **`reverb`** staging, **`duck`** audibility, at least one **automation** move if the arrange is long, **`master.gain`** / **limiter** / **return** sanity.
 
-If it sounds bad, revise the arrangement first: harmony, register, rhythm, and dynamics matter more than adding more notes.
+## Quality
+
+Motif in first 8 bars; section contrast; sensible velocities; fresh compiled output; `bun run check` passes.

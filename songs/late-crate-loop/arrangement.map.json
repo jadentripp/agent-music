@@ -1,0 +1,2088 @@
+{
+  "version": 1,
+  "tracks": {
+    "drums": {
+      "part": "drums",
+      "role": "drums",
+      "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+      "pattern": {
+        "part": "drums",
+        "role": "drums",
+        "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+        "generator": "pattern"
+      },
+      "notes": [
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "explicit",
+          "index": 0,
+          "time": "1:1",
+          "pitch": "crash"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "fill",
+          "section": "flip",
+          "index": 1,
+          "time": "4:4:480",
+          "pitch": "snare"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "fill",
+          "section": "flip",
+          "index": 2,
+          "time": "4:4:720",
+          "pitch": "open_hat"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "explicit",
+          "index": 3,
+          "time": "12:4:480",
+          "pitch": "rim"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "fill",
+          "section": "strip",
+          "index": 4,
+          "time": "12:4:480",
+          "pitch": "snare"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "fill",
+          "section": "strip",
+          "index": 5,
+          "time": "12:4:720",
+          "pitch": "open_hat"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "fill",
+          "section": "strings",
+          "index": 6,
+          "time": "16:4:480",
+          "pitch": "snare"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "explicit",
+          "index": 7,
+          "time": "16:4:720",
+          "pitch": "open_hat"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "fill",
+          "section": "strings",
+          "index": 8,
+          "time": "16:4:720",
+          "pitch": "open_hat"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "explicit",
+          "index": 9,
+          "time": "24:4:480",
+          "pitch": "snare"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "fill",
+          "section": "tag",
+          "index": 10,
+          "time": "24:4:480",
+          "pitch": "snare"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "fill",
+          "section": "tag",
+          "index": 11,
+          "time": "24:4:720",
+          "pitch": "open_hat"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "fill",
+          "section": "outro",
+          "index": 12,
+          "time": "28:4:480",
+          "pitch": "snare"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "explicit",
+          "index": 13,
+          "time": "28:4:720",
+          "pitch": "rim"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dryer local dusty-kit drums with clap layer, rim ghosts, and a crooked hat drag.",
+          "generator": "fill",
+          "section": "outro",
+          "index": 14,
+          "time": "28:4:720",
+          "pitch": "open_hat"
+        }
+      ]
+    },
+    "sub": {
+      "part": "sub",
+      "role": "custom",
+      "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+      "notes": [
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 0,
+          "time": "1:1",
+          "pitch": "D1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 1,
+          "time": "1:2:720",
+          "pitch": "A1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 2,
+          "time": "1:3:480",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 3,
+          "time": "2:1",
+          "pitch": "G1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 4,
+          "time": "2:3:720",
+          "pitch": "Bb1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 5,
+          "time": "3:1",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 6,
+          "time": "3:4",
+          "pitch": "E2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 7,
+          "time": "4:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 8,
+          "time": "4:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 9,
+          "time": "5:1",
+          "pitch": "D1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 10,
+          "time": "5:2:720",
+          "pitch": "A1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 11,
+          "time": "5:3:480",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 12,
+          "time": "6:1",
+          "pitch": "G1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 13,
+          "time": "6:3:720",
+          "pitch": "Bb1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 14,
+          "time": "7:1",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 15,
+          "time": "7:4",
+          "pitch": "E2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 16,
+          "time": "8:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 17,
+          "time": "8:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 18,
+          "time": "9:1",
+          "pitch": "D1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 19,
+          "time": "9:2:720",
+          "pitch": "A1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 20,
+          "time": "9:3:480",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 21,
+          "time": "10:1",
+          "pitch": "G1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 22,
+          "time": "10:3:720",
+          "pitch": "Bb1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 23,
+          "time": "11:1",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 24,
+          "time": "11:4",
+          "pitch": "E2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 25,
+          "time": "12:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 26,
+          "time": "12:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 27,
+          "time": "17:1",
+          "pitch": "D1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 28,
+          "time": "17:2:720",
+          "pitch": "A1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 29,
+          "time": "17:3:480",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 30,
+          "time": "18:1",
+          "pitch": "G1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 31,
+          "time": "18:3:720",
+          "pitch": "Bb1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 32,
+          "time": "19:1",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 33,
+          "time": "19:4",
+          "pitch": "E2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 34,
+          "time": "20:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 35,
+          "time": "20:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 36,
+          "time": "21:1",
+          "pitch": "D1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 37,
+          "time": "21:2:720",
+          "pitch": "A1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 38,
+          "time": "21:3:480",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 39,
+          "time": "22:1",
+          "pitch": "G1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 40,
+          "time": "22:3:720",
+          "pitch": "Bb1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 41,
+          "time": "23:1",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 42,
+          "time": "23:4",
+          "pitch": "E2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 43,
+          "time": "24:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 44,
+          "time": "24:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 45,
+          "time": "25:1",
+          "pitch": "D1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 46,
+          "time": "25:2:720",
+          "pitch": "A1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 47,
+          "time": "25:3:480",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 48,
+          "time": "26:1",
+          "pitch": "G1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 49,
+          "time": "26:3:720",
+          "pitch": "Bb1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 50,
+          "time": "27:1",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 51,
+          "time": "27:4",
+          "pitch": "E2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 52,
+          "time": "28:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 53,
+          "time": "28:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 54,
+          "time": "29:1",
+          "pitch": "D1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 55,
+          "time": "29:2:720",
+          "pitch": "A1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 56,
+          "time": "29:3:480",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 57,
+          "time": "30:1",
+          "pitch": "G1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 58,
+          "time": "30:3:720",
+          "pitch": "Bb1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 59,
+          "time": "31:1",
+          "pitch": "C2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 60,
+          "time": "31:4",
+          "pitch": "E2"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 61,
+          "time": "32:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 62,
+          "time": "32:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "sub",
+          "role": "custom",
+          "intent": "Fallback synth sub replaces the upright bass; short rubber notes answer the kick.",
+          "generator": "explicit",
+          "index": 63,
+          "time": "33:1",
+          "pitch": "D1"
+        }
+      ]
+    },
+    "piano": {
+      "part": "piano",
+      "role": "lead",
+      "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+      "notes": [
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 0,
+          "time": "1:1",
+          "pitches": [
+            "D3",
+            "F3",
+            "C4",
+            "E4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 1,
+          "time": "1:2:480",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 2,
+          "time": "2:1:240",
+          "pitches": [
+            "G3",
+            "Bb3",
+            "F4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 3,
+          "time": "2:3:480",
+          "pitches": [
+            "Bb3",
+            "D4",
+            "F4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 4,
+          "time": "3:1",
+          "pitches": [
+            "C3",
+            "E3",
+            "Bb3",
+            "D4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 5,
+          "time": "3:4:480",
+          "pitches": [
+            "E3",
+            "G3",
+            "D4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 6,
+          "time": "4:2",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 7,
+          "time": "4:4:720",
+          "pitches": [
+            "A3",
+            "C4",
+            "E4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 8,
+          "time": "5:1",
+          "pitches": [
+            "D3",
+            "F3",
+            "C4",
+            "E4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 9,
+          "time": "5:2:480",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 10,
+          "time": "6:1:240",
+          "pitches": [
+            "G3",
+            "Bb3",
+            "F4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 11,
+          "time": "6:3:480",
+          "pitches": [
+            "Bb3",
+            "D4",
+            "F4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 12,
+          "time": "7:1",
+          "pitches": [
+            "C3",
+            "E3",
+            "Bb3",
+            "D4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 13,
+          "time": "7:4:480",
+          "pitches": [
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 14,
+          "time": "8:2",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 15,
+          "time": "8:4:720",
+          "pitches": [
+            "A4",
+            "C5",
+            "E5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 16,
+          "time": "9:1",
+          "pitches": [
+            "D3",
+            "F3",
+            "C4",
+            "E4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 17,
+          "time": "9:2:480",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 18,
+          "time": "10:1:240",
+          "pitches": [
+            "G3",
+            "Bb3",
+            "F4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 19,
+          "time": "10:3:480",
+          "pitches": [
+            "Bb3",
+            "D4",
+            "F4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 20,
+          "time": "11:1",
+          "pitches": [
+            "C3",
+            "E3",
+            "Bb3",
+            "D4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 21,
+          "time": "11:4:480",
+          "pitches": [
+            "E3",
+            "G3",
+            "D4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 22,
+          "time": "12:2",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 23,
+          "time": "12:4:720",
+          "pitches": [
+            "A3",
+            "C4",
+            "E4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 24,
+          "time": "13:1",
+          "pitches": [
+            "D3",
+            "F3",
+            "C4",
+            "E4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 25,
+          "time": "13:2:480",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 26,
+          "time": "14:1:240",
+          "pitches": [
+            "G3",
+            "Bb3",
+            "F4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 27,
+          "time": "14:3:480",
+          "pitches": [
+            "Bb3",
+            "D4",
+            "F4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 28,
+          "time": "15:1",
+          "pitches": [
+            "C3",
+            "E3",
+            "Bb3",
+            "D4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 29,
+          "time": "15:4:480",
+          "pitches": [
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 30,
+          "time": "16:2",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 31,
+          "time": "16:4:720",
+          "pitches": [
+            "A4",
+            "C5",
+            "E5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 32,
+          "time": "17:1",
+          "pitches": [
+            "D3",
+            "F3",
+            "C4",
+            "E4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 33,
+          "time": "17:2:480",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 34,
+          "time": "18:1:240",
+          "pitches": [
+            "G3",
+            "Bb3",
+            "F4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 35,
+          "time": "18:3:480",
+          "pitches": [
+            "Bb3",
+            "D4",
+            "F4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 36,
+          "time": "19:1",
+          "pitches": [
+            "C3",
+            "E3",
+            "Bb3",
+            "D4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 37,
+          "time": "19:4:480",
+          "pitches": [
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 38,
+          "time": "20:2",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 39,
+          "time": "20:4:720",
+          "pitches": [
+            "A4",
+            "C5",
+            "E5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 40,
+          "time": "21:1",
+          "pitches": [
+            "D3",
+            "F3",
+            "C4",
+            "E4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 41,
+          "time": "21:2:480",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 42,
+          "time": "22:1:240",
+          "pitches": [
+            "G3",
+            "Bb3",
+            "F4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 43,
+          "time": "22:3:480",
+          "pitches": [
+            "Bb3",
+            "D4",
+            "F4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 44,
+          "time": "23:1",
+          "pitches": [
+            "C3",
+            "E3",
+            "Bb3",
+            "D4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 45,
+          "time": "23:4:480",
+          "pitches": [
+            "E3",
+            "G3",
+            "D4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 46,
+          "time": "24:2",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 47,
+          "time": "24:4:720",
+          "pitches": [
+            "A3",
+            "C4",
+            "E4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 48,
+          "time": "25:1",
+          "pitches": [
+            "D3",
+            "F3",
+            "C4",
+            "E4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 49,
+          "time": "25:2:480",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 50,
+          "time": "26:1:240",
+          "pitches": [
+            "G3",
+            "Bb3",
+            "F4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 51,
+          "time": "26:3:480",
+          "pitches": [
+            "Bb3",
+            "D4",
+            "F4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 52,
+          "time": "27:1",
+          "pitches": [
+            "C3",
+            "E3",
+            "Bb3",
+            "D4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 53,
+          "time": "27:4:480",
+          "pitches": [
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 54,
+          "time": "28:2",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 55,
+          "time": "28:4:720",
+          "pitches": [
+            "A4",
+            "C5",
+            "E5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 56,
+          "time": "29:1",
+          "pitches": [
+            "D3",
+            "F3",
+            "C4",
+            "E4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 57,
+          "time": "29:2:480",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 58,
+          "time": "30:1:240",
+          "pitches": [
+            "G3",
+            "Bb3",
+            "F4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 59,
+          "time": "30:3:480",
+          "pitches": [
+            "Bb3",
+            "D4",
+            "F4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 60,
+          "time": "31:1",
+          "pitches": [
+            "C3",
+            "E3",
+            "Bb3",
+            "D4",
+            "G4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 61,
+          "time": "31:4:480",
+          "pitches": [
+            "E3",
+            "G3",
+            "D4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 62,
+          "time": "32:2",
+          "pitches": [
+            "F3",
+            "A3",
+            "E4",
+            "G4",
+            "C5"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 63,
+          "time": "32:4:480",
+          "pitches": [
+            "D3",
+            "F3",
+            "C4",
+            "E4",
+            "A4"
+          ]
+        },
+        {
+          "part": "piano",
+          "role": "lead",
+          "intent": "Sample-backed grand piano chops act like the sampled record instead of a smooth Rhodes bed.",
+          "generator": "explicit",
+          "index": 64,
+          "time": "32:4:720",
+          "pitches": [
+            "A3",
+            "C4",
+            "E4"
+          ]
+        }
+      ]
+    },
+    "strings": {
+      "part": "strings",
+      "role": "counterline",
+      "intent": "Local VSCO violin section enters as dusty orchestral stabs, not a cello melody.",
+      "notes": [
+        {
+          "part": "strings",
+          "role": "counterline",
+          "intent": "Local VSCO violin section enters as dusty orchestral stabs, not a cello melody.",
+          "generator": "explicit",
+          "index": 0,
+          "time": "4:4:480",
+          "pitches": [
+            "A3",
+            "D4",
+            "E4"
+          ]
+        },
+        {
+          "part": "strings",
+          "role": "counterline",
+          "intent": "Local VSCO violin section enters as dusty orchestral stabs, not a cello melody.",
+          "generator": "explicit",
+          "index": 1,
+          "time": "8:4:480",
+          "pitches": [
+            "G#3",
+            "D4",
+            "F4"
+          ]
+        },
+        {
+          "part": "strings",
+          "role": "counterline",
+          "intent": "Local VSCO violin section enters as dusty orchestral stabs, not a cello melody.",
+          "generator": "explicit",
+          "index": 2,
+          "time": "12:4:480",
+          "pitches": [
+            "A3",
+            "C4",
+            "E4"
+          ]
+        },
+        {
+          "part": "strings",
+          "role": "counterline",
+          "intent": "Local VSCO violin section enters as dusty orchestral stabs, not a cello melody.",
+          "generator": "explicit",
+          "index": 3,
+          "time": "16:4:480",
+          "pitches": [
+            "A3",
+            "C#4",
+            "G4"
+          ]
+        },
+        {
+          "part": "strings",
+          "role": "counterline",
+          "intent": "Local VSCO violin section enters as dusty orchestral stabs, not a cello melody.",
+          "generator": "explicit",
+          "index": 4,
+          "time": "20:4:480",
+          "pitches": [
+            "A3",
+            "D4",
+            "E4"
+          ]
+        },
+        {
+          "part": "strings",
+          "role": "counterline",
+          "intent": "Local VSCO violin section enters as dusty orchestral stabs, not a cello melody.",
+          "generator": "explicit",
+          "index": 5,
+          "time": "24:4:480",
+          "pitches": [
+            "G#3",
+            "B3",
+            "E4"
+          ]
+        },
+        {
+          "part": "strings",
+          "role": "counterline",
+          "intent": "Local VSCO violin section enters as dusty orchestral stabs, not a cello melody.",
+          "generator": "explicit",
+          "index": 6,
+          "time": "28:4:480",
+          "pitches": [
+            "A3",
+            "C4",
+            "F4"
+          ]
+        },
+        {
+          "part": "strings",
+          "role": "counterline",
+          "intent": "Local VSCO violin section enters as dusty orchestral stabs, not a cello melody.",
+          "generator": "explicit",
+          "index": 7,
+          "time": "32:3",
+          "pitches": [
+            "D4",
+            "F4",
+            "A4"
+          ]
+        }
+      ]
+    },
+    "bells": {
+      "part": "bells",
+      "role": "lead",
+      "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+      "notes": [
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 0,
+          "time": "6:2:480",
+          "pitch": "A5"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 1,
+          "time": "6:3",
+          "pitch": "C6"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 2,
+          "time": "6:3:720",
+          "pitch": "D6"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 3,
+          "time": "10:2:480",
+          "pitch": "A5"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 4,
+          "time": "10:3",
+          "pitch": "C6"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 5,
+          "time": "10:3:720",
+          "pitch": "E6"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 6,
+          "time": "18:2:480",
+          "pitch": "A5"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 7,
+          "time": "18:3",
+          "pitch": "C6"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 8,
+          "time": "18:3:720",
+          "pitch": "D6"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 9,
+          "time": "22:2:480",
+          "pitch": "Bb5"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 10,
+          "time": "22:3",
+          "pitch": "A5"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 11,
+          "time": "22:3:720",
+          "pitch": "E6"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 12,
+          "time": "30:2:480",
+          "pitch": "A5"
+        },
+        {
+          "part": "bells",
+          "role": "lead",
+          "intent": "A tiny glass hook replaces the old synth smear and only appears as a sampled-glint response.",
+          "generator": "explicit",
+          "index": 13,
+          "time": "30:3:240",
+          "pitch": "D6"
+        }
+      ]
+    },
+    "dust": {
+      "part": "dust",
+      "role": "ear_candy",
+      "intent": "Transition flecks only; no constant pad wash.",
+      "notes": [
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "ear_candy",
+          "placementIndex": 0,
+          "section": "flip",
+          "index": 0,
+          "time": "4:4:480",
+          "pitch": "C5"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "explicit",
+          "index": 1,
+          "time": "4:4:720",
+          "pitch": "D6"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "ear_candy",
+          "placementIndex": 0,
+          "section": "flip",
+          "index": 2,
+          "time": "4:4:720",
+          "pitch": "Eb5"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "explicit",
+          "index": 3,
+          "time": "12:4:480",
+          "pitch": "F6"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "ear_candy",
+          "placementIndex": 1,
+          "section": "strip",
+          "index": 4,
+          "time": "12:4:480",
+          "pitch": "C6"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "ear_candy",
+          "placementIndex": 1,
+          "section": "strip",
+          "index": 5,
+          "time": "12:4:720",
+          "pitch": "Eb6"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "explicit",
+          "index": 6,
+          "time": "13:1",
+          "pitch": "A6"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "ear_candy",
+          "placementIndex": 2,
+          "section": "strings",
+          "index": 7,
+          "time": "16:4:480",
+          "pitch": "C5"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "explicit",
+          "index": 8,
+          "time": "16:4:720",
+          "pitch": "C6"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "ear_candy",
+          "placementIndex": 2,
+          "section": "strings",
+          "index": 9,
+          "time": "16:4:720",
+          "pitch": "Eb5"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "explicit",
+          "index": 10,
+          "time": "24:4:480",
+          "pitch": "E6"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "ear_candy",
+          "placementIndex": 3,
+          "section": "tag",
+          "index": 11,
+          "time": "24:4:480",
+          "pitch": "C6"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "ear_candy",
+          "placementIndex": 3,
+          "section": "tag",
+          "index": 12,
+          "time": "24:4:720",
+          "pitch": "Eb6"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "explicit",
+          "index": 13,
+          "time": "25:1",
+          "pitch": "G6"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "ear_candy",
+          "placementIndex": 4,
+          "section": "outro",
+          "index": 14,
+          "time": "28:4:480",
+          "pitch": "C5"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "explicit",
+          "index": 15,
+          "time": "28:4:720",
+          "pitch": "D6"
+        },
+        {
+          "part": "dust",
+          "role": "ear_candy",
+          "intent": "Transition flecks only; no constant pad wash.",
+          "generator": "ear_candy",
+          "placementIndex": 4,
+          "section": "outro",
+          "index": 16,
+          "time": "28:4:720",
+          "pitch": "Eb5"
+        }
+      ]
+    }
+  }
+}

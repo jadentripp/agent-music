@@ -79,6 +79,7 @@ function single(lane, layer, sourceDir, prefix, velocityLayers, gain) {
 
 function region({ lane, layer, sourceDir, filename, layerIndex, layerCount, gain, roundRobin }) {
   const { low, high } = velocityBand(layerIndex, layerCount);
+  const hatChoke = lane === "hat" || lane === "closed_hat" || lane === "open_hat";
   return {
     lane,
     layer,
@@ -88,6 +89,7 @@ function region({ lane, layer, sourceDir, filename, layerIndex, layerCount, gain
     hivel: high,
     gain,
     oneShot: true,
+    ...(hatChoke ? { choke: "hats", pan: lane === "open_hat" ? 0.18 : 0.12 } : {}),
     roundRobin
   };
 }

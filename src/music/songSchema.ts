@@ -47,6 +47,18 @@ const instrumentSchema = z.enum([
   "electric_piano"
 ]);
 
+const trackRoleSchema = z.enum([
+  "drums",
+  "bass",
+  "harmony",
+  "lead",
+  "counterline",
+  "texture",
+  "pad",
+  "ear_candy",
+  "custom"
+]);
+
 const sectionSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -78,17 +90,34 @@ const patternSchema = z.object({
   lanes: z.record(z.string().min(1), z.string())
 });
 
-const grooveSchema = z.union([
-  z.string().min(1),
-  z.object({
-    resolution: z.number().int().min(2).max(64).optional(),
-    offsets: z.array(z.number().min(-200).max(200)).min(1)
-  })
-]);
+const grooveSchema = z.object({
+  resolution: z.number().int().min(2).max(64).optional(),
+  offsets: z.array(z.number().min(-200).max(200)).min(1)
+});
+
+const eqSchema = z.object({
+  lowGain: z.number().min(-24).max(24).optional(),
+  lowFrequency: z.number().min(20).max(2000).optional(),
+  midGain: z.number().min(-24).max(24).optional(),
+  midFrequency: z.number().min(80).max(12000).optional(),
+  midQ: z.number().min(0.1).max(18).optional(),
+  highGain: z.number().min(-24).max(24).optional(),
+  highFrequency: z.number().min(1000).max(20000).optional()
+});
+
+const compressorSchema = z.object({
+  threshold: z.number().min(-80).max(0).optional(),
+  knee: z.number().min(0).max(40).optional(),
+  ratio: z.number().min(1).max(30).optional(),
+  attack: z.number().min(0).max(1).optional(),
+  release: z.number().min(0.01).max(3).optional(),
+  makeupGain: z.number().min(0).max(4).optional()
+});
 
 const trackSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
+  role: trackRoleSchema.optional(),
   instrument: instrumentSchema,
   sound: z
     .object({
@@ -113,6 +142,8 @@ const trackSchema = z.object({
   saturation: z.number().min(0).max(1).optional(),
   lowpass: z.number().min(40).max(20000).optional(),
   highpass: z.number().min(20).max(8000).optional(),
+  eq: eqSchema.optional(),
+  compressor: compressorSchema.optional(),
   duck: z.string().min(1).optional(),
   duckAmount: z.number().min(0).max(1).optional(),
   humanize: z.number().min(0).max(0.08).optional(),
@@ -131,16 +162,25 @@ const trackSchema = z.object({
   message: "Provide notes or a pattern"
 });
 
+const tempoMapPointSchema = z.object({
+  time: timeValue,
+  bpm: z.number().min(20).max(320)
+});
+
 const songMetaSchema = z.object({
   title: z.string().min(1),
   artist: z.string().optional(),
   tempo: z.number().min(30).max(240),
+  tempoMap: z.array(tempoMapPointSchema).optional(),
   key: z.string().min(1),
   timeSignature: z.string().regex(/^\d+\/\d+$/),
   master: z.object({
     gain: z.number().min(0).max(1.2),
     limiter: z.boolean().optional(),
-    vinyl: z.number().min(0).max(1).optional()
+    vinyl: z.number().min(0).max(1).optional(),
+    reverbIrSeconds: z.number().min(0.3).max(8).optional(),
+    reverbIrDecay: z.number().min(0.5).max(6).optional(),
+    reverbReturnGain: z.number().min(0).max(1).optional()
   }),
   sections: z.array(sectionSchema).min(1),
   trackOrder: z.array(z.string().min(1)).optional()

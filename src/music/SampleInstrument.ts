@@ -15,6 +15,10 @@ export type SampleRegion = {
   release?: number;
   oneShot?: boolean;
   roundRobin?: string;
+  choke?: string;
+  pan?: number;
+  detune?: number;
+  offset?: number;
 };
 
 export type SampleInstrumentManifest = {
@@ -33,6 +37,11 @@ export type SampleTrigger = {
   gain?: number;
 };
 
+export type SampleUsage = {
+  pitch: string | number;
+  velocity: number;
+};
+
 type DecodedRegion = SampleRegion & {
   buffer: AudioBuffer;
   rootMidi?: number;
@@ -42,6 +51,7 @@ type DecodedRegion = SampleRegion & {
 
 export class SampleInstrument {
   private roundRobinIndexes = new Map<string, number>();
+  private activeChokes = new Map<string, AudioBufferSourceNode[]>();
 
   private constructor(
     private readonly context: AudioContext,
@@ -50,7 +60,7 @@ export class SampleInstrument {
     private readonly regions: DecodedRegion[]
   ) {}
 
-  static async load(context: AudioContext, manifestUrl: string) {
+  static async load(context: AudioContext, manifestUrl: string, usage: SampleUsage[] = []) {
     const response = await fetch(manifestUrl);
     if (!response.ok) {
       throw new Error(`Sample manifest failed: ${manifestUrl} (${response.status})`);
@@ -62,8 +72,9 @@ export class SampleInstrument {
     }
 
     const baseUrl = resolveBaseUrl(manifestUrl, manifest.baseUrl);
+    const regionsToLoad = regionsForUsage(manifest.regions, usage);
     const regions = await Promise.all(
-      manifest.regions.map(async (region) => {
+      regionsToLoad.map(async (region) => {
         const sampleUrl = resolveSampleUrl(region.sample, baseUrl);
         const sampleResponse = await fetch(sampleUrl);
         if (!sampleResponse.ok) {
@@ -92,24 +103,59 @@ export class SampleInstrument {
       const amp = this.context.createGain();
       source.buffer = region.buffer;
       source.playbackRate.value = playbackRate(region, pitch);
+      source.detune.value = region.detune ?? 0;
 
       const regionGain = Math.max(0.0001, gain * velocity * (region.gain ?? 1));
       const attack = region.attack ?? 0.001;
       const release = region.release ?? 0.08;
+      const sampleOffset = Math.max(0, Math.min(region.offset ?? 0, Math.max(0, region.buffer.duration - 0.001)));
       amp.gain.setValueAtTime(0.0001, startAt);
       amp.gain.exponentialRampToValueAtTime(regionGain, startAt + attack);
 
-      const stopAt = region.oneShot ? startAt + region.buffer.duration + 0.02 : startAt + duration + release;
+      const stopAt = region.oneShot ? startAt + Math.max(0.02, region.buffer.duration - sampleOffset) + 0.02 : startAt + duration + release;
       if (!region.oneShot) {
         amp.gain.setTargetAtTime(0.0001, startAt + duration, release);
       }
 
+      if (region.choke) this.choke(region.choke, startAt);
+
       source.connect(amp);
-      amp.connect(destination);
-      source.start(startAt);
+      if (typeof region.pan === "number") {
+        const panner = this.context.createStereoPanner();
+        panner.pan.value = Math.max(-1, Math.min(1, region.pan));
+        amp.connect(panner);
+        panner.connect(destination);
+      } else {
+        amp.connect(destination);
+      }
+      source.start(startAt, sampleOffset);
       source.stop(stopAt);
+      if (region.choke) {
+        const group = this.activeChokes.get(region.choke) ?? [];
+        group.push(source);
+        this.activeChokes.set(region.choke, group);
+        source.addEventListener("ended", () => {
+          const current = this.activeChokes.get(region.choke!);
+          if (!current) return;
+          const next = current.filter((item) => item !== source);
+          if (next.length) this.activeChokes.set(region.choke!, next);
+          else this.activeChokes.delete(region.choke!);
+        });
+      }
       return source;
     });
+  }
+
+  private choke(group: string, startAt: number) {
+    const sources = this.activeChokes.get(group);
+    if (!sources?.length) return;
+    for (const source of sources) {
+      try {
+        source.stop(startAt + 0.004);
+      } catch {
+      }
+    }
+    this.activeChokes.delete(group);
   }
 
   private pickRegions(pitch: string | number, velocity: number) {
@@ -140,6 +186,23 @@ export class SampleInstrument {
       return layerCandidates[index % layerCandidates.length];
     });
   }
+}
+
+function regionsForUsage(regions: SampleRegion[], usage: SampleUsage[]) {
+  if (usage.length === 0) return regions;
+  return regions.filter((region) => usage.some((item) => regionMatchesUsage(region, item)));
+}
+
+function regionMatchesUsage(region: SampleRegion, usage: SampleUsage) {
+  const midi = toMidi(usage.pitch);
+  const lane = typeof usage.pitch === "string" && midi === undefined ? usage.pitch.toLowerCase() : undefined;
+  const laneMatches = lane ? region.lane?.toLowerCase() === lane : true;
+  const velocityMatches = usage.velocity >= (region.lovel ?? 0) && usage.velocity <= (region.hivel ?? 1);
+  const keyMatches =
+    midi === undefined ||
+    (midi >= (toMidi(region.lokey) ?? Number.NEGATIVE_INFINITY) &&
+      midi <= (toMidi(region.hikey) ?? Number.POSITIVE_INFINITY));
+  return laneMatches && velocityMatches && keyMatches;
 }
 
 function resolveBaseUrl(manifestUrl: string, baseUrl?: string) {

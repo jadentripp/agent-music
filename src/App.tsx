@@ -7,6 +7,7 @@ import {
   Gauge,
   Headphones,
   ListMusic,
+  LoaderCircle,
   Pause,
   Play,
   Repeat,
@@ -32,6 +33,8 @@ function wallNowMs(): number {
 export default function App() {
   const engineRef = useRef(new AudioEngine());
   const lastTransportUiMs = useRef(0);
+  const playIntentRef = useRef(0);
+  const previewRef = useRef(readPreviewParams());
 
   /**
    * Immediate transport readout sync (pause, seek, tempo, restart, post-load).
@@ -50,11 +53,14 @@ export default function App() {
     if (now - lastTransportUiMs.current < TRANSPORT_UI_MS) return;
     flushTransportUi();
   };
-  const [selectedId, setSelectedId] = useState(
-    songFiles.some((file) => file.id === "midnight-groove") ? "midnight-groove" : songFiles[0]?.id ?? ""
-  );
+  const [selectedId, setSelectedId] = useState(() => {
+    const requestedSong = previewRef.current.song;
+    if (requestedSong && songFiles.some((file) => file.id === requestedSong)) return requestedSong;
+    return songFiles.some((file) => file.id === "midnight-groove") ? "midnight-groove" : songFiles[0]?.id ?? "";
+  });
   const [song, setSong] = useState<Song | null>(null);
   const [error, setError] = useState("");
+  const [starting, setStarting] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -64,6 +70,7 @@ export default function App() {
   const [tempoMultiplier, setTempoMultiplier] = useState(1);
   const [loopEnabled, setLoopEnabled] = useState(true);
   const [visualIntensity, setVisualIntensity] = useState(1);
+  const [sectionsOpen, setSectionsOpen] = useState(true);
   const [mixerOpen, setMixerOpen] = useState(false);
 
   const selectedFile = songFiles.find((file) => file.id === selectedId);
@@ -71,31 +78,44 @@ export default function App() {
   useEffect(() => {
     if (!selectedFile) return;
     let alive = true;
+    playIntentRef.current += 1;
     setError("");
+    setStarting(false);
+    setPlaying(false);
     setSong(null);
     loadSong(selectedFile)
       .then((loaded) => {
         if (!alive) return;
+        const requestedPreview = previewRef.current;
+        const preview =
+          requestedPreview.song === selectedFile.id ? requestedPreview : { song: undefined, section: undefined, solo: undefined };
         const nextMixer = Object.fromEntries(
           loaded.tracks.map((track) => [
             track.id,
             {
               volume: 1,
               muted: false,
-              solo: false
+              solo: preview.solo ? track.id === preview.solo : false
             }
           ])
         );
+        const previewStart = preview.section ? sectionStart(loaded, preview.section, tempoMultiplier) : 0;
         setSong(loaded);
         setMixer(nextMixer);
-        setCurrentTime(0);
+        setCurrentTime(previewStart);
+        setStarting(false);
         setPlaying(false);
         engineRef.current.loadSong(loaded, nextMixer, tempoMultiplier);
+        engineRef.current.setLoopSection(preview.section);
         engineRef.current.setLoopEnabled(loopEnabled);
+        engineRef.current.seek(previewStart);
         setDuration(engineRef.current.duration);
+        setActiveSection(engineRef.current.activeSection);
       })
       .catch((loadError) => {
         setSong(null);
+        setStarting(false);
+        setPlaying(false);
         setError(loadError instanceof Error ? loadError.message : String(loadError));
       });
 
@@ -120,7 +140,17 @@ export default function App() {
   const togglePlayback = async () => {
     if (!song) return;
     const engine = engineRef.current;
+    if (starting) {
+      playIntentRef.current += 1;
+      engine.pause();
+      setStarting(false);
+      setPlaying(false);
+      flushTransportUi();
+      return;
+    }
+
     if (playing) {
+      playIntentRef.current += 1;
       engine.pause();
       setPlaying(false);
       flushTransportUi();
@@ -128,17 +158,18 @@ export default function App() {
     }
 
     setError("");
-    // Flip the button state to "playing" *before* awaiting engine.play(). The
-    // first play of a song can take a moment while soundfonts/samples fetch;
-    // without this, the button still reads "Play" during that window and a
-    // user click triggers a second play() instead of a pause(). The engine's
-    // play-token guard makes this safe — if the user pauses mid-load, the
-    // in-flight play() aborts before the scheduler starts.
-    setPlaying(true);
+    const requestId = ++playIntentRef.current;
+    setStarting(true);
+    setPlaying(false);
     try {
       await engine.play(tickFromScheduler);
+      if (playIntentRef.current !== requestId) return;
+      setStarting(false);
+      setPlaying(true);
       flushTransportUi();
     } catch (playError) {
+      if (playIntentRef.current !== requestId) return;
+      setStarting(false);
       setPlaying(false);
       setError(playError instanceof Error ? playError.message : String(playError));
     }
@@ -191,11 +222,13 @@ export default function App() {
   };
 
   const progress = duration > 0 ? Math.min(100, Math.max(0, (currentTime / duration) * 100)) : 0;
+  const transportState = starting ? "Loading samples" : playing ? "Playing" : "Paused";
 
   return (
     <main className="studio-shell">
       <Suspense fallback={<div className="visualizer-stage" aria-hidden />}>
         <VisualizerStage
+          syncSource={engineRef.current}
           analyser={engineRef.current.analyserNode}
           activeSection={activeSection}
           intensity={visualIntensity}
@@ -235,8 +268,13 @@ export default function App() {
 
       <section className="transport-panel" aria-label="Playback controls">
         <div className="transport-main">
-          <button className="primary-button" onClick={togglePlayback} disabled={!song} title={playing ? "Pause" : "Play"}>
-            {playing ? <Pause size={24} /> : <Play size={24} />}
+          <button
+            className="primary-button"
+            onClick={togglePlayback}
+            disabled={!song}
+            title={starting ? "Cancel loading" : playing ? "Pause" : "Play"}
+          >
+            {starting ? <LoaderCircle className="loading-icon" size={24} /> : playing ? <Pause size={24} /> : <Play size={24} />}
           </button>
           <button className="icon-button" onClick={restart} disabled={!song} title="Restart">
             <SkipBack size={18} />
@@ -245,7 +283,7 @@ export default function App() {
         <div className="transport-readout">
           <div className="transport-copy">
             <strong>{activeSection?.name ?? song?.sections[0]?.name ?? "Ready"}</strong>
-            <span>{playing ? "Playing" : "Paused"} · {formatTime(currentTime)} / {formatTime(duration)}</span>
+            <span>{transportState} · {formatTime(currentTime)} / {formatTime(duration)}</span>
           </div>
           <div className="timeline" style={{ "--progress": `${progress}%` } as CSSProperties}>
             <span>{formatTime(currentTime)}</span>
@@ -274,24 +312,35 @@ export default function App() {
         </div>
       </section>
 
-      <aside className="left-rail">
-        <div className="rail-title">
-          <Headphones size={17} />
-          <span>{song?.key ?? "Key"} · {song?.tempo ?? 0} BPM</span>
-        </div>
-        <div className="section-list">
-          {song?.sections.map((section) => (
-            <button
-              key={section.id}
-              className={activeSection?.id === section.id ? "section-row active" : "section-row"}
-              onClick={() => seek(sectionStart(song, section.id, tempoMultiplier))}
-            >
-              <span>{section.name}</span>
-              <small>{formatTime(musicalTimeToSeconds(section.duration, song, tempoMultiplier))}</small>
-            </button>
-          ))}
-        </div>
-        {error && <pre className="error-box">{error}</pre>}
+      <aside className={sectionsOpen ? "left-rail" : "left-rail collapsed"}>
+        <button
+          className="rail-toggle"
+          onClick={() => setSectionsOpen((value) => !value)}
+          title={sectionsOpen ? "Hide sections" : "Show sections"}
+        >
+          {sectionsOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+        </button>
+        {sectionsOpen && (
+          <>
+            <div className="rail-title">
+              <Headphones size={17} />
+              <span>{song?.key ?? "Key"} · {song?.tempo ?? 0} BPM</span>
+            </div>
+            <div className="section-list">
+              {song?.sections.map((section) => (
+                <button
+                  key={section.id}
+                  className={activeSection?.id === section.id ? "section-row active" : "section-row"}
+                  onClick={() => seek(sectionStart(song, section.id, tempoMultiplier))}
+                >
+                  <span>{section.name}</span>
+                  <small>{formatTime(musicalTimeToSeconds(section.duration, song, tempoMultiplier))}</small>
+                </button>
+              ))}
+            </div>
+            {error && <pre className="error-box">{error}</pre>}
+          </>
+        )}
       </aside>
 
       <aside className={mixerOpen ? "right-mixer" : "right-mixer collapsed"}>
@@ -383,6 +432,16 @@ export default function App() {
 function sectionStart(song: Song, sectionId: string, tempoMultiplier: number) {
   const section = song.sections.find((item) => item.id === sectionId);
   return section ? musicalTimeToSeconds(section.start, song, tempoMultiplier) : 0;
+}
+
+function readPreviewParams() {
+  if (typeof window === "undefined") return {};
+  const params = new URLSearchParams(window.location.search);
+  return {
+    song: params.get("song") || undefined,
+    section: params.get("section") || undefined,
+    solo: params.get("solo") || undefined
+  };
 }
 
 function formatTime(seconds: number) {

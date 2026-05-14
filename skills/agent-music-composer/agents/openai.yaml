@@ -1,3 +1,3 @@
 display_name: Agent Music Composer
-short_description: Write expressive modular song folders.
-default_prompt: Create or improve an Agent-Written Music Studio song file with realistic sampled instruments, musical structure, expressive performance details, and synced visual cues.
+short_description: Write professional Agent-Written Music Studio arrangements that compile to playable song folders.
+default_prompt: Create or improve an Agent-Written Music Studio arrangement with sections, harmony, motifs, grooves, role-based parts, realistic sampled instruments, expressive performance, mix/master intent, and synced visual cues.

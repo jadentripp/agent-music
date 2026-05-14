@@ -177,6 +177,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: hat
     layer: overhead
     sample: oh_hh_closed_vl2_rr2.flac
@@ -185,6 +187,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: hat
     layer: overhead
     sample: oh_hh_closed_vl2_rr3.flac
@@ -193,6 +197,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: hat
     layer: overhead
     sample: oh_hh_closed_vl2_rr4.flac
@@ -201,6 +207,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: hat
     layer: overhead
     sample: oh_hh_closed_vl3_rr1.flac
@@ -209,6 +217,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: hat
     layer: overhead
     sample: oh_hh_closed_vl3_rr2.flac
@@ -217,6 +227,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: hat
     layer: overhead
     sample: oh_hh_closed_vl3_rr3.flac
@@ -225,6 +237,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: hat
     layer: overhead
     sample: oh_hh_closed_vl3_rr4.flac
@@ -233,6 +247,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: hat
     layer: overhead
     sample: oh_hh_closed_vl4_rr1.flac
@@ -241,6 +257,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: hat
     layer: overhead
     sample: oh_hh_closed_vl4_rr2.flac
@@ -249,6 +267,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: hat
     layer: overhead
     sample: oh_hh_closed_vl4_rr3.flac
@@ -257,6 +277,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: hat
     layer: overhead
     sample: oh_hh_closed_vl4_rr4.flac
@@ -265,6 +287,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl2_rr1.flac
@@ -273,6 +297,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl2_rr2.flac
@@ -281,6 +307,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl2_rr3.flac
@@ -289,6 +317,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl2_rr4.flac
@@ -297,6 +327,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl3_rr1.flac
@@ -305,6 +337,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl3_rr2.flac
@@ -313,6 +347,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl3_rr3.flac
@@ -321,6 +357,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl3_rr4.flac
@@ -329,6 +367,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl4_rr1.flac
@@ -337,6 +377,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl4_rr2.flac
@@ -345,6 +387,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl4_rr3.flac
@@ -353,6 +397,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: closed_hat
     layer: overhead
     sample: oh_hh_closed_vl4_rr4.flac
@@ -361,6 +407,8 @@ regions:
     gain: 0.66
     oneShot: true
     roundRobin: closed_hat:overhead
+    choke: hats
+    pan: 0.12
   - lane: open_hat
     layer: overhead
     sample: oh_hh_open_vl2_rr1.flac
@@ -369,6 +417,8 @@ regions:
     gain: 0.62
     oneShot: true
     roundRobin: open_hat:overhead
+    choke: hats
+    pan: 0.18
   - lane: open_hat
     layer: overhead
     sample: oh_hh_open_vl2_rr2.flac
@@ -377,6 +427,8 @@ regions:
     gain: 0.62
     oneShot: true
     roundRobin: open_hat:overhead
+    choke: hats
+    pan: 0.18
   - lane: open_hat
     layer: overhead
     sample: oh_hh_open_vl2_rr3.flac
@@ -385,6 +437,8 @@ regions:
     gain: 0.62
     oneShot: true
     roundRobin: open_hat:overhead
+    choke: hats
+    pan: 0.18
   - lane: open_hat
     layer: overhead
     sample: oh_hh_open_vl3_rr1.flac
@@ -393,6 +447,8 @@ regions:
     gain: 0.62
     oneShot: true
     roundRobin: open_hat:overhead
+    choke: hats
+    pan: 0.18
   - lane: open_hat
     layer: overhead
     sample: oh_hh_open_vl3_rr2.flac
@@ -401,6 +457,8 @@ regions:
     gain: 0.62
     oneShot: true
     roundRobin: open_hat:overhead
+    choke: hats
+    pan: 0.18
   - lane: open_hat
     layer: overhead
     sample: oh_hh_open_vl3_rr3.flac
@@ -409,6 +467,8 @@ regions:
     gain: 0.62
     oneShot: true
     roundRobin: open_hat:overhead
+    choke: hats
+    pan: 0.18
   - lane: open_hat
     layer: overhead
     sample: oh_hh_open_vl4_rr1.flac
@@ -417,6 +477,8 @@ regions:
     gain: 0.62
     oneShot: true
     roundRobin: open_hat:overhead
+    choke: hats
+    pan: 0.18
   - lane: open_hat
     layer: overhead
     sample: oh_hh_open_vl4_rr2.flac
@@ -425,6 +487,8 @@ regions:
     gain: 0.62
     oneShot: true
     roundRobin: open_hat:overhead
+    choke: hats
+    pan: 0.18
   - lane: open_hat
     layer: overhead
     sample: oh_hh_open_vl4_rr3.flac
@@ -433,6 +497,8 @@ regions:
     gain: 0.62
     oneShot: true
     roundRobin: open_hat:overhead
+    choke: hats
+    pan: 0.18
   - lane: rim
     layer: close
     sample: snaremic_snare_crossstick_vl6.flac

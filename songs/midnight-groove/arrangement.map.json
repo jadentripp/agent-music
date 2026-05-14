@@ -1,0 +1,2278 @@
+{
+  "version": 1,
+  "tracks": {
+    "drums": {
+      "part": "drums",
+      "role": "drums",
+      "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+      "pattern": {
+        "part": "drums",
+        "role": "drums",
+        "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+        "generator": "pattern"
+      },
+      "notes": [
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "explicit",
+          "index": 0,
+          "time": "1:1",
+          "pitch": "crash"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "explicit",
+          "index": 1,
+          "time": "2:4:480",
+          "pitch": "rim"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "explicit",
+          "index": 2,
+          "time": "3:4:720",
+          "pitch": "open_hat"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "explicit",
+          "index": 3,
+          "time": "4:3:480",
+          "pitch": "tom"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "fill",
+          "section": "verse1",
+          "index": 4,
+          "time": "4:4:480",
+          "pitch": "snare"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "fill",
+          "section": "verse1",
+          "index": 5,
+          "time": "4:4:720",
+          "pitch": "open_hat"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "fill",
+          "section": "breakdown",
+          "index": 6,
+          "time": "12:4:480",
+          "pitch": "snare"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "fill",
+          "section": "breakdown",
+          "index": 7,
+          "time": "12:4:720",
+          "pitch": "open_hat"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "fill",
+          "section": "verse2",
+          "index": 8,
+          "time": "20:4:480",
+          "pitch": "snare"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "fill",
+          "section": "verse2",
+          "index": 9,
+          "time": "20:4:720",
+          "pitch": "open_hat"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "fill",
+          "section": "outro",
+          "index": 10,
+          "time": "28:4:480",
+          "pitch": "snare"
+        },
+        {
+          "part": "drums",
+          "role": "drums",
+          "intent": "Dusty backbeat with late hats, soft ghost notes, and short fills into each new section.",
+          "generator": "fill",
+          "section": "outro",
+          "index": 11,
+          "time": "28:4:720",
+          "pitch": "open_hat"
+        }
+      ]
+    },
+    "bass": {
+      "part": "bass",
+      "role": "bass",
+      "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+      "notes": [
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 0,
+          "chord": "Fm7",
+          "section": "intro",
+          "index": 0,
+          "time": "1:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 0,
+          "chord": "Fm7",
+          "section": "intro",
+          "index": 1,
+          "time": "1:3",
+          "pitch": "C2"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 0,
+          "chord": "Fm7",
+          "section": "intro",
+          "index": 2,
+          "time": "1:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 1,
+          "chord": "Fm7",
+          "section": "intro",
+          "index": 3,
+          "time": "3:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 1,
+          "chord": "Fm7",
+          "section": "intro",
+          "index": 4,
+          "time": "3:3",
+          "pitch": "C2"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 1,
+          "chord": "Fm7",
+          "section": "intro",
+          "index": 5,
+          "time": "3:4:480",
+          "pitch": "G1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 2,
+          "chord": "Abmaj7",
+          "section": "verse1",
+          "index": 6,
+          "time": "5:1",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 2,
+          "chord": "Abmaj7",
+          "section": "verse1",
+          "index": 7,
+          "time": "5:3",
+          "pitch": "D#2"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 2,
+          "chord": "Abmaj7",
+          "section": "verse1",
+          "index": 8,
+          "time": "5:4:480",
+          "pitch": "C1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 3,
+          "chord": "Dbmaj7",
+          "section": "verse1",
+          "index": 9,
+          "time": "7:1",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 3,
+          "chord": "Dbmaj7",
+          "section": "verse1",
+          "index": 10,
+          "time": "7:3",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 3,
+          "chord": "Dbmaj7",
+          "section": "verse1",
+          "index": 11,
+          "time": "7:4:480",
+          "pitch": "A1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 4,
+          "chord": "Abmaj7",
+          "section": "verse1",
+          "index": 12,
+          "time": "9:1",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 4,
+          "chord": "Abmaj7",
+          "section": "verse1",
+          "index": 13,
+          "time": "9:3",
+          "pitch": "D#2"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 4,
+          "chord": "Abmaj7",
+          "section": "verse1",
+          "index": 14,
+          "time": "9:4:480",
+          "pitch": "C1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 5,
+          "chord": "Dbmaj7",
+          "section": "verse1",
+          "index": 15,
+          "time": "11:1",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 5,
+          "chord": "Dbmaj7",
+          "section": "verse1",
+          "index": 16,
+          "time": "11:3",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 5,
+          "chord": "Dbmaj7",
+          "section": "verse1",
+          "index": 17,
+          "time": "11:4:480",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 6,
+          "chord": "C7",
+          "section": "verse1",
+          "index": 18,
+          "time": "12:1",
+          "pitch": "C1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 6,
+          "chord": "C7",
+          "section": "verse1",
+          "index": 19,
+          "time": "12:3",
+          "pitch": "G1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 6,
+          "chord": "C7",
+          "section": "verse1",
+          "index": 20,
+          "time": "12:4:480",
+          "pitch": "C1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 7,
+          "chord": "Dbmaj7",
+          "section": "breakdown",
+          "index": 21,
+          "time": "13:1",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 7,
+          "chord": "Dbmaj7",
+          "section": "breakdown",
+          "index": 22,
+          "time": "13:3",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 7,
+          "chord": "Dbmaj7",
+          "section": "breakdown",
+          "index": 23,
+          "time": "13:4:480",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 8,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 24,
+          "time": "14:1",
+          "pitch": "C1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 8,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 25,
+          "time": "14:3",
+          "pitch": "G1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 8,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 26,
+          "time": "14:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 9,
+          "chord": "Fm7",
+          "section": "breakdown",
+          "index": 27,
+          "time": "15:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 9,
+          "chord": "Fm7",
+          "section": "breakdown",
+          "index": 28,
+          "time": "15:3",
+          "pitch": "C2"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 9,
+          "chord": "Fm7",
+          "section": "breakdown",
+          "index": 29,
+          "time": "15:4:480",
+          "pitch": "A1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 10,
+          "chord": "Bb13",
+          "section": "breakdown",
+          "index": 30,
+          "time": "16:1",
+          "pitch": "A#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 10,
+          "chord": "Bb13",
+          "section": "breakdown",
+          "index": 31,
+          "time": "16:3",
+          "pitch": "F2"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 10,
+          "chord": "Bb13",
+          "section": "breakdown",
+          "index": 32,
+          "time": "16:4:480",
+          "pitch": "C1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 11,
+          "chord": "Dbmaj7",
+          "section": "breakdown",
+          "index": 33,
+          "time": "17:1",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 11,
+          "chord": "Dbmaj7",
+          "section": "breakdown",
+          "index": 34,
+          "time": "17:3",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 11,
+          "chord": "Dbmaj7",
+          "section": "breakdown",
+          "index": 35,
+          "time": "17:4:480",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 12,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 36,
+          "time": "18:1",
+          "pitch": "C1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 12,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 37,
+          "time": "18:3",
+          "pitch": "G1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 12,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 38,
+          "time": "18:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 13,
+          "chord": "Fm7",
+          "section": "breakdown",
+          "index": 39,
+          "time": "19:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 13,
+          "chord": "Fm7",
+          "section": "breakdown",
+          "index": 40,
+          "time": "19:3",
+          "pitch": "C2"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 13,
+          "chord": "Fm7",
+          "section": "breakdown",
+          "index": 41,
+          "time": "19:4:480",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 14,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 42,
+          "time": "20:1",
+          "pitch": "C1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 14,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 43,
+          "time": "20:3",
+          "pitch": "G1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 14,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 44,
+          "time": "20:4:480",
+          "pitch": "A1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 15,
+          "chord": "Abmaj7",
+          "section": "verse2",
+          "index": 45,
+          "time": "21:1",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 15,
+          "chord": "Abmaj7",
+          "section": "verse2",
+          "index": 46,
+          "time": "21:3",
+          "pitch": "D#2"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 15,
+          "chord": "Abmaj7",
+          "section": "verse2",
+          "index": 47,
+          "time": "21:4:480",
+          "pitch": "C1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 16,
+          "chord": "Dbmaj7",
+          "section": "verse2",
+          "index": 48,
+          "time": "23:1",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 16,
+          "chord": "Dbmaj7",
+          "section": "verse2",
+          "index": 49,
+          "time": "23:3",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 16,
+          "chord": "Dbmaj7",
+          "section": "verse2",
+          "index": 50,
+          "time": "23:4:480",
+          "pitch": "A1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 17,
+          "chord": "Abmaj7",
+          "section": "verse2",
+          "index": 51,
+          "time": "25:1",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 17,
+          "chord": "Abmaj7",
+          "section": "verse2",
+          "index": 52,
+          "time": "25:3",
+          "pitch": "D#2"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 17,
+          "chord": "Abmaj7",
+          "section": "verse2",
+          "index": 53,
+          "time": "25:4:480",
+          "pitch": "C1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 18,
+          "chord": "Dbmaj7",
+          "section": "verse2",
+          "index": 54,
+          "time": "27:1",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 18,
+          "chord": "Dbmaj7",
+          "section": "verse2",
+          "index": 55,
+          "time": "27:3",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 18,
+          "chord": "Dbmaj7",
+          "section": "verse2",
+          "index": 56,
+          "time": "27:4:480",
+          "pitch": "A1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 19,
+          "chord": "Abmaj7",
+          "section": "outro",
+          "index": 57,
+          "time": "29:1",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 19,
+          "chord": "Abmaj7",
+          "section": "outro",
+          "index": 58,
+          "time": "29:3",
+          "pitch": "D#2"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 19,
+          "chord": "Abmaj7",
+          "section": "outro",
+          "index": 59,
+          "time": "29:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 20,
+          "chord": "Eb7",
+          "section": "outro",
+          "index": 60,
+          "time": "30:1",
+          "pitch": "D#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 20,
+          "chord": "Eb7",
+          "section": "outro",
+          "index": 61,
+          "time": "30:3",
+          "pitch": "A#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 20,
+          "chord": "Eb7",
+          "section": "outro",
+          "index": 62,
+          "time": "30:4:480",
+          "pitch": "D1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 21,
+          "chord": "Dbmaj7",
+          "section": "outro",
+          "index": 63,
+          "time": "31:1",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 21,
+          "chord": "Dbmaj7",
+          "section": "outro",
+          "index": 64,
+          "time": "31:3",
+          "pitch": "G#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 21,
+          "chord": "Dbmaj7",
+          "section": "outro",
+          "index": 65,
+          "time": "31:4:480",
+          "pitch": "C#1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 22,
+          "chord": "C7",
+          "section": "outro",
+          "index": 66,
+          "time": "32:1",
+          "pitch": "C1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 22,
+          "chord": "C7",
+          "section": "outro",
+          "index": 67,
+          "time": "32:3",
+          "pitch": "G1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 22,
+          "chord": "C7",
+          "section": "outro",
+          "index": 68,
+          "time": "32:4:480",
+          "pitch": "E1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 23,
+          "chord": "Fm7",
+          "section": "outro",
+          "index": 69,
+          "time": "33:1",
+          "pitch": "F1"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 23,
+          "chord": "Fm7",
+          "section": "outro",
+          "index": 70,
+          "time": "33:3",
+          "pitch": "C2"
+        },
+        {
+          "part": "bass",
+          "role": "bass",
+          "intent": "Warm walking root movement that anchors the low end while ducking around the kick.",
+          "generator": "bass",
+          "harmonyIndex": 23,
+          "chord": "Fm7",
+          "section": "outro",
+          "index": 71,
+          "time": "33:4:480",
+          "pitch": "E1"
+        }
+      ]
+    },
+    "rhodes": {
+      "part": "rhodes",
+      "role": "harmony",
+      "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+      "notes": [
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 0,
+          "chord": "Fm7",
+          "section": "intro",
+          "index": 0,
+          "time": "1:1",
+          "pitches": [
+            "G#3",
+            "D#4",
+            "C5",
+            "F5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 1,
+          "chord": "Fm7",
+          "section": "intro",
+          "index": 1,
+          "time": "3:1",
+          "pitches": [
+            "G#3",
+            "D#4",
+            "C5",
+            "F5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 2,
+          "chord": "Abmaj7",
+          "section": "verse1",
+          "index": 2,
+          "time": "5:1",
+          "pitches": [
+            "C4",
+            "G4",
+            "D#5",
+            "G#5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 3,
+          "chord": "Dbmaj7",
+          "section": "verse1",
+          "index": 3,
+          "time": "7:1",
+          "pitches": [
+            "G#3",
+            "C#4",
+            "C5",
+            "F5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 4,
+          "chord": "Abmaj7",
+          "section": "verse1",
+          "index": 4,
+          "time": "9:1",
+          "pitches": [
+            "C4",
+            "G4",
+            "D#5",
+            "G#5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 5,
+          "chord": "Dbmaj7",
+          "section": "verse1",
+          "index": 5,
+          "time": "11:1",
+          "pitches": [
+            "G#3",
+            "C#4",
+            "C5",
+            "F5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 6,
+          "chord": "C7",
+          "section": "verse1",
+          "index": 6,
+          "time": "12:1",
+          "pitches": [
+            "G3",
+            "C4",
+            "A#4",
+            "E5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 7,
+          "chord": "Dbmaj7",
+          "section": "breakdown",
+          "index": 7,
+          "time": "13:1",
+          "pitches": [
+            "G#3",
+            "C#4",
+            "C5",
+            "F5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 8,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 8,
+          "time": "14:1",
+          "pitches": [
+            "G3",
+            "C4",
+            "A#4",
+            "E5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 9,
+          "chord": "Fm7",
+          "section": "breakdown",
+          "index": 9,
+          "time": "15:1",
+          "pitches": [
+            "G#3",
+            "D#4",
+            "C5",
+            "F5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 10,
+          "chord": "Bb13",
+          "section": "breakdown",
+          "index": 10,
+          "time": "16:1",
+          "pitches": [
+            "D4",
+            "G#4",
+            "F5",
+            "A#5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 11,
+          "chord": "Dbmaj7",
+          "section": "breakdown",
+          "index": 11,
+          "time": "17:1",
+          "pitches": [
+            "G#3",
+            "C#4",
+            "C5",
+            "F5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 12,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 12,
+          "time": "18:1",
+          "pitches": [
+            "G3",
+            "C4",
+            "A#4",
+            "E5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 13,
+          "chord": "Fm7",
+          "section": "breakdown",
+          "index": 13,
+          "time": "19:1",
+          "pitches": [
+            "G#3",
+            "D#4",
+            "C5",
+            "F5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 14,
+          "chord": "C7",
+          "section": "breakdown",
+          "index": 14,
+          "time": "20:1",
+          "pitches": [
+            "G3",
+            "C4",
+            "A#4",
+            "E5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 15,
+          "chord": "Abmaj7",
+          "section": "verse2",
+          "index": 15,
+          "time": "21:1",
+          "pitches": [
+            "C4",
+            "G4",
+            "D#5",
+            "G#5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 16,
+          "chord": "Dbmaj7",
+          "section": "verse2",
+          "index": 16,
+          "time": "23:1",
+          "pitches": [
+            "G#3",
+            "C#4",
+            "C5",
+            "F5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 17,
+          "chord": "Abmaj7",
+          "section": "verse2",
+          "index": 17,
+          "time": "25:1",
+          "pitches": [
+            "C4",
+            "G4",
+            "D#5",
+            "G#5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 18,
+          "chord": "Dbmaj7",
+          "section": "verse2",
+          "index": 18,
+          "time": "27:1",
+          "pitches": [
+            "G#3",
+            "C#4",
+            "C5",
+            "F5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 19,
+          "chord": "Abmaj7",
+          "section": "outro",
+          "index": 19,
+          "time": "29:1",
+          "pitches": [
+            "C4",
+            "G4",
+            "D#5",
+            "G#5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 20,
+          "chord": "Eb7",
+          "section": "outro",
+          "index": 20,
+          "time": "30:1",
+          "pitches": [
+            "A#3",
+            "D#4",
+            "C#5",
+            "G5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 21,
+          "chord": "Dbmaj7",
+          "section": "outro",
+          "index": 21,
+          "time": "31:1",
+          "pitches": [
+            "G#3",
+            "C#4",
+            "C5",
+            "F5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 22,
+          "chord": "C7",
+          "section": "outro",
+          "index": 22,
+          "time": "32:1",
+          "pitches": [
+            "G3",
+            "C4",
+            "A#4",
+            "E5"
+          ]
+        },
+        {
+          "part": "rhodes",
+          "role": "harmony",
+          "intent": "Wide sparse chord bed that states the harmony without crowding bass or cello.",
+          "generator": "harmony",
+          "harmonyIndex": 23,
+          "chord": "Fm7",
+          "section": "outro",
+          "index": 23,
+          "time": "33:1",
+          "pitches": [
+            "G#3",
+            "D#4",
+            "C5",
+            "F5"
+          ]
+        }
+      ]
+    },
+    "texture": {
+      "part": "texture",
+      "role": "ear_candy",
+      "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+      "notes": [
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 0,
+          "time": "1:1",
+          "pitches": [
+            "F5",
+            "G#5",
+            "C6"
+          ]
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 1,
+          "time": "1:3:480",
+          "pitch": "C6"
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 2,
+          "time": "1:4",
+          "pitch": "D#6"
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 3,
+          "time": "2:3",
+          "pitches": [
+            "C5",
+            "D#5",
+            "A#5"
+          ]
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 4,
+          "time": "3:4:480",
+          "pitch": "F6"
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 5,
+          "time": "12:4:480",
+          "pitch": "C6"
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 6,
+          "time": "12:4:720",
+          "pitch": "G#5"
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 7,
+          "time": "13:1",
+          "pitch": "D#6"
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 8,
+          "time": "20:4:480",
+          "pitch": "D#6"
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 9,
+          "time": "20:4:720",
+          "pitch": "F6"
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 10,
+          "time": "21:1",
+          "pitches": [
+            "C6",
+            "D#6",
+            "G#6"
+          ]
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 11,
+          "time": "28:4:480",
+          "pitch": "A#5"
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 12,
+          "time": "28:4:720",
+          "pitch": "C6"
+        },
+        {
+          "part": "texture",
+          "role": "ear_candy",
+          "intent": "Sparse prismatic pings and transition halos instead of a constant wavy pad.",
+          "generator": "explicit",
+          "index": 13,
+          "time": "29:1",
+          "pitches": [
+            "F5",
+            "C6",
+            "F6"
+          ]
+        }
+      ]
+    },
+    "cello": {
+      "part": "cello",
+      "role": "counterline",
+      "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+      "notes": [
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 0,
+          "placementIndex": 1,
+          "section": "verse1",
+          "index": 0,
+          "time": "5:1",
+          "pitch": "G4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 1,
+          "placementIndex": 1,
+          "section": "verse1",
+          "index": 1,
+          "time": "5:3",
+          "pitch": "G#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 2,
+          "placementIndex": 1,
+          "section": "verse1",
+          "index": 2,
+          "time": "5:4",
+          "pitch": "A#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 3,
+          "placementIndex": 1,
+          "section": "verse1",
+          "index": 3,
+          "time": "6:2",
+          "pitch": "C#5"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 4,
+          "placementIndex": 1,
+          "section": "verse1",
+          "index": 4,
+          "time": "6:3",
+          "pitch": "G#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 5,
+          "placementIndex": 1,
+          "section": "verse1",
+          "index": 5,
+          "time": "7:1",
+          "pitch": "A#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 6,
+          "placementIndex": 1,
+          "section": "verse1",
+          "index": 6,
+          "time": "7:2",
+          "pitch": "C5"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 7,
+          "placementIndex": 1,
+          "section": "verse1",
+          "index": 7,
+          "time": "7:4",
+          "pitch": "D#5"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 0,
+          "placementIndex": 2,
+          "section": "breakdown",
+          "index": 8,
+          "time": "13:1",
+          "pitch": "D#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 1,
+          "placementIndex": 2,
+          "section": "breakdown",
+          "index": 9,
+          "time": "13:3",
+          "pitch": "F4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 2,
+          "placementIndex": 2,
+          "section": "breakdown",
+          "index": 10,
+          "time": "13:4",
+          "pitch": "G4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 3,
+          "placementIndex": 2,
+          "section": "breakdown",
+          "index": 11,
+          "time": "14:2",
+          "pitch": "A#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 4,
+          "placementIndex": 2,
+          "section": "breakdown",
+          "index": 12,
+          "time": "14:3",
+          "pitch": "F4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 5,
+          "placementIndex": 2,
+          "section": "breakdown",
+          "index": 13,
+          "time": "15:1",
+          "pitch": "G4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 6,
+          "placementIndex": 2,
+          "section": "breakdown",
+          "index": 14,
+          "time": "15:2",
+          "pitch": "G#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 7,
+          "placementIndex": 2,
+          "section": "breakdown",
+          "index": 15,
+          "time": "15:4",
+          "pitch": "C5"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 0,
+          "placementIndex": 3,
+          "section": "verse2",
+          "index": 16,
+          "time": "21:1",
+          "pitch": "G#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 1,
+          "placementIndex": 3,
+          "section": "verse2",
+          "index": 17,
+          "time": "21:3",
+          "pitch": "A#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 2,
+          "placementIndex": 3,
+          "section": "verse2",
+          "index": 18,
+          "time": "21:4",
+          "pitch": "C5"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 3,
+          "placementIndex": 3,
+          "section": "verse2",
+          "index": 19,
+          "time": "22:2",
+          "pitch": "D#5"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 4,
+          "placementIndex": 3,
+          "section": "verse2",
+          "index": 20,
+          "time": "22:3",
+          "pitch": "A#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 5,
+          "placementIndex": 3,
+          "section": "verse2",
+          "index": 21,
+          "time": "23:1",
+          "pitch": "C5"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 6,
+          "placementIndex": 3,
+          "section": "verse2",
+          "index": 22,
+          "time": "23:2",
+          "pitch": "C#5"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 7,
+          "placementIndex": 3,
+          "section": "verse2",
+          "index": 23,
+          "time": "23:4",
+          "pitch": "F5"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 0,
+          "placementIndex": 4,
+          "section": "outro",
+          "index": 24,
+          "time": "29:1",
+          "pitch": "C#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 1,
+          "placementIndex": 4,
+          "section": "outro",
+          "index": 25,
+          "time": "29:3",
+          "pitch": "D#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 2,
+          "placementIndex": 4,
+          "section": "outro",
+          "index": 26,
+          "time": "29:4",
+          "pitch": "F4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 3,
+          "placementIndex": 4,
+          "section": "outro",
+          "index": 27,
+          "time": "30:2",
+          "pitch": "G#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 4,
+          "placementIndex": 4,
+          "section": "outro",
+          "index": 28,
+          "time": "30:3",
+          "pitch": "D#4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 5,
+          "placementIndex": 4,
+          "section": "outro",
+          "index": 29,
+          "time": "31:1",
+          "pitch": "F4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 6,
+          "placementIndex": 4,
+          "section": "outro",
+          "index": 30,
+          "time": "31:2",
+          "pitch": "G4"
+        },
+        {
+          "part": "cello",
+          "role": "counterline",
+          "intent": "Call-and-response melodic answer that develops the hook at section starts.",
+          "generator": "motif",
+          "motif": "cello-answer",
+          "motifIndex": 7,
+          "placementIndex": 4,
+          "section": "outro",
+          "index": 31,
+          "time": "31:4",
+          "pitch": "A#4"
+        }
+      ]
+    },
+    "lead": {
+      "part": "lead",
+      "role": "lead",
+      "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+      "notes": [
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 0,
+          "time": "1:3",
+          "pitch": "C5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 1,
+          "time": "1:3:480",
+          "pitch": "C#5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 2,
+          "time": "1:4",
+          "pitch": "D#5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 3,
+          "time": "2:2",
+          "pitch": "C5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 4,
+          "time": "2:2:480",
+          "pitch": "G#4"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 5,
+          "time": "2:3",
+          "pitch": "A#4"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 6,
+          "time": "3:3",
+          "pitch": "C5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 7,
+          "time": "3:3:480",
+          "pitch": "D#5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 8,
+          "time": "4:1",
+          "pitch": "F5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 9,
+          "time": "21:3",
+          "pitch": "C5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 10,
+          "time": "21:3:480",
+          "pitch": "C#5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 11,
+          "time": "21:4",
+          "pitch": "D#5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 12,
+          "time": "22:2",
+          "pitch": "C5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 13,
+          "time": "22:2:480",
+          "pitch": "G#4"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 14,
+          "time": "22:3",
+          "pitch": "A#4"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 15,
+          "time": "23:3",
+          "pitch": "C5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 16,
+          "time": "23:3:480",
+          "pitch": "D#5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 17,
+          "time": "24:1",
+          "pitch": "F5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 18,
+          "time": "24:3",
+          "pitch": "D#5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 19,
+          "time": "24:4",
+          "pitch": "C5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 20,
+          "time": "25:3",
+          "pitch": "G#5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 21,
+          "time": "25:3:480",
+          "pitch": "F5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 22,
+          "time": "26:1",
+          "pitch": "D#5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 23,
+          "time": "26:3",
+          "pitch": "C5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 24,
+          "time": "26:4",
+          "pitch": "A#4"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 25,
+          "time": "29:3",
+          "pitch": "C6"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 26,
+          "time": "29:3:480",
+          "pitch": "C#6"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 27,
+          "time": "30:1",
+          "pitch": "F6"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 28,
+          "time": "31:3",
+          "pitch": "A#5"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 29,
+          "time": "31:4",
+          "pitch": "C6"
+        },
+        {
+          "part": "lead",
+          "role": "lead",
+          "intent": "A recognizable intro signal that returns as the verse two payoff, then fades into a high outro echo.",
+          "generator": "explicit",
+          "index": 30,
+          "time": "33:1",
+          "pitch": "F6"
+        }
+      ]
+    }
+  }
+}

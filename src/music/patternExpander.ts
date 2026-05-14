@@ -6,7 +6,16 @@ const flamChars = new Set(["f"]);
 const hitChars = new Set(["x", "o", "*"]);
 const restChars = new Set([".", "-", "_", "~"]);
 
-export function expandPattern(pattern: DrumPattern, beatsPerMeasure: number, patternStartBeat: number): NoteEvent[] {
+/**
+ * @param bpm Song tempo at pattern start (base `song.tempo`; use `SongMeta.tempo` in loader).
+ * Off-step swing delay = `swing * (one step duration in seconds)` so feel scales with BPM.
+ */
+export function expandPattern(
+  pattern: DrumPattern,
+  beatsPerMeasure: number,
+  patternStartBeat: number,
+  bpm: number
+): NoteEvent[] {
   const resolution = pattern.resolution ?? 16;
   const bars = pattern.bars ?? 1;
   const repeat = pattern.repeat ?? 1;
@@ -14,7 +23,8 @@ export function expandPattern(pattern: DrumPattern, beatsPerMeasure: number, pat
   const beatsPerStep = beatsPerMeasure / resolution;
   const beatsPerPhrase = beatsPerStep * stepsTotal;
   const swing = pattern.swing ?? 0;
-  const swingSeconds = swing > 0 ? swing * beatsPerStep : 0;
+  const secondsPerBeat = 60 / Math.max(1, bpm);
+  const secondsPerStep = secondsPerBeat * beatsPerStep;
 
   const defaultVel = pattern.velocity?.default ?? 0.78;
   const accentVel = pattern.velocity?.accent ?? Math.min(1, defaultVel + 0.22);
@@ -51,7 +61,7 @@ export function expandPattern(pattern: DrumPattern, beatsPerMeasure: number, pat
       }
 
       const offIsOdd = index % 2 === 1;
-      const swingOffsetSeconds = offIsOdd ? swingSeconds : 0;
+      const swingOffsetSeconds = offIsOdd && swing > 0 ? swing * secondsPerStep : 0;
 
       for (let phrase = 0; phrase < repeat; phrase += 1) {
         const stepStartBeat = patternStartBeat + phrase * beatsPerPhrase + index * beatsPerStep;

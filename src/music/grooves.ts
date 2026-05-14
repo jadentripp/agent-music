@@ -6,53 +6,10 @@ export type ResolvedGroove = {
   offsetsMs: number[];
 };
 
-const grooves: Record<string, ResolvedGroove> = {
-  "dilla-drag": {
-    resolution: 16,
-    offsetsMs: [
-      0, 0, 22, 0,
-      0, 0, 14, 0,
-      0, 0, 26, 0,
-      0, 0, 18, 0
-    ]
-  },
-  "j-rush": {
-    resolution: 16,
-    offsetsMs: [
-      0, 0, -10, 0,
-      0, 0, -6, 0,
-      0, 0, -12, 0,
-      0, 0, -8, 0
-    ]
-  },
-  "boom-bap": {
-    resolution: 16,
-    offsetsMs: [
-      0, 0, 0, 0,
-      6, 0, 0, 0,
-      0, 0, 0, 0,
-      6, 0, 0, 0
-    ]
-  },
-  "mpc-swing-58": {
-    resolution: 16,
-    offsetsMs: [
-      0, 0, 38, 0,
-      0, 0, 38, 0,
-      0, 0, 38, 0,
-      0, 0, 38, 0
-    ]
-  }
-};
-
 export function resolveGroove(spec: GrooveSpec | undefined): ResolvedGroove | undefined {
   if (!spec) return undefined;
-  if (typeof spec === "string") {
-    const found = grooves[spec];
-    if (!found) {
-      throw new Error(`Unknown groove "${spec}". Known: ${Object.keys(grooves).join(", ")}`);
-    }
-    return found;
+  if (!Array.isArray(spec.offsets) || spec.offsets.length === 0) {
+    throw new Error("groove.offsets must be a non-empty array of millisecond offsets per step");
   }
   return {
     resolution: spec.resolution ?? 16,
@@ -82,5 +39,3 @@ function clampOffset(value: number): number {
   if (value < -0.25) return -0.25;
   return value;
 }
-
-export const grooveNames = Object.keys(grooves);

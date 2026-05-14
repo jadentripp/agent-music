@@ -7,82 +7,18 @@ const root = process.cwd();
 const songsDir = path.join(root, "songs");
 const [command, ...args] = process.argv.slice(2);
 
-const instruments = {
-  grand_piano: {
-    name: "Grand Piano",
-    sound: { source: "sample_pack", samplePack: "/samples/salamander-grand-v8/manifest.yaml" },
-    mix: { gain: 0.56, pan: -0.12, reverb: 0.42, humanize: 0.014 },
-    notes: [{ time: "1:1", duration: "2n", pitches: ["C3", "G3", "E4"], velocity: 0.5, strum: 0.018 }]
-  },
-  cinematic_strings: {
-    name: "Cinematic Strings",
-    sound: { source: "sample_pack", samplePack: "/samples/vsco-violin-section-sustain/manifest.yaml" },
-    mix: { gain: 0.48, pan: 0.18, reverb: 0.62, humanize: 0.018 },
-    notes: [{ time: "1:1", duration: "2m", pitch: "C4", velocity: 0.46, articulation: "sustain" }]
-  },
-  solo_cello: {
-    name: "Solo Cello",
-    sound: { source: "sample_pack", samplePack: "/samples/vsco-cello-section-sustain/manifest.yaml" },
-    mix: { gain: 0.5, pan: -0.18, reverb: 0.5, humanize: 0.016 },
-    notes: [{ time: "1:1", duration: "2n", pitch: "C3", velocity: 0.52, articulation: "legato" }]
-  },
-  drum_kit: {
-    name: "Virtuosity Kit",
-    sound: { source: "sample_pack", samplePack: "/samples/virtuosity-kit/manifest.yaml" },
-    mix: { gain: 0.86, pan: 0, reverb: 0.12, humanize: 0.008, highpass: 45 },
-    kit: {
-      kick: { gain: 1 },
-      snare: { gain: 0.92 },
-      hat: { gain: 0.62 },
-      open_hat: { gain: 0.5 },
-      rim: { gain: 0.5 },
-      perc: { gain: 0.46 }
-    },
-    pattern: {
-      resolution: 16,
-      bars: 2,
-      repeat: 4,
-      start: "1:1",
-      swing: 0.1,
-      velocity: { default: 0.7, ghost: 0.25, accent: 0.94 },
-      lanes: {
-        kick: "X . . . . . . . . . x . . . . . x . . . . . . . X . . . . . . .",
-        snare: ". . . . X . . g . . . . x . . . . . . . X . . . . . g . . . . .",
-        hat: "x . g . x . g . x . g . x . g . x . g . x . g . x . g . x . g ."
-      }
-    }
-  },
-  upright_bass: {
-    name: "Upright Bass",
-    sound: { soundfont: "acoustic_bass" },
-    mix: { gain: 0.62, pan: -0.08, reverb: 0.16, humanize: 0.012 },
-    notes: [{ time: "1:1", duration: "4n", pitch: "C2", velocity: 0.72 }]
-  },
-  hybrid_drums: {
-    name: "Hybrid Toms",
-    sound: { soundfont: "taiko_drum" },
-    mix: { gain: 0.62, pan: 0, reverb: 0.28, humanize: 0.01 },
-    notes: [{ time: "1:1", duration: "8n", pitch: "C2", velocity: 0.82 }]
-  },
-  glass_pad: {
-    name: "Glass Pad",
-    sound: { soundfont: "pad_2_warm", attack: 0.52, release: 2.4 },
-    mix: { gain: 0.44, pan: 0.12, reverb: 0.72, humanize: 0.018 },
-    notes: [{ time: "1:1", duration: "2m", pitches: ["C3", "G3", "D4"], velocity: 0.42 }]
-  },
-  analog_lead: {
-    name: "Analog Lead",
-    sound: { soundfont: "lead_2_sawtooth" },
-    mix: { gain: 0.42, pan: 0.14, reverb: 0.24, delay: 0.18, humanize: 0.01 },
-    notes: [{ time: "1:1", duration: "8n", pitch: "C4", velocity: 0.66 }]
-  },
-  electric_piano: {
-    name: "Electric Piano",
-    sound: { soundfont: "electric_piano_1", attack: 0.008, release: 0.9 },
-    mix: { gain: 0.54, pan: 0.1, reverb: 0.38, humanize: 0.016 },
-    notes: [{ time: "1:1", duration: "2n", pitches: ["C3", "G3", "E4"], velocity: 0.5, strum: 0.012 }]
-  }
-};
+/** Matches `instrumentSchema` in songSchema — no baked-in sounds or starter figures. */
+const INSTRUMENT_IDS = [
+  "grand_piano",
+  "cinematic_strings",
+  "upright_bass",
+  "hybrid_drums",
+  "drum_kit",
+  "glass_pad",
+  "solo_cello",
+  "analog_lead",
+  "electric_piano"
+];
 
 if (!command || command === "help" || command === "--help") help();
 else if (command === "instruments") listInstruments();
@@ -91,17 +27,12 @@ else if (command === "check") check(args[0]);
 else fail(`Unknown command: ${command}`);
 
 function listInstruments() {
-  const rows = Object.entries(instruments).map(([id, spec]) => [
-    id,
-    spec.name,
-    spec.sound.samplePack ?? spec.sound.soundfont,
-    spec.pattern ? "pattern" : "notes"
-  ]);
   print([
-    toon("instruments", ["id", "name", "sound", "starter"], rows),
+    toon("instruments", ["id"], INSTRUMENT_IDS.map((id) => [id])),
     "help[2]:",
+    "  For complex songs, prefer `bun run arrange compile <song-id>` from arrangement.ts",
     "  Run `bun run yaml new-track <song-id> <track-id> <instrument>`",
-    "  Run `bun run yaml check <song-id>`"
+    "  Add sound:, pattern:, notes:, mix fields yourself; no starters are generated"
   ]);
 }
 
@@ -109,8 +40,9 @@ function newTrack([songId, trackId, instrument, ...rest]) {
   if (!songId || !trackId || !instrument) {
     fail("Usage: bun run yaml new-track <song-id> <track-id> <instrument> [--force]");
   }
-  const spec = instruments[instrument];
-  if (!spec) fail(`Unsupported instrument: ${instrument}`);
+  if (!INSTRUMENT_IDS.includes(instrument)) {
+    fail(`Unsupported instrument: ${instrument}. Run \`bun run yaml instruments\`.`);
+  }
 
   const songPath = path.join(songsDir, songId, "song.yaml");
   const trackPath = path.join(songsDir, songId, "tracks", `${trackId}.track.yaml`);
@@ -119,7 +51,7 @@ function newTrack([songId, trackId, instrument, ...rest]) {
     fail(`Track already exists: ${shortPath(trackPath)}; pass --force to replace it`);
   }
 
-  const track = orderedTrack(trackId, spec, instrument);
+  const track = minimalTrack(trackId, instrument);
   parseTrackYaml(yaml.dump(track));
   fs.mkdirSync(path.dirname(trackPath), { recursive: true });
   fs.writeFileSync(trackPath, yaml.dump(track, { lineWidth: 120, noRefs: true }), "utf8");
@@ -129,11 +61,24 @@ function newTrack([songId, trackId, instrument, ...rest]) {
     "created:",
     `  track: ${shortPath(trackPath)}`,
     `  instrument: ${instrument}`,
-    `  sound: ${spec.sound.samplePack ?? spec.sound.soundfont}`,
     "help[2]:",
-    `  Edit \`${shortPath(trackPath)}\``,
+    `  Edit \`${shortPath(trackPath)}\` — set sound, notes or pattern, mix`,
     `  Run \`bun run yaml check ${songId}\``
   ]);
+}
+
+function minimalTrack(id, instrument) {
+  const title = id
+    .split(/[-_]+/)
+    .filter(Boolean)
+    .map((p) => p[0].toUpperCase() + p.slice(1))
+    .join(" ");
+  return {
+    id,
+    name: title || id,
+    instrument,
+    notes: [{ time: "1:1", duration: "4n", pitch: "C4", velocity: 0.72 }]
+  };
 }
 
 function check(songId) {
@@ -168,28 +113,11 @@ function check(songId) {
     `tracks_checked: ${checkedTracks}`,
     issues.length ? toon("issues", ["file", "error"], issues) : "issues[0]: none",
     "help[2]:",
+    "  Run `bun run arrange check <song-id>` for compiled arrangements",
     "  Run `bun run yaml instruments`",
     "  Run `bun run check` for musical audit plus build"
   ]);
   process.exitCode = issues.length === 0 ? 0 : 1;
-}
-
-function orderedTrack(id, spec, instrument) {
-  const track = {
-    id,
-    name: spec.name,
-    instrument,
-    sound: spec.sound,
-    ...spec.mix
-  };
-  if (spec.kit) track.kit = spec.kit;
-  if (spec.pattern) {
-    track.pattern = spec.pattern;
-    track.notes = [];
-  } else {
-    track.notes = spec.notes;
-  }
-  return track;
 }
 
 function ensureTrackOrder(songPath, trackId) {
@@ -203,16 +131,16 @@ function ensureTrackOrder(songPath, trackId) {
 
 function help() {
   print([
-    "description: Schema-aware helpers for writing valid song and track YAML",
+    "description: Schema-aware helpers for song/track YAML (no instrument presets)",
     "commands[4]{name,description}:",
-    "  instruments,List legal instruments and starter sounds",
-    "  new-track <song-id> <track-id> <instrument>,Create a valid track YAML skeleton and update trackOrder",
-    "  check [song-id],Validate song and track YAML with file-local errors",
+    "  instruments,List legal instrument ids",
+    "  new-track <song-id> <track-id> <instrument>,Minimal valid track (one placeholder note)",
+    "  check [song-id],Validate song and track YAML",
     "  help,Show this reference",
     "examples[3]:",
     "  bun run yaml instruments",
-    "  bun run yaml new-track dusty-loop organ glass_pad",
-    "  bun run yaml check dusty-loop"
+    "  bun run yaml new-track my-song bass-line upright_bass",
+    "  bun run yaml check my-song"
   ]);
 }
 

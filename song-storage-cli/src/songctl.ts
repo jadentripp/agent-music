@@ -65,9 +65,11 @@ master:
   gain: 0.82
   limiter: true
 sections:
-  - id: intro
+  - id: main
+    name: Main
     start: 1:1
-    length: 4m
+    duration: 4m
+    scene: aurora
 trackOrder:
   - piano
 `;
@@ -75,19 +77,10 @@ trackOrder:
 
 function pianoTrackTemplate() {
   return `id: piano
-name: Felt Piano
+name: Piano
 instrument: grand_piano
-sound:
-  soundfont: acoustic_grand_piano
-  attack: 0.01
-  decay: 0.24
-  sustain: 0.52
-  release: 1.2
-gain: 0.58
-pan: -0.12
-reverb: 0.55
-humanize: 0.018
-notes: []
+notes:
+  - { time: "1:1", duration: "4n", pitch: "C4", velocity: 0.72 }
 `;
 }
 

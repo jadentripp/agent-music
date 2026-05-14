@@ -2,7 +2,7 @@
 
 This project stores agent-written song folders in SQLite while preserving the folder/YAML authoring workflow.
 
-The repository stays useful for app code, examples, schemas, and fixtures. User songs live in SQLite as immutable versions.
+The repository holds app code and the `songctl` bridge. User songs live in SQLite as immutable versions.
 
 ## Model
 
@@ -37,7 +37,7 @@ songctl open glass-meadow
 By default the database is stored at `.data/songs.sqlite`. Override it with:
 
 ```bash
-SONG_DB=/path/to/songs.sqlite songctl history minimal-song
+SONG_DB=/path/to/songs.sqlite songctl history glass-meadow
 ```
 
 ## Extra Commands
@@ -45,8 +45,8 @@ SONG_DB=/path/to/songs.sqlite songctl history minimal-song
 ```bash
 songctl list
 songctl history glass-meadow --full
-songctl validate work/minimal-song
-songctl changes minimal-song <old-version-id> <new-version-id>
+songctl validate work/glass-meadow
+songctl changes glass-meadow <old-version-id> <new-version-id>
 ```
 
 ## Song Folder Shape
@@ -58,16 +58,4 @@ tracks/
   bass.track.yaml
 ```
 
-`song.yaml` should include:
-
-```yaml
-title: Example
-tempo: 84
-key: D minor
-timeSignature: 4/4
-master:
-  gain: 0.82
-  limiter: true
-sections: []
-trackOrder: []
-```
+Required fields match the app’s `songSchema` (`title`, `tempo`, `key`, `timeSignature`, `master`, `sections`). Add `trackOrder` and tracks as you author them.

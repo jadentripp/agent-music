@@ -15,125 +15,81 @@ Open `http://localhost:5173`.
 
 ## Song Files
 
-Songs should live as folders:
+Songs live as folders: `songs/<id>/song.yaml` and `songs/<id>/tracks/*.track.yaml`.
+
+For complex agent-authored music, prefer a high-level TypeScript source file:
 
 ```text
-songs/ambient-orbit/
-  song.yaml
-  tracks/
-    bass.track.yaml
-    piano.track.yaml
-    strings.track.yaml
+songs/<id>/arrangement.ts
 ```
 
-`song.yaml` defines:
+`arrangement.ts` uses the typed DSL in `src/music/dsl.ts` to describe the musical form: `sections`, chord `harmony`, named `motifs`, explicit `grooves`, and role-based `parts` such as `drums`, `bass`, `harmony`, `lead`, `counterline`, `pad`, or `ear_candy`. Compile it into playable YAML with:
 
-- `tempo`, `key`, `timeSignature`, and `master`
-- `sections` with `start`, `duration`, `scene`, and `intensity`
-- optional `trackOrder`
-
-Each `tracks/*.track.yaml` file defines one instrument with mix values, effects,
-humanization, and notes.
-
-Agent workflow rule: write one instrument at a time. First create the song
-scaffold with sections and `trackOrder`, then add one complete track file per
-pass. This keeps the agent focused on how each instrument functions in the
-arrangement.
-
-The supported v1 instruments are:
-
-- `grand_piano`
-- `cinematic_strings`
-- `upright_bass`
-- `hybrid_drums`
-- `drum_kit` — multi-sample kit; `pitch` is a lane name (`kick`, `snare`, `hat`, `open_hat`, `clap`, `rim`, `perc`, `tom`, `ride`, `crash`); per-track `kit:` block overrides per-lane soundfont/pitch/gain
-- `glass_pad`
-- `solo_cello`
-- `analog_lead`
-- `electric_piano` — Rhodes-style chord bed; use with `soundfont: electric_piano_1` (Rhodes) or `electric_piano_2` (Wurli)
-
-The engine uses real browser-loaded SoundFont samples by default. Add a `sound`
-block on each track to pick the exact sampled instrument and envelope:
-
-```yaml
-sound:
-  soundfont: acoustic_grand_piano
-  attack: 0.01
-  decay: 0.24
-  sustain: 0.52
-  release: 1.2
+```bash
+bun run arrange compile <song-id>
+bun run arrange check <song-id>
+bun run agent:music check <song-id>
 ```
 
-Notes can use either `pitch` or `pitches`. Use `pitches` plus `strum` for
-voiced chords:
+Generated files start with a header and should be refreshed by editing `arrangement.ts`, not by hand-editing generated tracks. The compiler also writes `arrangement.map.json`, which links generated notes back to part roles, intents, motifs, harmony points, fills, and patterns for agent diagnostics. `arrangement.yaml` is still supported as a simpler fallback source; when both files exist, `arrangement.ts` wins.
 
-```yaml
-- { time: 5:1, duration: 2n, pitches: [D3, A3, F4], velocity: 0.48, strum: 0.018 }
-```
+The DSL includes agent-friendly transforms and intent helpers:
 
-## Minimal Track Template
+- Notes: `note()`, `hit()`, `chordNote()`, and `phrase(start, steps)` for compact explicit hooks.
+- Motifs: `.transpose()`, `.invert()`, `.sequence()` / `.repeat()`, `.thin()`, `.take()`.
+- Parts: `.intent()`, `.soundfont()`, `.samplePack()`, `.gain()`, `.pan()`, `.reverb()`, `.delay()`, `.filter()`, `.duck()`, `.automate()`, `.humanize()`.
+- Arrangement roles: `.lockToKick()`, `.approachNextChord()`, `.drop2()`, `.avoidLowThirds()`, `.fillIntoSections()`.
+- Examples live in `docs/AGENT_MUSIC_EXAMPLES.md`.
 
-```yaml
-id: piano
-name: Felt Piano
-instrument: grand_piano
-sound:
-  soundfont: acoustic_grand_piano
-  attack: 0.01
-  decay: 0.24
-  sustain: 0.52
-  release: 1.2
-gain: 0.58
-pan: -0.12
-reverb: 0.55
-humanize: 0.018
-notes:
-  - { time: 1:1, duration: 2n, pitches: [D3, A3, F4], velocity: 0.48, strum: 0.018 }
-```
+`song.yaml`: `tempo`, optional `tempoMap`, `key`, `timeSignature`, `master`, `sections`, optional `trackOrder` (when present, `trackOrder` controls mixer/playback order—add or reorder entries whenever you add tracks so it stays in sync with each file’s `id`).
 
-## Drum Patterns
+**Master bus — shared reverb** (optional numbers, not names):
 
-Drum tracks can author a step grid instead of writing each hit by hand:
+- `reverbIrSeconds` — convolver IR length (default 2.8)
+- `reverbIrDecay` — decay shaping inside IR (default 2.6)
+- `reverbReturnGain` — wet return level (default 0.42)
 
-```yaml
-instrument: drum_kit
-groove: dilla-drag        # named per-step micro-timing
-pattern:
-  resolution: 16          # steps per bar
-  bars: 2                 # phrase length
-  repeat: 8               # how many times to repeat the phrase
-  start: 1:1
-  swing: 0.18             # MPC swing on off-16ths
-  velocity: { default: 0.78, ghost: 0.34, accent: 0.95 }
-  lanes:
-    kick:  "x . . . . . . . . . x . . . . . x . . . . . . . x . . . . . . ."
-    snare: ". . . . X . . g . . . . x . . . . . . . X . . . . . g . . . . ."
-    hat:   "X . x . x . g . X . x . x . x . X . x . x . g . X . x . x . x ."
-```
+Tracks: `instrument`, optional `sound`, mix fields, `humanize`, `pattern` and/or `notes`.
 
-Lane tokens: `x` normal, `X` accent, `g` ghost, `f` flam, `.` silence. The
-loader expands the pattern into `NoteEvent[]` and merges any explicit `notes:`
-entries on the same track.
+**Groove** is always explicit: `groove: { resolution: 16, offsets: [ ... ] }` where `offsets` are per-step milliseconds (same length cycle as your grid). No named groove presets.
 
-Bundled grooves: `dilla-drag`, `j-rush`, `boom-bap`, `mpc-swing-58`. Or supply
-a custom `{ resolution, offsets: [ms, ...] }`.
+Instruments include `grand_piano`, `cinematic_strings`, `upright_bass`, `hybrid_drums`, `drum_kit` (lane names as `pitch`: `kick`, `snare`, `hat`, …), `glass_pad`, `solo_cello`, `analog_lead`, `electric_piano`.
 
-## Lo-fi & Sidechain
+Add a `sound` block per track when you need a specific soundfont, envelope, or `sample_pack` path.
 
-Track-level effects:
+## Drum patterns
 
-- `saturation: 0–1` — soft-clip waveshaper (tape edge).
-- `lowpass: Hz` — track lowpass filter.
-- `highpass: Hz` — track highpass filter.
-- `duck: <lane>` — sidechain duck this track from a drum-kit lane (usually `kick`).
-- `duckAmount: 0–1` — duck depth (default 0.6, ~3 dB).
+`pattern`: `resolution`, `bars`, `repeat`, `start`, `swing`, `velocity`, `lanes` (strings of `x`, `X`, `g`, `f`, `.`). Expanded at load time and merged with hand-written `notes`.
 
-Master:
+## Mix and master
 
-- `master.vinyl: 0–1` — master vinyl/dust noise bus.
+Stem levels and effects live on each **`tracks/*.track.yaml`** (`gain`, `pan`, `reverb`, `delay`, filters, `eq`, `compressor`, `saturation`, `duck`, `automation`). The stereo bus is only **`song.yaml` → `master`** (`gain`, optional `limiter`, `vinyl`, shared **`reverbIr*`** / **`reverbReturnGain`**). Prefer the **Mix and master** section in `skills/agent-music-composer/SKILL.md` for signal-flow detail and a sensible pass order.
+
+## Lo-fi and sidechain
+
+- `saturation`, `lowpass`, `highpass`, `delay` (+ time/feedback)
+- `eq` — simple low/mid/high track shaping in dB
+- `compressor` — optional per-track dynamics before ducking
+- `duck` — e.g. `kick` or `kick,snare` for sidechain sources
+- `master.vinyl`
+
+## Helpers
+
+`bun run arrange compile <song>` — compile `arrangement.ts` or fallback `arrangement.yaml` into generated song/track YAML.  
+`bun run arrange check <song>` — verify generated YAML and `arrangement.map.json` are fresh.  
+`bun run arrange preview <song> --section <section> --solo <track>` — print a browser URL that loads a focused preview.  
+`bun run agent:music check <song>` — run the agent compose loop: freshness, score features, diagnostics, and next actions.  
+`bun run agent:music analyze <song>` — print section/track density, velocity, range, masking, and mix-width features.  
+`bun run agent:music suggest <song> [--issue masking|density|transition|velocity|mix|intent]` — print patch-oriented DSL suggestions.  
+`bun run yaml instruments` — legal instrument ids.  
+`bun run yaml new-track <song> <track-id> <instrument>` — minimal valid track (one placeholder note only).
 
 ## Checks
 
 ```bash
+bun test
+bun run arrange compile midnight-groove
+bun run arrange check midnight-groove
+bun run agent:music check midnight-groove
 bun run check
 ```

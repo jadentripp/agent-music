@@ -1,8 +1,29 @@
 import * as Soundfont from "soundfont-player";
 import type { Player } from "soundfont-player";
-import type { AutomationPoint, KitVoice, MixerState, Song, Track } from "../types";
-import { SampleInstrument } from "./SampleInstrument";
-import { findSectionAt, musicalTimeToSeconds, noteToFrequency, songDuration } from "./timing";
+import type {
+  AutomationPoint,
+  KitVoice,
+  MixerState,
+  Song,
+  Track,
+  TrackRole,
+  VisualEvent,
+  VisualSyncFrame,
+  VisualTrackState
+} from "../types";
+import { SampleInstrument, type SampleUsage } from "./SampleInstrument";
+import {
+  beatsPerMeasure,
+  findSectionAt,
+  musicalTimeToBeats,
+  musicalTimeToSeconds,
+  noteDurationSeconds,
+  noteToFrequency,
+  secondsPerBeatAt,
+  songSecondsToBeats,
+  songDuration,
+  swingOffset
+} from "./timing";
 
 type ScheduledEvent = {
   id: string;
@@ -12,16 +33,25 @@ type ScheduledEvent = {
   pitch: string | number;
   frequency: number;
   velocity: number;
+  humanize: number;
   /** Expression trim after velocity (default 1). */
   noteGain: number;
   articulation?: string;
   flam?: number;
-  isKick?: boolean;
+  /** Drum lane key for sidechain (kick / snare), when `instrument` is drum_kit. */
+  sidechainLane?: string;
+  ghost?: boolean;
 };
 
 type TrackChannel = {
   input: GainNode;
   duck: GainNode;
+  processors?: AudioNode[];
+  delayMerge?: GainNode;
+  delayDry?: GainNode;
+  delayLine?: DelayNode;
+  delayWet?: GainNode;
+  delayFeedback?: GainNode;
   panner: StereoPannerNode;
   output: GainNode;
   tone?: BiquadFilterNode;
@@ -94,6 +124,82 @@ const defaultKit: Record<string, KitVoice> = {
 };
 
 const kickAliases = new Set(["kick", "bd", "bass_drum", "k"]);
+const snareAliases = new Set(["snare", "sd", "side_stick", "rimshot"]);
+
+function parseDuckLanes(duck: string): string[] {
+  return duck
+    .split(/[,|]+/)
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function sidechainLaneForDrumPitch(pitch: string | number): string | undefined {
+  if (typeof pitch !== "string") return undefined;
+  const key = pitch.toLowerCase();
+  if (kickAliases.has(key)) return "kick";
+  if (snareAliases.has(key)) return "snare";
+  return undefined;
+}
+
+function visualLaneForPitch(track: Track, pitch: string | number): string | undefined {
+  if (track.instrument !== "drum_kit" || typeof pitch !== "string") return undefined;
+  return pitch.toLowerCase();
+}
+
+function inferredTrackRole(track: Track): TrackRole {
+  if (track.role) return track.role;
+  if (track.instrument === "drum_kit" || track.instrument === "hybrid_drums") return "drums";
+  if (track.instrument === "upright_bass") return "bass";
+  if (track.instrument === "electric_piano" || track.instrument === "grand_piano") return "harmony";
+  if (track.instrument === "glass_pad" || track.instrument === "cinematic_strings") return "pad";
+  if (track.instrument === "solo_cello") return "counterline";
+  if (track.instrument === "analog_lead") return "lead";
+  return "custom";
+}
+
+function eventIndexAtOrAfter(events: ScheduledEvent[], target: number): number {
+  let low = 0;
+  let high = events.length;
+  while (low < high) {
+    const mid = (low + high) >> 1;
+    if (events[mid].start < target) low = mid + 1;
+    else high = mid;
+  }
+  return low;
+}
+
+function positiveModulo(value: number, mod: number): number {
+  return ((value % mod) + mod) % mod;
+}
+
+function clamp01(value: number): number {
+  return Math.max(0, Math.min(1, value));
+}
+
+function pulseFromProgress(progress: number, width: number): number {
+  return clamp01(1 - progress / Math.max(0.001, width));
+}
+
+function emptyVisualSyncFrame(time: number, duration: number, playing: boolean, tempoMultiplier: number): VisualSyncFrame {
+  return {
+    time,
+    duration,
+    playing,
+    tempoMultiplier,
+    sectionProgress: 0,
+    beat: 0,
+    beatInBar: 0,
+    bar: 0,
+    beatsPerBar: 4,
+    beatProgress: 0,
+    barProgress: 0,
+    secondsPerBeat: 60 / 88,
+    beatPulse: 0,
+    barPulse: 0,
+    events: [],
+    tracks: []
+  };
+}
 
 export class AudioEngine {
   private context?: AudioContext;
@@ -105,7 +211,6 @@ export class AudioEngine {
   private vinylSource?: AudioBufferSourceNode;
   private vinylGain?: GainNode;
   private events: ScheduledEvent[] = [];
-  private kickTimes: number[] = [];
   private nextEventIndex = 0;
   private startedAt = 0;
   private offset = 0;
@@ -121,8 +226,12 @@ export class AudioEngine {
   private sampleInstruments = new Map<string, SampleInstrument>();
   private channels = new Map<string, TrackChannel>();
   private channelsForSong?: Song;
-  private duckedKickIndex = new Map<string, number>();
-  /** `songDuration(song)/tempo` — kept in sync in `loadSong` only */
+  /** Drum hit times by lane (kick, snare, …) for sidechain sources. */
+  private sidechainTimesByLane = new Map<string, number[]>();
+  /** Per-track merged hit times for `duck` lane list. */
+  private sidechainDuckSchedules = new Map<string, number[]>();
+  private duckedHitIndex = new Map<string, number>();
+  /** Set in `loadSong` from note/event timing */
   private scaledDurationCached = 0;
   private onTick?: () => void;
   private playGeneration = 0;
@@ -163,33 +272,44 @@ export class AudioEngine {
           const pitches = note.pitches ?? (note.pitch !== undefined ? [note.pitch] : []);
           return pitches.flatMap((pitch, pitchIndex) => {
             const voicedPitch = applyOctave(pitch, track.octave);
+            const eventId = `${track.id}-${index}-${pitchIndex}`;
             const baseStart =
               musicalTimeToSeconds(note.time, song, tempoMultiplier) +
               (note.offset ?? 0) +
               pitchIndex * (note.strum ?? 0) +
-              swingOffset(note.time, song, track.swing);
-            const isKick = track.instrument === "drum_kit" && isKickPitch(voicedPitch);
+              swingOffset(note.time, song, track.swing, tempoMultiplier);
+            const sidechainLane =
+              track.instrument === "drum_kit" ? sidechainLaneForDrumPitch(voicedPitch) : undefined;
             const noteGain = note.gain ?? 1;
+            const durSec = Math.max(
+              0.04,
+              noteDurationSeconds(note.time, note.duration, song, tempoMultiplier)
+            );
             const main: ScheduledEvent = {
-              id: `${track.id}-${index}-${pitchIndex}`,
+              id: eventId,
               track,
               start: baseStart,
-              duration: Math.max(0.04, musicalTimeToSeconds(note.duration, song, tempoMultiplier)),
+              duration: durSec,
               pitch: voicedPitch,
               frequency: noteToFrequency(safeFreqPitch(voicedPitch)),
               velocity: note.velocity ?? 0.72,
+              humanize: (track.humanize ?? 0) * seededNoise(eventId),
               noteGain,
               articulation: note.articulation,
-              isKick
+              sidechainLane,
+              ghost: note.ghost
             };
             if (note.flam && note.flam > 0) {
+              const graceId = `${main.id}-flam`;
               const grace: ScheduledEvent = {
                 ...main,
-                id: `${main.id}-flam`,
+                id: graceId,
                 start: baseStart - note.flam,
                 duration: Math.max(0.03, main.duration * 0.5),
                 velocity: main.velocity * 0.45,
-                isKick: false
+                humanize: (track.humanize ?? 0) * seededNoise(graceId),
+                sidechainLane: undefined,
+                ghost: false
               };
               return [grace, main];
             }
@@ -198,17 +318,39 @@ export class AudioEngine {
         })
       )
       .sort((a, b) => a.start - b.start);
-    this.kickTimes = this.events.filter((event) => event.isKick).map((event) => event.start);
-    this.duckedKickIndex.clear();
+    this.sidechainTimesByLane.clear();
+    for (const event of this.events) {
+      if (!event.sidechainLane) continue;
+      let arr = this.sidechainTimesByLane.get(event.sidechainLane);
+      if (!arr) {
+        arr = [];
+        this.sidechainTimesByLane.set(event.sidechainLane, arr);
+      }
+      arr.push(event.start);
+    }
+    for (const arr of this.sidechainTimesByLane.values()) {
+      arr.sort((a, b) => a - b);
+    }
+    this.sidechainDuckSchedules.clear();
+    for (const track of song.tracks) {
+      if (!track.duck) continue;
+      const lanes = parseDuckLanes(track.duck);
+      const merged = lanes
+        .flatMap((lane) => this.sidechainTimesByLane.get(lane) ?? [])
+        .sort((a, b) => a - b);
+      if (merged.length) {
+        this.sidechainDuckSchedules.set(track.id, merged);
+      }
+    }
+    this.duckedHitIndex.clear();
     this.nextEventIndex = 0;
     this.preScheduledEventIndices.clear();
     const maxEventEnd = this.events.reduce((max, e) => Math.max(max, e.start + e.duration), 0);
-    const fromSectionsAndNotes = songDuration(song) / tempoMultiplier;
+    const fromSectionsAndNotes = songDuration(song, tempoMultiplier);
     this.scaledDurationCached = Math.max(fromSectionsAndNotes, maxEventEnd) + playbackEndPadSeconds;
   }
 
   async play(onTick: () => void) {
-    console.log("[AudioEngine] play() called. State:", this.context?.state);
     const myGen = ++this.playGeneration;
     this.clearTimer();
 
@@ -217,11 +359,9 @@ export class AudioEngine {
     if (!this.context || !this.song || !this.master) return;
 
     await this.context.resume();
-    console.log("[AudioEngine] context.resume() done. State:", this.context.state);
     if (myGen !== this.playGeneration) return;
 
     if (this.channelsForSong !== this.song) {
-      console.log("[AudioEngine] building channels for:", this.song.title);
       this.buildChannels();
       this.channelsForSong = this.song;
     }
@@ -236,11 +376,11 @@ export class AudioEngine {
     this.startedAt = this.context.currentTime - this.offset;
     this.stopVoices();
     this.applyMasterBus();
+    this.applyReverbFromSong();
     this.scheduleTrackAutomation();
     this.scheduleAllNotesFromOffset(this.offset);
     this.applyVinylAmount(this.song.master.vinyl ?? 0);
     this.timer = window.setInterval(() => this.schedule(), schedulerMs);
-    console.log("[AudioEngine] scheduler started at index:", this.nextEventIndex);
     this._agentLastScheduleWallMs = 0;
     this.schedule();
   }
@@ -267,7 +407,7 @@ export class AudioEngine {
     if (this.context) {
       this.startedAt = this.context.currentTime - this.offset;
     }
-    this.duckedKickIndex.clear();
+    this.duckedHitIndex.clear();
     if (wasPlaying) {
       this.scheduleTrackAutomation();
       this.scheduleAllNotesFromOffset(this.offset);
@@ -312,11 +452,136 @@ export class AudioEngine {
   }
 
   get activeSection() {
-    return this.song ? findSectionAt(this.song, this.currentTime * this.tempoMultiplier) : undefined;
+    return this.song ? findSectionAt(this.song, this.currentTime, this.tempoMultiplier) : undefined;
   }
 
   get analyserNode() {
     return this.analyser;
+  }
+
+  getVisualSyncFrame(): VisualSyncFrame {
+    const current = this.currentTime;
+    const playing = Boolean(this.timer);
+    if (!this.song) {
+      return emptyVisualSyncFrame(current, this.duration, playing, this.tempoMultiplier);
+    }
+
+    const song = this.song;
+    const beatsPerBar = beatsPerMeasure(song);
+    const beat = songSecondsToBeats(song, current, this.tempoMultiplier);
+    const beatProgress = positiveModulo(beat, 1);
+    const beatInBar = positiveModulo(beat, beatsPerBar);
+    const activeSection = findSectionAt(song, current, this.tempoMultiplier);
+    const sectionStartBeat = musicalTimeToBeats(activeSection.start, song);
+    const sectionDurationBeats = Math.max(0.0001, musicalTimeToBeats(activeSection.duration, song));
+    const sectionProgress = clamp01((beat - sectionStartBeat) / sectionDurationBeats);
+    const soloed = Object.values(this.mixer).some((track) => track.solo);
+    const tracks = new Map<string, VisualTrackState>();
+
+    for (const track of song.tracks) {
+      const mix = this.mixer[track.id] ?? { volume: 1, muted: false, solo: false };
+      const audible = !mix.muted && (!soloed || mix.solo);
+      tracks.set(track.id, {
+        id: track.id,
+        name: track.name,
+        role: inferredTrackRole(track),
+        instrument: track.instrument,
+        volume: mix.volume,
+        muted: mix.muted,
+        solo: mix.solo,
+        audible,
+        pan: track.pan ?? 0,
+        recentHit: 0,
+        sustain: 0,
+        energy: 0
+      });
+    }
+
+    const recentWindow = 1.4;
+    const upcomingWindow = 9.5;
+    const events: VisualEvent[] = [];
+    const firstEvent = eventIndexAtOrAfter(this.events, current - recentWindow - 0.12);
+
+    for (let i = firstEvent; i < this.events.length && events.length < 320; i += 1) {
+      const event = this.events[i];
+      if (event.start > current + upcomingWindow + 0.12) break;
+
+      const visualEvent = this.toVisualEvent(event, current, soloed, recentWindow, upcomingWindow);
+      if (!visualEvent) continue;
+      events.push(visualEvent);
+
+      const track = tracks.get(event.track.id);
+      if (!track) continue;
+      const hitStrength = visualEvent.recent ? (1 - Math.abs(visualEvent.timeDelta) / recentWindow) * visualEvent.gain : 0;
+      const sustainStrength = visualEvent.active ? (1 - visualEvent.progress * 0.36) * visualEvent.gain : 0;
+      track.recentHit = Math.max(track.recentHit, hitStrength);
+      track.sustain = Math.max(track.sustain, sustainStrength);
+      track.energy = Math.max(track.energy, hitStrength, sustainStrength * 0.78);
+    }
+
+    return {
+      time: current,
+      duration: this.duration,
+      playing,
+      tempoMultiplier: this.tempoMultiplier,
+      activeSection,
+      sectionProgress,
+      beat,
+      beatInBar,
+      bar: Math.floor(beat / beatsPerBar),
+      beatsPerBar,
+      beatProgress,
+      barProgress: beatInBar / beatsPerBar,
+      secondsPerBeat: secondsPerBeatAt(song, beat, this.tempoMultiplier),
+      beatPulse: playing ? pulseFromProgress(beatProgress, 0.18) : 0,
+      barPulse: playing ? pulseFromProgress(beatInBar / beatsPerBar, 0.12) : 0,
+      events,
+      tracks: Array.from(tracks.values())
+    };
+  }
+
+  private toVisualEvent(
+    event: ScheduledEvent,
+    current: number,
+    soloed: boolean,
+    recentWindow: number,
+    upcomingWindow: number
+  ): VisualEvent | undefined {
+    const trackMix = this.mixer[event.track.id] ?? { volume: 1, muted: false, solo: false };
+    if (trackMix.muted || (soloed && !trackMix.solo)) return undefined;
+
+    const kitVoice = this.resolveKitVoice(event.track, event.pitch);
+    const kitGain = kitVoice?.gain ?? 1;
+    const gain = (event.track.gain ?? 0.8) * trackMix.volume * event.velocity * kitGain * event.noteGain;
+    const start = event.start + event.humanize;
+    const timeDelta = start - current;
+    const active = current >= start && current <= start + event.duration;
+    const recent = timeDelta <= 0 && timeDelta >= -recentWindow;
+    const upcoming = timeDelta > 0 && timeDelta <= upcomingWindow;
+    if (!active && !recent && !upcoming) return undefined;
+
+    return {
+      id: event.id,
+      trackId: event.track.id,
+      trackName: event.track.name,
+      role: inferredTrackRole(event.track),
+      instrument: event.track.instrument,
+      lane: visualLaneForPitch(event.track, event.pitch),
+      pitch: event.pitch,
+      frequency: event.frequency,
+      start,
+      duration: event.duration,
+      velocity: event.velocity,
+      gain,
+      pan: event.track.pan ?? 0,
+      timeDelta,
+      progress: clamp01((current - start) / Math.max(0.001, event.duration)),
+      active,
+      recent,
+      upcoming,
+      ghost: event.ghost,
+      articulation: event.articulation
+    };
   }
 
   private schedule() {
@@ -436,50 +701,22 @@ export class AudioEngine {
     const gain = this.context.createGain();
     const kitVoice = this.resolveKitVoice(event.track, event.pitch);
     const kitGain = kitVoice?.gain ?? 1;
-    const trackGain =
+    let trackGain =
       (event.track.gain ?? 0.8) * trackMix.volume * event.velocity * kitGain * event.noteGain;
-    const humanize = (event.track.humanize ?? 0) * seededNoise(event.id);
-    const startAt = Math.max(this.context.currentTime, when + humanize);
+    const startAt = Math.max(this.context.currentTime, when + event.humanize);
     const noteDuration = playback?.noteDuration ?? event.duration;
-    const release = event.track.instrument.includes("strings") || event.track.instrument.includes("pad") ? 1.2 : 0.16;
+    let release =
+      event.track.instrument.includes("strings") || event.track.instrument.includes("pad") ? 1.2 : 0.16;
+    if (event.ghost) {
+      trackGain *= 0.82;
+      release = Math.min(release, 0.09);
+    }
 
     gain.gain.setValueAtTime(0.0001, startAt);
     gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, trackGain), startAt + 0.025);
     gain.gain.setTargetAtTime(0.0001, startAt + noteDuration, release);
 
-    const wet = event.track.delay ?? 0;
-    const delayFeedback = event.track.delayFeedback ?? 0;
-    const delayTimeSec = event.track.delayTime ?? 0.24;
-    const useDelay = wet > 0 || delayFeedback > 0;
-
-    if (!useDelay) {
-      const dryGain = this.context.createGain();
-      dryGain.gain.value = 1;
-      gain.connect(dryGain);
-      dryGain.connect(destination);
-    } else {
-      const dryGain = this.context.createGain();
-      dryGain.gain.value = 1 - wet * 0.45;
-
-      const delayNode = this.context.createDelay(Math.max(2, delayTimeSec + 0.05));
-      delayNode.delayTime.setValueAtTime(delayTimeSec, startAt);
-
-      const wetGain = this.context.createGain();
-      wetGain.gain.value = wet;
-
-      gain.connect(dryGain);
-      dryGain.connect(destination);
-      gain.connect(delayNode);
-      delayNode.connect(wetGain);
-      wetGain.connect(destination);
-
-      if (delayFeedback > 0) {
-        const feedbackGain = this.context.createGain();
-        feedbackGain.gain.value = Math.min(0.85, delayFeedback);
-        delayNode.connect(feedbackGain);
-        feedbackGain.connect(delayNode);
-      }
-    }
+    gain.connect(destination);
 
     const voice: Voice = {
       silence: (now: number) => {
@@ -506,6 +743,12 @@ export class AudioEngine {
     for (const channel of this.channels.values()) {
       disconnectNode(channel.input);
       disconnectNode(channel.duck);
+      for (const processor of channel.processors ?? []) disconnectNode(processor);
+      if (channel.delayMerge) disconnectNode(channel.delayMerge);
+      if (channel.delayDry) disconnectNode(channel.delayDry);
+      if (channel.delayLine) disconnectNode(channel.delayLine);
+      if (channel.delayWet) disconnectNode(channel.delayWet);
+      if (channel.delayFeedback) disconnectNode(channel.delayFeedback);
       disconnectNode(channel.panner);
       disconnectNode(channel.output);
       if (channel.tone) disconnectNode(channel.tone);
@@ -526,6 +769,7 @@ export class AudioEngine {
       reverbSend.gain.value = reverbSendLevel(track.reverb);
 
       let chainEnd: AudioNode = input;
+      const processors: AudioNode[] = [];
 
       if (track.highpass !== undefined) {
         const hp = this.context.createBiquadFilter();
@@ -534,6 +778,7 @@ export class AudioEngine {
         hp.Q.value = 0.7;
         chainEnd.connect(hp);
         chainEnd = hp;
+        processors.push(hp);
       }
 
       const needsToneFilter = track.lowpass !== undefined || Boolean(track.automation?.filter?.length);
@@ -546,6 +791,39 @@ export class AudioEngine {
         chainEnd.connect(lp);
         chainEnd = lp;
         tone = lp;
+        processors.push(lp);
+      }
+
+      if (track.eq) {
+        const { lowGain = 0, lowFrequency = 120, midGain = 0, midFrequency = 900, midQ = 0.9, highGain = 0, highFrequency = 7000 } = track.eq;
+        if (Math.abs(lowGain) > 0.001) {
+          const low = this.context.createBiquadFilter();
+          low.type = "lowshelf";
+          low.frequency.value = lowFrequency;
+          low.gain.value = lowGain;
+          chainEnd.connect(low);
+          chainEnd = low;
+          processors.push(low);
+        }
+        if (Math.abs(midGain) > 0.001) {
+          const mid = this.context.createBiquadFilter();
+          mid.type = "peaking";
+          mid.frequency.value = midFrequency;
+          mid.Q.value = midQ;
+          mid.gain.value = midGain;
+          chainEnd.connect(mid);
+          chainEnd = mid;
+          processors.push(mid);
+        }
+        if (Math.abs(highGain) > 0.001) {
+          const high = this.context.createBiquadFilter();
+          high.type = "highshelf";
+          high.frequency.value = highFrequency;
+          high.gain.value = highGain;
+          chainEnd.connect(high);
+          chainEnd = high;
+          processors.push(high);
+        }
       }
 
       if (track.saturation !== undefined && track.saturation > 0) {
@@ -554,10 +832,68 @@ export class AudioEngine {
         shaper.oversample = "2x";
         chainEnd.connect(shaper);
         chainEnd = shaper;
+        processors.push(shaper);
+      }
+
+      if (track.compressor) {
+        const c = track.compressor;
+        const compressor = this.context.createDynamicsCompressor();
+        compressor.threshold.value = c.threshold ?? -20;
+        compressor.knee.value = c.knee ?? 14;
+        compressor.ratio.value = c.ratio ?? 3;
+        compressor.attack.value = c.attack ?? 0.006;
+        compressor.release.value = c.release ?? 0.16;
+        chainEnd.connect(compressor);
+        chainEnd = compressor;
+        processors.push(compressor);
+
+        if (c.makeupGain !== undefined && Math.abs(c.makeupGain - 1) > 0.001) {
+          const makeup = this.context.createGain();
+          makeup.gain.value = c.makeupGain;
+          chainEnd.connect(makeup);
+          chainEnd = makeup;
+          processors.push(makeup);
+        }
       }
 
       chainEnd.connect(duck);
-      duck.connect(panner);
+
+      const wet = track.delay ?? 0;
+      const delayFeedback = track.delayFeedback ?? 0;
+      const delayTimeSec = track.delayTime ?? 0.24;
+      const useDelay = wet > 0 || delayFeedback > 0;
+
+      let delayMerge: GainNode | undefined;
+      let delayDry: GainNode | undefined;
+      let delayLine: DelayNode | undefined;
+      let delayWet: GainNode | undefined;
+      let delayFb: GainNode | undefined;
+
+      let prePanner: AudioNode = duck;
+      if (useDelay) {
+        delayMerge = this.context.createGain();
+        delayMerge.gain.value = 1;
+        delayDry = this.context.createGain();
+        delayDry.gain.value = 1 - wet * 0.45;
+        delayLine = this.context.createDelay(Math.max(2, delayTimeSec + 0.05));
+        delayLine.delayTime.value = delayTimeSec;
+        delayWet = this.context.createGain();
+        delayWet.gain.value = wet;
+        duck.connect(delayDry);
+        delayDry.connect(delayMerge);
+        duck.connect(delayLine);
+        delayLine.connect(delayWet);
+        delayWet.connect(delayMerge);
+        if (delayFeedback > 0) {
+          delayFb = this.context.createGain();
+          delayFb.gain.value = Math.min(0.85, delayFeedback);
+          delayLine.connect(delayFb);
+          delayFb.connect(delayLine);
+        }
+        prePanner = delayMerge;
+      }
+
+      prePanner.connect(panner);
       panner.connect(output);
       output.connect(this.master);
       if (this.reverb) {
@@ -565,7 +901,20 @@ export class AudioEngine {
         reverbSend.connect(this.reverb);
       }
 
-      this.channels.set(track.id, { input, duck, panner, output, tone, reverbSend });
+      this.channels.set(track.id, {
+        input,
+        duck,
+        processors,
+        delayMerge,
+        delayDry,
+        delayLine,
+        delayWet,
+        delayFeedback: delayFb,
+        panner,
+        output,
+        tone,
+        reverbSend
+      });
     }
   }
 
@@ -771,11 +1120,22 @@ export class AudioEngine {
         .map((track) => this.samplePackForTrack(track))
         .filter((manifest): manifest is string => Boolean(manifest))
     );
+    const usageByManifest = new Map<string, SampleUsage[]>();
+    for (const event of this.events) {
+      const manifest = this.samplePackForTrack(event.track);
+      if (!manifest) continue;
+      const usage = usageByManifest.get(manifest) ?? [];
+      usage.push({ pitch: event.pitch, velocity: event.velocity });
+      usageByManifest.set(manifest, usage);
+    }
 
     await Promise.all(
       manifests.map(async (manifest) => {
         if (this.sampleInstruments.has(manifest)) return;
-        this.sampleInstruments.set(manifest, await SampleInstrument.load(this.context!, manifest));
+        this.sampleInstruments.set(
+          manifest,
+          await SampleInstrument.load(this.context!, manifest, uniqueSampleUsage(usageByManifest.get(manifest) ?? []))
+        );
       })
     );
   }
@@ -881,36 +1241,46 @@ export class AudioEngine {
   }
 
   private scheduleDucks(currentSongTime: number, horizonSongTime: number): number {
-    if (!this.context || !this.song || this.kickTimes.length === 0) return 0;
+    if (!this.context || !this.song) return 0;
 
     let bassKickDips = 0;
     for (const track of this.song.tracks) {
       if (!track.duck) continue;
+      const hitTimes = this.sidechainDuckSchedules.get(track.id);
+      if (!hitTimes?.length) continue;
+
       const channel = this.channels.get(track.id);
       if (!channel) continue;
-      const targetLane = track.duck.toLowerCase();
-      const shouldDuck = kickAliases.has(targetLane) || targetLane === "kick";
-      if (!shouldDuck) continue;
 
       const amount = Math.max(0, Math.min(1, track.duckAmount ?? 0.6));
       if (amount <= 0) continue;
 
-      const lastIndex = this.duckedKickIndex.get(track.id) ?? -1;
+      const lastIndex = this.duckedHitIndex.get(track.id) ?? -1;
       let nextIndex = lastIndex + 1;
-      while (nextIndex < this.kickTimes.length && this.kickTimes[nextIndex] <= horizonSongTime) {
-        const kickSongTime = this.kickTimes[nextIndex];
-        if (kickSongTime + 0.4 < currentSongTime) {
+      while (nextIndex < hitTimes.length && hitTimes[nextIndex] <= horizonSongTime) {
+        const hitSongTime = hitTimes[nextIndex];
+        if (hitSongTime + 0.4 < currentSongTime) {
           nextIndex += 1;
           continue;
         }
-        const audioTime = this.context.currentTime + Math.max(0, kickSongTime - currentSongTime);
+        const audioTime = this.context.currentTime + Math.max(0, hitSongTime - currentSongTime);
         scheduleDuckDip(channel.duck, audioTime, amount);
-        if (track.id === "bass") bassKickDips += 1;
+        if (track.instrument === "upright_bass") bassKickDips += 1;
         nextIndex += 1;
       }
-      this.duckedKickIndex.set(track.id, nextIndex - 1);
+      this.duckedHitIndex.set(track.id, nextIndex - 1);
     }
     return bassKickDips;
+  }
+
+  private applyReverbFromSong() {
+    if (!this.context || !this.reverb || !this.reverbReturn || !this.song) return;
+    const m = this.song.master;
+    const seconds = m.reverbIrSeconds ?? 2.8;
+    const decay = m.reverbIrDecay ?? 2.6;
+    const returnGain = m.reverbReturnGain ?? 0.42;
+    this.reverb.buffer = makeImpulseResponse(this.context, seconds, decay);
+    this.reverbReturn.gain.setTargetAtTime(returnGain, this.context.currentTime, 0.05);
   }
 
   private buildVinylBus() {
@@ -1118,6 +1488,16 @@ function unique<T>(items: T[]) {
   return Array.from(new Set(items));
 }
 
+function uniqueSampleUsage(items: SampleUsage[]) {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    const key = `${String(item.pitch)}:${item.velocity.toFixed(4)}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function makeSaturationCurve(amount: number): Float32Array<ArrayBuffer> {
   const samples = 1024;
   const buffer = new ArrayBuffer(samples * Float32Array.BYTES_PER_ELEMENT);
@@ -1133,17 +1513,6 @@ function makeSaturationCurve(amount: number): Float32Array<ArrayBuffer> {
 function applyOctave(pitch: string | number, octaveShift = 0) {
   if (typeof pitch === "number" || octaveShift === 0) return pitch;
   return pitch.replace(/(-?\d)$/, (octave) => String(Number(octave) + octaveShift));
-}
-
-function swingOffset(time: string | number, song: Song, swing = 0) {
-  if (!swing || typeof time !== "string" || !/^\d+:\d+(:\d+)?$/.test(time)) return 0;
-  const beat = musicalTimeToSeconds(time, song) / (60 / song.tempo);
-  return Math.round(beat * 2) % 2 === 1 ? swing * (60 / song.tempo) : 0;
-}
-
-function isKickPitch(pitch: string | number): boolean {
-  if (typeof pitch !== "string") return false;
-  return kickAliases.has(pitch.toLowerCase());
 }
 
 function safeFreqPitch(pitch: string | number): string | number {

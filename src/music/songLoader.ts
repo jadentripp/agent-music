@@ -74,7 +74,7 @@ function prepareTrack(track: Track, meta: SongMeta): Track {
 
   if (track.pattern) {
     const startBeat = musicalTimeToBeats(track.pattern.start ?? "1:1", { timeSignature: meta.timeSignature } as never);
-    notes = [...expandPattern(track.pattern, beatsPerMeasure, startBeat), ...notes];
+    notes = [...expandPattern(track.pattern, beatsPerMeasure, startBeat, meta.tempo), ...notes];
   }
 
   if (track.groove) {
